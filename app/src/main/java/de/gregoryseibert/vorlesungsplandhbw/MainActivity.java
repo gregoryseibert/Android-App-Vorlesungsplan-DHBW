@@ -141,6 +141,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        lecturePlan.sortLectureList();
+
         testText.setText(lecturePlan.toString());
     }
 }

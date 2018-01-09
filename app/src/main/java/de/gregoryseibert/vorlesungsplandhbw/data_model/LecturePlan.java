@@ -1,6 +1,8 @@
 package de.gregoryseibert.vorlesungsplandhbw.data_model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by Gregory Seibert on 09.01.2018.
@@ -19,6 +21,15 @@ public class LecturePlan {
 
     public ArrayList<Lecture> getLectureList() {
         return lectureList;
+    }
+
+    public void sortLectureList() {
+        Collections.sort(lectureList, new Comparator<Lecture>() {
+            @Override
+            public int compare(Lecture lec1, Lecture lec2) {
+                return lec1.getStartTime() < lec2.getStartTime() ? -1 : (lec1.getStartTime() > lec2.getStartTime()) ? 1 : 0;
+            }
+        });
     }
 
     @Override
