@@ -17,8 +17,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -45,8 +47,10 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView rv;
     private EditText dateText;
     private DatePickerDialog datePickerDialog;
+    private ImageButton nextButton, prevButton;
     private String key;
     private int day, month, year;
+    private Date date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,13 +78,35 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Calendar newCalendar = Calendar.getInstance();
+        final Calendar newCalendar = Calendar.getInstance();
         datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 loadLecturePlan(day, month, year);
             }
 
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+
+        nextButton = findViewById(R.id.nextButton);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar c = Calendar.getInstance();
+                c.set(year, month, day);
+                c.add(Calendar.DAY_OF_MONTH, 1);
+                loadLecturePlan(c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH), c.get(Calendar.YEAR));
+            }
+        });
+
+        prevButton = findViewById(R.id.prevButton);
+        prevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar c = Calendar.getInstance();
+                c.set(year, month, day);
+                c.add(Calendar.DAY_OF_MONTH, -1);
+                loadLecturePlan(c.get(Calendar.DAY_OF_MONTH), c.get(Calendar.MONTH), c.get(Calendar.YEAR));
+            }
+        });
 
         loadLecturePlan(day, month, year);
     }
@@ -101,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         new LoadDocumentTask(this).execute(new LoadDocumentTaskParams(getResources().getString(R.string.base_url), key, day, month + 1, year));
     }
 
-    public void createLecturePlan(Document doc) {
+    public void createLecturePlan(Document doc) throws NullPointerException{
         LecturePlan lecturePlan = new LecturePlan();
 
         Elements tableRows = doc.select("#calendar .week_table tbody tr");

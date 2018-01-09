@@ -3,6 +3,7 @@ package de.gregoryseibert.vorlesungsplandhbw.utility;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -39,6 +40,11 @@ public class LoadDocumentTask extends AsyncTask<LoadDocumentTaskParams, Void, Do
     }
 
     protected void onPostExecute(Document doc) {
-        activity.createLecturePlan(doc);
+        try {
+            activity.createLecturePlan(doc);
+        } catch(NullPointerException e) {
+            Log.d("LoadDocumentTask", e.getMessage());
+            Toast.makeText(activity, "Jsoup Error!", Toast.LENGTH_SHORT);
+        }
     }
 }
