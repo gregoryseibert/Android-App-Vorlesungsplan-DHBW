@@ -4,6 +4,8 @@ import android.app.DatePickerDialog;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
@@ -28,7 +30,8 @@ import de.gregoryseibert.vorlesungsplandhbw.utility.Utility;
  */
 
 public class MainActivity extends AppCompatActivity {
-    private EditText testText, dateText;
+    private RecyclerView rv;
+    private EditText dateText;
     private DatePickerDialog datePickerDialog;
     private String key;
     private int day, month, year;
@@ -44,14 +47,15 @@ public class MainActivity extends AppCompatActivity {
         month = 11;
         year = 2017;
 
-        testText = findViewById(R.id.testText);
+        rv = findViewById(R.id.recyclerView);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        rv.setLayoutManager(llm);
+
         dateText = findViewById(R.id.dateText);
-        dateText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        dateText.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus)
-                    datePickerDialog.show();
-                v.clearFocus();
+            public void onClick(View v) {
+                datePickerDialog.show();
             }
         });
 
@@ -73,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         this.month = month;
         this.year = year;
 
-        dateText.setText("Vorlesungsplan der Woche: " + Utility.formatDateSimple(Utility.getDate(day, month, year, 0, 0)));
+        dateText.setText("Vorlesungen der Woche: " + Utility.formatDateSimple(Utility.getDate(day, month, year, 0, 0)));
 
         new LoadDocumentTask(this).execute(new LoadDocumentTaskParams(getResources().getString(R.string.base_url), key, day, month, year));
     }
@@ -143,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
 
         lecturePlan.sortLectureList();
 
-        testText.setText(lecturePlan.toString());
+        LecturePlanAdapter adapter = new LecturePlanAdapter(lecturePlan.getLectureList());
+        rv.setAdapter(adapter);
     }
 }

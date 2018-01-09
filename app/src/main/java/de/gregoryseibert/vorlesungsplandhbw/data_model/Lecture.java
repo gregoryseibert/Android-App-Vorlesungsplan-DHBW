@@ -43,6 +43,10 @@ public class Lecture {
         return date;
     }
 
+    public String getCombinedDate() {
+        return Utility.formatDateTime(new Date(startTime)) + " - " + Utility.formatDateTime(new Date(startTime)) + " am " + Utility.formatDateSimple(new Date(startTime));
+    }
+
     public String getTitle() {
         return title;
     }
