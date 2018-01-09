@@ -1,7 +1,16 @@
 package de.gregoryseibert.vorlesungsplandhbw;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.support.annotation.DimenRes;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,9 +26,12 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import de.gregoryseibert.vorlesungsplandhbw.data_model.Lecture;
 import de.gregoryseibert.vorlesungsplandhbw.data_model.LecturePlan;
 import de.gregoryseibert.vorlesungsplandhbw.utility.LoadDocumentTask;
 import de.gregoryseibert.vorlesungsplandhbw.utility.LoadDocumentTaskParams;
@@ -43,18 +55,21 @@ public class MainActivity extends AppCompatActivity {
 
         key = "txB1FOi5xd1wUJBWuX8lJhGDUgtMSFmnKLgAG_NVMhDUd7PDlGaEoMaVfHmMbiow";
 
-        day = 13;
-        month = 11;
-        year = 2017;
+        day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        month = Calendar.getInstance().get(Calendar.MONTH);
+        year = Calendar.getInstance().get(Calendar.YEAR);
 
         rv = findViewById(R.id.recyclerView);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
+        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.item_offset);
+        rv.addItemDecoration(itemDecoration);
 
         dateText = findViewById(R.id.dateText);
         dateText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                datePickerDialog.updateDate(year, month, day);
                 datePickerDialog.show();
             }
         });
@@ -62,8 +77,6 @@ public class MainActivity extends AppCompatActivity {
         Calendar newCalendar = Calendar.getInstance();
         datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int month, int day) {
-                Calendar newDate = Calendar.getInstance();
-                newDate.set(year, month, day);
                 loadLecturePlan(day, month, year);
             }
 
@@ -72,14 +85,20 @@ public class MainActivity extends AppCompatActivity {
         loadLecturePlan(day, month, year);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        dateText.setText(Utility.formatDateSimple(Utility.getDate(day, month + 1, year, 0, 0)));
+    }
+
     private void loadLecturePlan(int day, int month, int year) {
         this.day = day;
         this.month = month;
         this.year = year;
 
-        dateText.setText("Vorlesungen der Woche: " + Utility.formatDateSimple(Utility.getDate(day, month, year, 0, 0)));
+        dateText.setText(Utility.formatDateSimple(Utility.getDate(day, month + 1, year, 0, 0)));
 
-        new LoadDocumentTask(this).execute(new LoadDocumentTaskParams(getResources().getString(R.string.base_url), key, day, month, year));
+        new LoadDocumentTask(this).execute(new LoadDocumentTaskParams(getResources().getString(R.string.base_url), key, day, month + 1, year));
     }
 
     public void createLecturePlan(Document doc) {
@@ -98,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
 
             if(!tableBlocks.isEmpty()) {
                 for(Element tableBlock : tableBlocks) {
-                    //Log.e("Test", tableRowElements.toString());
                     int indexOfBlock = tableRowElements.indexOf(tableBlock) / 3;
 
                     Element link = tableBlock.getElementsByTag("a").first();
@@ -111,43 +129,83 @@ public class MainActivity extends AppCompatActivity {
                     String[] startTime = linkSplit[0].split(":");
                     String[] endTime = linkSplit[1].split(":");
 
-                    Calendar c = Calendar.getInstance();
+                    Calendar c1 = Calendar.getInstance(), c2 = Calendar.getInstance();
+                    c1.setTime(Utility.getDate(firstDay, month, year, 0, 0));
+                    c1.add(Calendar.DATE, indexOfBlock);
+                    c2.setTime(Utility.getDate(day, month, year, 0, 0));
 
-                    c.setTime(Utility.getDate(firstDay, month, year, Integer.parseInt(startTime[0]), Integer.parseInt(startTime[1])));
-                    c.add(Calendar.DATE, indexOfBlock);
-                    long lStartTime = c.getTimeInMillis();
+                    if(c1.equals(c2)) {
+                        c1.setTime(Utility.getDate(firstDay, month + 1, year, Integer.parseInt(startTime[0]), Integer.parseInt(startTime[1])));
+                        c1.add(Calendar.DATE, indexOfBlock);
+                        long lStartTime = c1.getTimeInMillis();
 
-                    c.setTime(Utility.getDate(firstDay, month, year, Integer.parseInt(endTime[0]), Integer.parseInt(endTime[1])));
-                    c.add(Calendar.DATE, indexOfBlock);
-                    long lEndTime = c.getTimeInMillis();
+                        c2.setTime(Utility.getDate(firstDay, month + 1, year, Integer.parseInt(endTime[0]), Integer.parseInt(endTime[1])));
+                        c2.add(Calendar.DATE, indexOfBlock);
+                        long lEndTime = c2.getTimeInMillis();
 
-                    StringBuilder titleBuilder = new StringBuilder();
-                    for(int i = 2; i < linkSplit.length; i++) {
-                        titleBuilder.append(linkSplit[i]);
-                        titleBuilder.append(" ");
+                        StringBuilder titleBuilder = new StringBuilder();
+                        for(int i = 2; i < linkSplit.length; i++) {
+                            titleBuilder.append(linkSplit[i]);
+                            titleBuilder.append(" ");
+                        }
+                        if (titleBuilder.length() > 0) {
+                            titleBuilder.deleteCharAt(titleBuilder.length()-1);
+                        }
+                        String lTitle = titleBuilder.toString();
+
+                        String lLecturer = "";
+                        if(!lIsExam) {
+                            Element person = tableBlock.getElementsByClass("person").first();
+                            lLecturer = person.text();
+
+                            if(lLecturer.endsWith(",")) {
+                                lLecturer = lLecturer.substring(0, lLecturer.length() - 1);
+                            }
+                        }
+
+                        Elements resources = tableBlock.getElementsByClass("resource");
+
+                        String lRoom = "";
+                        for(int i = 0; i < resources.size(); i++) {
+                            if(resources.get(i).text().contains(".")) {
+                                lRoom = resources.get(i).text();
+                            }
+                        }
+
+                        lecturePlan.addLecture(lStartTime, lEndTime, lTitle, lLecturer, lRoom, lIsExam);
                     }
-                    if (titleBuilder.length() > 0) {
-                        titleBuilder.deleteCharAt(titleBuilder.length()-1);
-                    }
-                    String lTitle = titleBuilder.toString();
-
-                    String lLecturer = "";
-                    if(!lIsExam) {
-                        Element person = tableBlock.getElementsByClass("person").first();
-                        lLecturer = person.text();
-                    }
-
-                    Element resource = tableBlock.getElementsByClass("resource").first();
-                    String lRoom = resource.text();
-
-                    lecturePlan.addLecture(lStartTime, lEndTime, lTitle, lLecturer, lRoom, lIsExam);
                 }
             }
         }
 
         lecturePlan.sortLectureList();
 
-        LecturePlanAdapter adapter = new LecturePlanAdapter(lecturePlan.getLectureList());
+        ArrayList<Lecture> lectureList = lecturePlan.getLectureList();
+        for (int i = 0; i < lectureList.size(); i++) {
+            if(i % 2 == 0 && i < lectureList.size() - 1) {
+                lectureList.add(i + 1, new Lecture(lectureList.get(i).getEndTime(), lectureList.get(i + 1).getStartTime()));
+            }
+        }
+
+        LecturePlanAdapter adapter = new LecturePlanAdapter(lectureList);
         rv.setAdapter(adapter);
+    }
+
+    class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
+        private int mItemOffset;
+
+        public ItemOffsetDecoration(int itemOffset) {
+            mItemOffset = itemOffset;
+        }
+
+        public ItemOffsetDecoration(@NonNull Context context, @DimenRes int itemOffsetId) {
+            this(context.getResources().getDimensionPixelSize(itemOffsetId));
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            super.getItemOffsets(outRect, view, parent, state);
+            outRect.set(0, 0, 0, mItemOffset);
+        }
     }
 }

@@ -1,8 +1,6 @@
 package de.gregoryseibert.vorlesungsplandhbw.data_model;
 
-import java.text.DateFormat;
 import java.util.Date;
-
 import de.gregoryseibert.vorlesungsplandhbw.utility.Utility;
 
 /**
@@ -12,7 +10,19 @@ import de.gregoryseibert.vorlesungsplandhbw.utility.Utility;
 public class Lecture {
     private long startTime, endTime;
     private String title, lecturer, room;
-    private boolean isExam;
+    private LectureType type;
+
+    public Lecture() {
+        this.title = "Es konnten keine Vorlesungen gefunden werden.";
+        this.type = LectureType.EMPTY;
+    }
+
+    public Lecture(long startTime, long endTime) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.title = "Pause";
+        this.type = LectureType.PAUSE;
+    }
 
     public Lecture(long startTime, long endTime, String title, String lecturer, String room, boolean isExam) {
         this.startTime = startTime;
@@ -20,7 +30,11 @@ public class Lecture {
         this.title = title;
         this.lecturer = lecturer;
         this.room = room;
-        this.isExam = isExam;
+        if (isExam) {
+            this.type = LectureType.EXAM;
+        } else {
+            this.type = LectureType.LECTURE;
+        }
     }
 
     public long getStartTime() {
@@ -43,8 +57,13 @@ public class Lecture {
         return date;
     }
 
+    public LectureType getType() {
+        return type;
+    }
+
     public String getCombinedDate() {
-        return Utility.formatDateTime(new Date(startTime)) + " - " + Utility.formatDateTime(new Date(startTime)) + " am " + Utility.formatDateSimple(new Date(startTime));
+        //return Utility.formatDateTime(new Date(startTime)) + " bis " + Utility.formatDateTime(new Date(endTime)) + " Uhr, am " + Utility.formatDateSimple(new Date(startTime));
+        return Utility.formatDateTime(new Date(startTime)) + " bis " + Utility.formatDateTime(new Date(endTime)) + " Uhr";
     }
 
     public String getTitle() {
@@ -57,24 +76,5 @@ public class Lecture {
 
     public String getRoom() {
         return room;
-    }
-
-    public boolean isExam() {
-        return isExam;
-    }
-
-    @Override
-    public String toString() {
-        String str = "Lecture:\n";
-        str += "Start: " + Utility.formatDate(this.getStartTimeDate()) + "\n";
-        str += "End: " + Utility.formatDate(this.getEndTimeDate()) + "\n";
-        str += "Title: " + title + "\n";
-        if(!isExam) {
-            str += "Lecturer: " + lecturer + "\n";
-        }
-        str += "Room: " + room + "\n";
-        str += "\n";
-
-        return str;
     }
 }

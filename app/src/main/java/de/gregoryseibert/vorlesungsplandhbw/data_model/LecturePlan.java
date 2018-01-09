@@ -20,6 +20,10 @@ public class LecturePlan {
     }
 
     public ArrayList<Lecture> getLectureList() {
+        if(lectureList.size() == 0) {
+            lectureList.add(new Lecture());
+        }
+
         return lectureList;
     }
 
