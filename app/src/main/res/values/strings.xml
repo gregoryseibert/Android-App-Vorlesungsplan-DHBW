@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Vorlesungsplan DHBW</string>
+    <string name="base_url">https://rapla.dhbw-stuttgart.de/rapla?key=</string>
+</resources>
