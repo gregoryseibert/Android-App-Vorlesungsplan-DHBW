@@ -44,17 +44,17 @@ public class LecturePlanAdapter extends RecyclerView.Adapter<LecturePlanAdapter.
         if(type == LectureType.EMPTY) {
             ((ViewGroup) lectureViewHolder.dateText.getParent()).removeView(lectureViewHolder.dateText);
             ((ViewGroup) lectureViewHolder.roomText.getParent()).removeView(lectureViewHolder.roomText);
-            ((ViewGroup) lectureViewHolder.lecturerText.getParent()).removeView(lectureViewHolder.lecturerText);
+            //((ViewGroup) lectureViewHolder.lecturerText.getParent()).removeView(lectureViewHolder.lecturerText);
         } else {
-            lectureViewHolder.dateText.setText(lectureList.get(i).getStartDate().getFormatTime() + " - " +lectureList.get(i).getEndDate().getFormatTime() + " Uhr");
+            lectureViewHolder.dateText.setText(lectureList.get(i).getStartDate().getFormatTime() + " - " +lectureList.get(i).getEndDate().getFormatTime());
 
             if(type == LectureType.LECTURE || type == LectureType.EXAM) {
                 lectureViewHolder.roomText.setText(lectureList.get(i).getRoom());
-                lectureViewHolder.lecturerText.setText(lectureList.get(i).getLecturer());
+                //lectureViewHolder.lecturerText.setText(lectureList.get(i).getLecturer());
             } else if(type == LectureType.PAUSE) {
                 //lectureViewHolder.titleText.setTextColor(Color.GREEN);
                 ((ViewGroup) lectureViewHolder.roomText.getParent()).removeView(lectureViewHolder.roomText);
-                ((ViewGroup) lectureViewHolder.lecturerText.getParent()).removeView(lectureViewHolder.lecturerText);
+                //((ViewGroup) lectureViewHolder.lecturerText.getParent()).removeView(lectureViewHolder.lecturerText);
             }
         }
     }
@@ -69,16 +69,16 @@ public class LecturePlanAdapter extends RecyclerView.Adapter<LecturePlanAdapter.
         TextView titleText;
         TextView dateText;
         TextView roomText;
-        TextView lecturerText;
+        //TextView lecturerText;
 
         LectureViewHolder(View itemView) {
             super(itemView);
             cv = itemView.findViewById(R.id.cv);
 
             titleText = itemView.findViewById(R.id.titleText);
-            dateText = itemView.findViewById(R.id.dateText);
+            dateText = itemView.findViewById(R.id.timeText);
             roomText = itemView.findViewById(R.id.roomText);
-            lecturerText = itemView.findViewById(R.id.lecturerText);
+            //lecturerText = itemView.findViewById(R.id.lecturerText);
         }
     }
 }
