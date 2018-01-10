@@ -1,5 +1,8 @@
 package de.gregoryseibert.vorlesungsplandhbw.data_model;
 
+import android.support.annotation.NonNull;
+
+import java.util.Comparator;
 import java.util.Date;
 import de.gregoryseibert.vorlesungsplandhbw.utility.Utility;
 
@@ -7,8 +10,8 @@ import de.gregoryseibert.vorlesungsplandhbw.utility.Utility;
  * Created by Gregory Seibert on 09.01.2018.
  */
 
-public class Lecture {
-    private long startTime, endTime;
+public class Lecture implements Comparable<Lecture> {
+    private SimpleDate startDate, endDate;
     private String title, lecturer, room;
     private LectureType type;
 
@@ -17,16 +20,16 @@ public class Lecture {
         this.type = LectureType.EMPTY;
     }
 
-    public Lecture(long startTime, long endTime) {
-        this.startTime = startTime;
-        this.endTime = endTime;
+    public Lecture(SimpleDate startDate, SimpleDate endDate) {
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.title = "Pause";
         this.type = LectureType.PAUSE;
     }
 
-    public Lecture(long startTime, long endTime, String title, String lecturer, String room, boolean isExam) {
-        this.startTime = startTime;
-        this.endTime = endTime;
+    public Lecture(SimpleDate startDate, SimpleDate endDate, String title, String lecturer, String room, boolean isExam) {
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.title = title;
         this.lecturer = lecturer;
         this.room = room;
@@ -37,33 +40,8 @@ public class Lecture {
         }
     }
 
-    public long getStartTime() {
-        return startTime;
-    }
-
-    public Date getStartTimeDate() {
-        Date date = new Date();
-        date.setTime(startTime);
-        return date;
-    }
-
-    public long getEndTime() {
-        return endTime;
-    }
-
-    public Date getEndTimeDate() {
-        Date date = new Date();
-        date.setTime(endTime);
-        return date;
-    }
-
     public LectureType getType() {
         return type;
-    }
-
-    public String getCombinedDate() {
-        //return Utility.formatDateTime(new Date(startTime)) + " bis " + Utility.formatDateTime(new Date(endTime)) + " Uhr, am " + Utility.formatDateSimple(new Date(startTime));
-        return Utility.formatDateTime(new Date(startTime)) + " bis " + Utility.formatDateTime(new Date(endTime)) + " Uhr";
     }
 
     public String getTitle() {
@@ -76,5 +54,32 @@ public class Lecture {
 
     public String getRoom() {
         return room;
+    }
+
+    public SimpleDate getStartDate() {
+        return startDate;
+    }
+
+    public SimpleDate getEndDate() {
+        return endDate;
+    }
+
+    public String getCombinedDateString() {
+        if(type == LectureType.PAUSE) {
+            return startDate.getFormatTime() + " - " + endDate.getFormatTime() + " Uhr";
+        }
+
+        return startDate.getFormatTime() + " - " + endDate.getFormatTime() + " Uhr"/* + "\n" + startDate.getFormatDate()*/;
+    }
+
+    @Override
+    public String toString() {
+        return "Lecture '" + title + "': " + getCombinedDateString();
+    }
+
+    @Override
+    public int compareTo(@NonNull Lecture lecture) {
+        SimpleDate date = lecture.getStartDate();
+        return startDate.getMillis() < date.getMillis() ? -1 : (startDate.getMillis() > date.getMillis()) ? 1 : 0;
     }
 }

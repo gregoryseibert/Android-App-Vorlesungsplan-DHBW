@@ -1,5 +1,7 @@
 package de.gregoryseibert.vorlesungsplandhbw.utility;
 
+import de.gregoryseibert.vorlesungsplandhbw.data_model.SimpleDate;
+
 /**
  * Created by Gregory Seibert on 09.01.2018.
  */
@@ -7,15 +9,11 @@ package de.gregoryseibert.vorlesungsplandhbw.utility;
 public class LoadDocumentTaskParams {
     String base;
     String key;
-    int day;
-    int month;
-    int year;
+    SimpleDate date;
 
-    public LoadDocumentTaskParams(String base, String key, int day, int month, int year) {
+    public LoadDocumentTaskParams(String base, String key, SimpleDate date) {
         this.base = base;
         this.key = key;
-        this.day = day;
-        this.month = month;
-        this.year = year;
+        this.date = date;
     }
 }

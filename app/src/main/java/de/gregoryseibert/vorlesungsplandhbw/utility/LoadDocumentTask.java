@@ -32,9 +32,12 @@ public class LoadDocumentTask extends AsyncTask<LoadDocumentTaskParams, Void, Do
                 return null;
             }
 
-            return Jsoup.connect(Utility.generateURL(params.base, params.key, params.day, params.month, params.year)).get();
+            //Log.d("loadLecturePlan", params.date.getDay() + " " + params.date.getMonth() + " " +params.date.getYear());
+            //Log.d("URL:", Utility.generateURL(params.base, params.key, params.date.getDay(), params.date.getMonth(), params.date.getYear()));
+
+            return Jsoup.connect(Utility.generateURL(params.base, params.key, params.date.getDay(), params.date.getMonth() + 1, params.date.getYear())).get();
         } catch (Exception e) {
-            Log.e("LoadDocumetnTask", e.getMessage());
+            Log.e("LoadDocumentTask", e.getMessage());
             return null;
         }
     }
@@ -43,7 +46,7 @@ public class LoadDocumentTask extends AsyncTask<LoadDocumentTaskParams, Void, Do
         try {
             activity.createLecturePlan(doc);
         } catch(NullPointerException e) {
-            Log.d("LoadDocumentTask", e.getMessage());
+            Log.e("LoadDocumentTask", e.getMessage());
             Toast.makeText(activity, "Jsoup Error!", Toast.LENGTH_SHORT);
         }
     }
