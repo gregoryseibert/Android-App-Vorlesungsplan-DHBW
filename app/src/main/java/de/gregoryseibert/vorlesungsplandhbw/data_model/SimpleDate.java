@@ -1,7 +1,5 @@
 package de.gregoryseibert.vorlesungsplandhbw.data_model;
 
-import android.util.Log;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;

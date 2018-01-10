@@ -46,7 +46,7 @@ public class LecturePlanAdapter extends RecyclerView.Adapter<LecturePlanAdapter.
             ((ViewGroup) lectureViewHolder.roomText.getParent()).removeView(lectureViewHolder.roomText);
             ((ViewGroup) lectureViewHolder.lecturerText.getParent()).removeView(lectureViewHolder.lecturerText);
         } else {
-            lectureViewHolder.dateText.setText(lectureList.get(i).getCombinedDateString());
+            lectureViewHolder.dateText.setText(lectureList.get(i).getStartDate().getFormatTime() + " - " +lectureList.get(i).getEndDate().getFormatTime() + " Uhr");
 
             if(type == LectureType.LECTURE || type == LectureType.EXAM) {
                 lectureViewHolder.roomText.setText(lectureList.get(i).getRoom());

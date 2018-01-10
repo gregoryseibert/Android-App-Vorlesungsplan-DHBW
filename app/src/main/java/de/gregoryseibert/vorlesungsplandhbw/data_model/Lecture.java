@@ -64,17 +64,9 @@ public class Lecture implements Comparable<Lecture> {
         return endDate;
     }
 
-    public String getCombinedDateString() {
-        if(type == LectureType.PAUSE) {
-            return startDate.getFormatTime() + " - " + endDate.getFormatTime() + " Uhr";
-        }
-
-        return startDate.getFormatTime() + " - " + endDate.getFormatTime() + " Uhr"/* + "\n" + startDate.getFormatDate()*/;
-    }
-
     @Override
     public String toString() {
-        return "Lecture '" + title + "': " + getCombinedDateString();
+        return "Lecture '" + title + "': " + startDate.getFormatDate();
     }
 
     @Override

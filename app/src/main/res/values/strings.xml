@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Vorlesungsplan DHBW</string>
     <string name="base_url">https://rapla.dhbw-stuttgart.de/rapla?key=</string>
+    <string name="title_activity_settings">Einstellungen</string>
+
+    <!-- Strings related to Settings -->
+    <string name="key_dhbwkey">dhbwkey</string>
+    <string name="title_dhbwkey">DHBW Key</string>
+    <string name="summary_dhbwkey">Füge hier den Key aus der DHBW Vorlesungsplan-URL ein</string>
 </resources>

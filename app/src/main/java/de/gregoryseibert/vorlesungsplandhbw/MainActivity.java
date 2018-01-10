@@ -2,18 +2,28 @@ package de.gregoryseibert.vorlesungsplandhbw;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.DimenRes;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -46,7 +56,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        key = "txB1FOi5xd1wUJBWuX8lJhGDUgtMSFmnKLgAG_NVMhDUd7PDlGaEoMaVfHmMbiow";
+        Toolbar myToolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        key = settings.getString(getString(R.string.key_dhbwkey), "");
 
         date = new SimpleDate();
 
@@ -74,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 //Log.d("datepicker", date.getFormatDateTime());
                 //Log.d("datepicker", ""+date.isSameWeek(newDate));
 
-                if(date.isSameWeek(newDate)) {
+                if (date.isSameWeek(newDate)) {
                     date.copy(newDate);
                     loadLecturePlan(date, true);
                 } else {
@@ -91,10 +105,10 @@ public class MainActivity extends AppCompatActivity {
                 SimpleDate newDate = new SimpleDate();
                 newDate.copy(date);
                 newDate.addDays(1);
-                if(date.isSameWeek(newDate)) {
+                if (date.isSameWeek(newDate)) {
                     date.copy(newDate);
                     loadLecturePlan(newDate, true);
-                } else{
+                } else {
                     date.copy(newDate);
                     loadLecturePlan(newDate, false);
                 }
@@ -108,10 +122,10 @@ public class MainActivity extends AppCompatActivity {
                 SimpleDate newDate = new SimpleDate();
                 newDate.copy(date);
                 newDate.addDays(-1);
-                if(date.isSameWeek(newDate)) {
+                if (date.isSameWeek(newDate)) {
                     date = newDate;
                     loadLecturePlan(newDate, true);
-                } else{
+                } else {
                     date = newDate;
                     loadLecturePlan(newDate, false);
                 }
@@ -122,29 +136,58 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.action_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // action with ID action_refresh was selected
+            case R.id.action_settings:
+                Intent settingsIntent = new Intent(this, SettingsActivity.class);
+                startActivity(settingsIntent);
+                break;
+            default:
+                break;
+        }
+
+        return true;
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         dateText.setText(date.getFormatDate());
+        loadLecturePlan(date, false);
     }
 
     private void loadLecturePlan(SimpleDate date, boolean isSameWeek) {
         dateText.setText(date.getFormatDate());
 
-        if(lecturePlan != null) {
-            ArrayList<Lecture> lectureListOfDate = lecturePlan.getLectureListOfDate(date);
+        Log.e("loadLecturePlan", "Key length: " + key.length());
 
-            if(lectureListOfDate.size() != 0 && isSameWeek) {
-                lectureListOfDate = addPauses(lectureListOfDate);
+        if(key.length() > 0) {
+            if (lecturePlan != null) {
+                ArrayList<Lecture> lectureListOfDate = lecturePlan.getLectureListOfDate(date);
 
-                LecturePlanAdapter adapter = new LecturePlanAdapter(lectureListOfDate);
-                rv.setAdapter(adapter);
+                if (lectureListOfDate.size() != 0 && isSameWeek) {
+                    lectureListOfDate = addPauses(lectureListOfDate);
 
-                Log.d("loadLecturePlanOfDate", "loaded old data");
+                    LecturePlanAdapter adapter = new LecturePlanAdapter(lectureListOfDate);
+                    rv.setAdapter(adapter);
+
+                    Log.d("loadLecturePlanOfDate", "loaded old data");
+                } else {
+                    new LoadDocumentTask(this).execute(new LoadDocumentTaskParams(getResources().getString(R.string.base_url), key, date));
+                }
             } else {
                 new LoadDocumentTask(this).execute(new LoadDocumentTaskParams(getResources().getString(R.string.base_url), key, date));
             }
         } else {
-            new LoadDocumentTask(this).execute(new LoadDocumentTaskParams(getResources().getString(R.string.base_url), key, date));
+            Toast.makeText(this, "Du musst zuerst den DHBW-Key deiner Stundenplanseite in den Einstellungen hinzufügen.", Toast.LENGTH_LONG).show();
         }
     }
 
