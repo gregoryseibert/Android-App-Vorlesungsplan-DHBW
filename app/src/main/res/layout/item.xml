@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:text="Mathematik"
-            android:textColor="@color/colorAccent"
+            android:textColor="?attr/colorAccent"
             android:textStyle="bold" />
 
         <TextView

@@ -52,7 +52,7 @@ public class LecturePlanAdapter extends RecyclerView.Adapter<LecturePlanAdapter.
                 lectureViewHolder.roomText.setText(lectureList.get(i).getRoom());
                 lectureViewHolder.lecturerText.setText(lectureList.get(i).getLecturer());
             } else if(type == LectureType.PAUSE) {
-                lectureViewHolder.titleText.setTextColor(Color.GREEN);
+                //lectureViewHolder.titleText.setTextColor(Color.GREEN);
                 ((ViewGroup) lectureViewHolder.roomText.getParent()).removeView(lectureViewHolder.roomText);
                 ((ViewGroup) lectureViewHolder.lecturerText.getParent()).removeView(lectureViewHolder.lecturerText);
             }
