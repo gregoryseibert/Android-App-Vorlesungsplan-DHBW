@@ -89,10 +89,6 @@ public class MainActivity extends AppCompatActivity {
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 SimpleDate newDate = new SimpleDate(day, month, year, 0, 0);
 
-                //Log.d("datepicker", newDate.getFormatDateTime());
-                //Log.d("datepicker", currentDate.getFormatDateTime());
-                //Log.d("datepicker", ""+currentDate.isSameWeek(newDate));
-
                 if (currentDate.isSameWeek(newDate)) {
                     currentDate = new SimpleDate(newDate);
                     loadLecturePlan(false);
@@ -107,15 +103,7 @@ public class MainActivity extends AppCompatActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SimpleDate newDate = new SimpleDate(currentDate);
-                newDate.addDays(1);
-                if (currentDate.isSameWeek(newDate)) {
-                    currentDate.addDays(1);
-                    loadLecturePlan(false);
-                } else {
-                    currentDate.addDays(1);
-                    loadLecturePlan(true);
-                }
+                navigationButtonClicked(1);
             }
         });
 
@@ -123,15 +111,7 @@ public class MainActivity extends AppCompatActivity {
         prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SimpleDate newDate = new SimpleDate(currentDate);
-                newDate.addDays(-1);
-                if (currentDate.isSameWeek(newDate)) {
-                    currentDate = newDate;
-                    loadLecturePlan(false);
-                } else {
-                    currentDate = newDate;
-                    loadLecturePlan(true);
-                }
+                navigationButtonClicked(-1);
             }
         });
     }
@@ -166,6 +146,18 @@ public class MainActivity extends AppCompatActivity {
         Log.e("Counter", "onResume executed!");
         loadLecturePlan();
         */
+    }
+
+    public void navigationButtonClicked(int days) {
+        SimpleDate newDate = new SimpleDate(currentDate);
+        newDate.addDays(days);
+        if (currentDate.isSameWeek(newDate)) {
+            currentDate = newDate;
+            loadLecturePlan(false);
+        } else {
+            currentDate = newDate;
+            loadLecturePlan(true);
+        }
     }
 
     private void loadLecturePlan(boolean reload) {
@@ -224,8 +216,6 @@ public class MainActivity extends AppCompatActivity {
                     String linkText = link.text().replace("-", "");
                     String linkContent = linkText.substring(0, linkText.indexOf("erstellt"));
 
-                    boolean isExam = linkContent.contains("Klausur");
-
                     String[] linkSplit = linkContent.split(" ");
                     String[] startTime = linkSplit[0].split(":");
                     String[] endTime = linkSplit[1].split(":");
@@ -266,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     Event event;
-                    if(isExam) {
+                    if(linkContent.contains("Klausur")) {
                         event = new ExamEvent(lStartDate, lEndDate, lTitle, lRoom);
                     } else {
                         event = new LectureEvent(lStartDate, lEndDate, lTitle, lRoom, lLecturer);
