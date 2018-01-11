@@ -1,4 +1,4 @@
-package de.gregoryseibert.vorlesungsplandhbw;
+package de.gregoryseibert.vorlesungsplandhbw.view.activity;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -13,11 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * A {@link android.preference.PreferenceActivity} which implements and proxies the necessary calls
- * to be used with AppCompat.
+ * Created by Gregory Seibert on 10.01.2018.
  */
-public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
 
+public class AppCompatSettingsActivity extends PreferenceActivity {
     private AppCompatDelegate mDelegate;
 
     @Override

@@ -1,6 +1,6 @@
-package de.gregoryseibert.vorlesungsplandhbw.utility;
+package de.gregoryseibert.vorlesungsplandhbw.service.repo;
 
-import de.gregoryseibert.vorlesungsplandhbw.data_model.SimpleDate;
+import de.gregoryseibert.vorlesungsplandhbw.service.model.SimpleDate;
 
 /**
  * Created by Gregory Seibert on 09.01.2018.

@@ -1,12 +1,12 @@
-package de.gregoryseibert.vorlesungsplandhbw;
+package de.gregoryseibert.vorlesungsplandhbw.view.activity;
 
 import android.os.Bundle;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
+
+import de.gregoryseibert.vorlesungsplandhbw.R;
 
 public class SettingsActivity extends AppCompatSettingsActivity {
     @Override
