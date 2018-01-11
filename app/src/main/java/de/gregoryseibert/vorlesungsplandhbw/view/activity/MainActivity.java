@@ -277,17 +277,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        eventPlan.addEmptyEvents();
-
         eventPlan.sortEventList();
 
-        Log.e("MA | createLecturePlan", eventPlan.toString());
+        Log.d("MA | createLecturePlan", eventPlan.toString());
 
         EventPlanAdapter adapter = new EventPlanAdapter(eventPlan.getEventDay(currentDate).eventList);
         rv.setAdapter(adapter);
     }
-
-
 
     class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
         private int mItemOffset;

@@ -26,14 +26,6 @@ public class EventPlan {
         eventDays.get(index).addEvent(event);
     }
 
-    public void addEmptyEvents() {
-        for(EventDay eventDay : eventDays) {
-            if(eventDay.eventList.size() == 0) {
-                eventDay.addEvent(new EmptyEvent());
-            }
-        }
-    }
-
     public EventDay getEventDay(SimpleDate date) {
         for(EventDay eventDay : eventDays) {
             if(eventDay.day.isSameDay(date)) {
@@ -46,7 +38,11 @@ public class EventPlan {
 
     public void sortEventList() {
         for(EventDay eventDay : eventDays) {
-            eventDay.sortEventList();
+            if(eventDay.eventList.size() == 0) {
+                eventDay.addEvent(new EmptyEvent());
+            } else {
+                eventDay.sortEventList();
+            }
         }
     }
 
