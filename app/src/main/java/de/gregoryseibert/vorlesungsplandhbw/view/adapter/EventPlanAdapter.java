@@ -11,11 +11,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import de.gregoryseibert.vorlesungsplandhbw.R;
-import de.gregoryseibert.vorlesungsplandhbw.service.model.event.EmptyEvent;
-import de.gregoryseibert.vorlesungsplandhbw.service.model.event.Event;
-import de.gregoryseibert.vorlesungsplandhbw.service.model.event.ExamEvent;
-import de.gregoryseibert.vorlesungsplandhbw.service.model.event.LectureEvent;
-import de.gregoryseibert.vorlesungsplandhbw.service.model.event.PauseEvent;
+import de.gregoryseibert.vorlesungsplandhbw.service.model.Event;
+import de.gregoryseibert.vorlesungsplandhbw.service.model.EventType;
 
 /**
  * Created by Gregory Seibert on 09.01.2018.
@@ -41,24 +38,17 @@ public class EventPlanAdapter extends RecyclerView.Adapter<EventPlanAdapter.Even
 
     @Override
     public void onBindViewHolder(EventViewHolder eventViewHolder, int i) {
-        eventViewHolder.titleText.setText(eventList.get(i).title);
-
         Event event = eventList.get(i);
 
-        if(event instanceof EmptyEvent) {
-            ((ViewGroup) eventViewHolder.dateText.getParent()).removeView(eventViewHolder.dateText);
-            ((ViewGroup) eventViewHolder.roomText.getParent()).removeView(eventViewHolder.roomText);
-            //((ViewGroup) eventViewHolder.lecturerText.getParent()).removeView(eventViewHolder.lecturerText);
-        } else {
+        eventViewHolder.titleText.setText(event.title);
+
+        if(event.type != EventType.EMPTY) {
             eventViewHolder.dateText.setText(event.startDate.getFormatTime() + " - " + event.endDate.getFormatTime());
 
-            if(event instanceof LectureEvent || event instanceof ExamEvent) {
-                eventViewHolder.roomText.setText(event.room);
-                //eventViewHolder.lecturerText.setText(eventList.get(i).getLecturer());
-            } else if(event instanceof PauseEvent) {
-                ((ViewGroup) eventViewHolder.roomText.getParent()).removeView(eventViewHolder.roomText);
-                //((ViewGroup) eventViewHolder.lecturerText.getParent()).removeView(eventViewHolder.lecturerText);
-            }
+            eventViewHolder.roomText.setText(event.room);
+        } else {
+            ((ViewGroup) eventViewHolder.dateText.getParent()).removeView(eventViewHolder.dateText);
+            ((ViewGroup) eventViewHolder.roomText.getParent()).removeView(eventViewHolder.roomText);
         }
     }
 

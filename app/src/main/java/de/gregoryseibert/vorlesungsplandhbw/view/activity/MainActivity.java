@@ -1,59 +1,23 @@
 package de.gregoryseibert.vorlesungsplandhbw.view.activity;
 
-import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Rect;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.annotation.DimenRes;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.Toast;
-
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import java.util.ArrayList;
-import java.util.Calendar;
 
 import de.gregoryseibert.vorlesungsplandhbw.R;
-import de.gregoryseibert.vorlesungsplandhbw.service.model.EventDay;
-import de.gregoryseibert.vorlesungsplandhbw.service.model.event.EmptyEvent;
-import de.gregoryseibert.vorlesungsplandhbw.service.model.event.Event;
-import de.gregoryseibert.vorlesungsplandhbw.service.model.event.ExamEvent;
-import de.gregoryseibert.vorlesungsplandhbw.service.model.event.LectureEvent;
-import de.gregoryseibert.vorlesungsplandhbw.service.model.EventPlan;
 import de.gregoryseibert.vorlesungsplandhbw.service.model.SimpleDate;
-import de.gregoryseibert.vorlesungsplandhbw.service.repo.LoadDocumentTask;
-import de.gregoryseibert.vorlesungsplandhbw.service.repo.LoadDocumentTaskParams;
-import de.gregoryseibert.vorlesungsplandhbw.view.adapter.EventPlanAdapter;
+import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListFragment;
 
 /**
  * Created by Gregory Seibert on 09.01.2018.
  */
 
 public class MainActivity extends AppCompatActivity {
-    private RecyclerView rv;
-    private EditText dateText;
-    private DatePickerDialog datePickerDialog;
-    private ImageButton nextButton, prevButton;
-    private String key;
-    private EventPlan eventPlan;
-    private SimpleDate currentDate;
+    private EventListFragment firstFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +27,19 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
+        firstFragment = new EventListFragment();
+        firstFragment.setArguments(getIntent().getExtras());
+
+        if (findViewById(R.id.container) != null) {
+            if (savedInstanceState != null) {
+                return;
+            }
+
+            getSupportFragmentManager().beginTransaction().add(R.id.container, firstFragment).commit();
+        }
+
+
+        /*
         rv = findViewById(R.id.recyclerView);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
@@ -114,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 navigationButtonClicked(-1);
             }
         });
+        */
     }
 
     @Override
@@ -126,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // action with ID action_refresh was selected
             case R.id.action_settings:
                 Intent settingsIntent = new Intent(this, SettingsActivity.class);
                 startActivity(settingsIntent);
@@ -148,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
         */
     }
 
+    /*
     public void navigationButtonClicked(int days) {
         SimpleDate newDate = new SimpleDate(currentDate);
         newDate.addDays(days);
@@ -274,22 +252,5 @@ public class MainActivity extends AppCompatActivity {
         EventPlanAdapter adapter = new EventPlanAdapter(eventPlan.getEventDay(currentDate).eventList);
         rv.setAdapter(adapter);
     }
-
-    class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
-        private int mItemOffset;
-
-        public ItemOffsetDecoration(int itemOffset) {
-            mItemOffset = itemOffset;
-        }
-
-        public ItemOffsetDecoration(@NonNull Context context, @DimenRes int itemOffsetId) {
-            this(context.getResources().getDimensionPixelSize(itemOffsetId));
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            super.getItemOffsets(outRect, view, parent, state);
-            outRect.set(0, 0, 0, mItemOffset);
-        }
-    }
+    */
 }

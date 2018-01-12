@@ -26,6 +26,12 @@ public class SimpleDate {
         initSimpleDateFormat();
     }
 
+    public SimpleDate(long millis) {
+        c = Calendar.getInstance();
+        c.setTimeInMillis(millis);
+        initSimpleDateFormat();
+    }
+
     public SimpleDate() {
         c = Calendar.getInstance();
         initSimpleDateFormat();
@@ -43,6 +49,20 @@ public class SimpleDate {
 
     public boolean isSameWeek(SimpleDate date) {
         return this.getYear() == date.getYear() && this.getWeek() == date.getWeek();
+    }
+
+    public SimpleDate getFirstDayOfWeek() {
+        SimpleDate firstDay = new SimpleDate(this);
+        firstDay.getCalendar().set(Calendar.DAY_OF_WEEK, this.getCalendar().getFirstDayOfWeek());
+
+        return firstDay;
+    }
+
+    public SimpleDate getLastDayOfWeek() {
+        SimpleDate lastDay = getFirstDayOfWeek();
+        lastDay.getCalendar().add(Calendar.DAY_OF_WEEK, Calendar.SATURDAY - lastDay.getCalendar().get(Calendar.DAY_OF_WEEK) + 1);
+
+        return lastDay;
     }
 
     public void addDays(int amount) {
@@ -82,4 +102,6 @@ public class SimpleDate {
     public String getFormatTime() {
         return sdfTime.format(c.getTime());
     }
+
+    public Calendar getCalendar() { return c; }
 }

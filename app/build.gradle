@@ -16,6 +16,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -26,6 +30,17 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    // ViewModel and LiveData// Java8 support for Lifecycles
+    implementation "android.arch.lifecycle:common-java8:1.0.0"
+
+    // Room
+    implementation "android.arch.persistence.room:runtime:1.0.0"
+    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
+
+    // Paging
+    implementation "android.arch.paging:runtime:1.0.0-alpha4-1"
+
 
     // jsoup HTML parser library @ https://jsoup.org/
     compile 'org.jsoup:jsoup:1.11.2'
