@@ -1,5 +1,6 @@
 package de.gregoryseibert.vorlesungsplandhbw.view.activity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.DatePicker;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
+import java.util.Calendar;
 
 import de.gregoryseibert.vorlesungsplandhbw.R;
 import de.gregoryseibert.vorlesungsplandhbw.service.model.SimpleDate;
@@ -17,7 +24,11 @@ import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListFragment;
  */
 
 public class MainActivity extends AppCompatActivity {
-    private EventListFragment firstFragment;
+    private EventListFragment eventListFragment;
+
+    private TextView dateText;
+
+    private SimpleDate date;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,77 +38,79 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-        firstFragment = new EventListFragment();
-        firstFragment.setArguments(getIntent().getExtras());
+        date = new SimpleDate(14, 10, 2017, 0, 0);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("date", date);
+
+        eventListFragment = new EventListFragment();
+        eventListFragment.setArguments(bundle);
 
         if (findViewById(R.id.container) != null) {
             if (savedInstanceState != null) {
                 return;
             }
 
-            getSupportFragmentManager().beginTransaction().add(R.id.container, firstFragment).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.container, eventListFragment).commit();
         }
 
-
-        /*
-        rv = findViewById(R.id.recyclerView);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        rv.setLayoutManager(llm);
-        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.item_offset);
-        rv.addItemDecoration(itemDecoration);
+        final Calendar newCalendar = Calendar.getInstance();
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                setDate(new SimpleDate(day, month, year, 0, 0));
+            }
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
 
         dateText = findViewById(R.id.dateText);
+        dateText.setText(date.getFormatDate());
         dateText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                datePickerDialog.updateDate(currentDate.getYear(), currentDate.getMonth(), currentDate.getDay());
+                datePickerDialog.updateDate(date.getYear(), date.getMonth(), date.getDay());
                 datePickerDialog.show();
             }
         });
 
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        key = settings.getString(getString(R.string.key_dhbwkey), "");
-
-        currentDate = new SimpleDate();
-        loadLecturePlan(true);
-
-        final Calendar newCalendar = Calendar.getInstance();
-        datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
-            public void onDateSet(DatePicker view, int year, int month, int day) {
-                SimpleDate newDate = new SimpleDate(day, month, year, 0, 0);
-
-                if (currentDate.isSameWeek(newDate)) {
-                    currentDate = new SimpleDate(newDate);
-                    loadLecturePlan(false);
-                } else {
-                    currentDate = new SimpleDate(newDate);
-                    loadLecturePlan(true);
-                }
-            }
-        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
-
-        nextButton = findViewById(R.id.nextButton);
+        ImageButton nextButton = findViewById(R.id.nextButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                navigationButtonClicked(1);
+                SimpleDate newDate = new SimpleDate(date);
+                newDate.addDays(1);
+                setDate(newDate);
             }
         });
 
-        prevButton = findViewById(R.id.prevButton);
+        ImageButton prevButton = findViewById(R.id.prevButton);
         prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                navigationButtonClicked(-1);
+                SimpleDate newDate = new SimpleDate(date);
+                newDate.addDays(-1);
+                setDate(newDate);
             }
         });
-        */
+    }
+
+    public void setDate(SimpleDate date) {
+        this.date = date;
+
+        dateText.setText(date.getFormatDate());
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("date", date);
+
+        eventListFragment = new EventListFragment();
+        eventListFragment.setArguments(bundle);
+
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, eventListFragment).commit();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.action_menu, menu);
+
         return true;
     }
 
@@ -114,143 +127,4 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        /*
-        dateText.setText(currentDate.getFormatDate());
-        Log.e("Counter", "onResume executed!");
-        loadLecturePlan();
-        */
-    }
-
-    /*
-    public void navigationButtonClicked(int days) {
-        SimpleDate newDate = new SimpleDate(currentDate);
-        newDate.addDays(days);
-        if (currentDate.isSameWeek(newDate)) {
-            currentDate = newDate;
-            loadLecturePlan(false);
-        } else {
-            currentDate = newDate;
-            loadLecturePlan(true);
-        }
-    }
-
-    private void loadLecturePlan(boolean reload) {
-        boolean startDocumentTask = false;
-        dateText.setText(currentDate.getFormatDate());
-
-        if(key.length() > 0) {
-            if(eventPlan != null && !reload) {
-                EventDay eventDay = eventPlan.getEventDay(currentDate);
-
-                if(eventDay != null) {
-                    ArrayList<Event> eventsOfDay = eventDay.eventList;
-
-                    if (eventsOfDay.size() > 0) {
-                        EventPlanAdapter adapter = new EventPlanAdapter(eventsOfDay);
-                        rv.setAdapter(adapter);
-                    } else {
-                        startDocumentTask = true;
-                    }
-                } else {
-                    startDocumentTask = true;
-                }
-            } else {
-                startDocumentTask = true;
-            }
-        } else {
-            Toast.makeText(this, "Du musst zuerst den DHBW-Key deiner Stundenplanseite in den Einstellungen hinzufügen.", Toast.LENGTH_LONG).show();
-        }
-
-        if(startDocumentTask) {
-            new LoadDocumentTask(this).execute(new LoadDocumentTaskParams(getResources().getString(R.string.base_url), key, currentDate));
-        }
-    }
-
-    public void createLecturePlan(Document doc) {
-        Elements tableRows = doc.select("#calendar .week_table tbody tr");
-
-        Element weekHeader = tableRows.first().getElementsByClass("week_header").first();
-        String firstDateStr = weekHeader.getElementsByTag("nobr").first().text().split(" ")[1];
-        int firstDay = Integer.parseInt(firstDateStr.substring(0, firstDateStr.length()-1).split("\\.")[0]);
-
-        SimpleDate firstDate = new SimpleDate(currentDate);
-        firstDate.setDay(firstDay);
-        eventPlan = new EventPlan(firstDate);
-
-        for(Element tableRow : tableRows) {
-            Elements tableRowElements = tableRow.select(":root > td");
-
-            Elements tableBlocks = tableRow.getElementsByClass("week_block");
-
-            if(!tableBlocks.isEmpty()) {
-                for(Element tableBlock : tableBlocks) {
-                    int indexOfBlock = tableRowElements.indexOf(tableBlock) / 3;
-
-                    Element link = tableBlock.getElementsByTag("a").first();
-                    String linkText = link.text().replace("-", "");
-                    String linkContent = linkText.substring(0, linkText.indexOf("erstellt"));
-
-                    String[] linkSplit = linkContent.split(" ");
-                    String[] startTime = linkSplit[0].split(":");
-                    String[] endTime = linkSplit[1].split(":");
-
-                    SimpleDate lStartDate = new SimpleDate(firstDay, currentDate.getMonth(), currentDate.getYear(), Integer.parseInt(startTime[0]), Integer.parseInt(startTime[1]));
-                    lStartDate.addDays(indexOfBlock);
-
-                    SimpleDate lEndDate = new SimpleDate(firstDay, currentDate.getMonth(), currentDate.getYear(), Integer.parseInt(endTime[0]), Integer.parseInt(endTime[1]));
-                    lEndDate.addDays(indexOfBlock);
-
-                    StringBuilder titleBuilder = new StringBuilder();
-                    for(int i = 2; i < linkSplit.length; i++) {
-                        titleBuilder.append(linkSplit[i]);
-                        titleBuilder.append(" ");
-                    }
-                    if (titleBuilder.length() > 0) {
-                        titleBuilder.deleteCharAt(titleBuilder.length()-1);
-                    }
-                    String lTitle = titleBuilder.toString();
-
-                    Elements person = tableBlock.getElementsByClass("person");
-
-                    String lLecturer = "";
-                    if(person.size() > 0) {
-                        lLecturer = person.first().text();
-                        if(lLecturer.endsWith(",")) {
-                            lLecturer = lLecturer.substring(0, lLecturer.length() - 1);
-                        }
-                    }
-
-                    Elements resources = tableBlock.getElementsByClass("resource");
-
-                    String lRoom = "";
-                    for(int i = 0; i < resources.size(); i++) {
-                        if(resources.get(i).text().contains(".")) {
-                            lRoom = resources.get(i).text();
-                        }
-                    }
-
-                    Event event;
-                    if(linkContent.contains("Klausur")) {
-                        event = new ExamEvent(lStartDate, lEndDate, lTitle, lRoom);
-                    } else {
-                        event = new LectureEvent(lStartDate, lEndDate, lTitle, lRoom, lLecturer);
-                    }
-
-                    eventPlan.addEvent(indexOfBlock, event);
-                }
-            }
-        }
-
-        eventPlan.sortEventList();
-
-        Log.d("MA | createLecturePlan", eventPlan.toString());
-
-        EventPlanAdapter adapter = new EventPlanAdapter(eventPlan.getEventDay(currentDate).eventList);
-        rv.setAdapter(adapter);
-    }
-    */
 }

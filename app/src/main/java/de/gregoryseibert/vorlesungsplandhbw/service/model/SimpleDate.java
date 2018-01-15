@@ -2,6 +2,7 @@ package de.gregoryseibert.vorlesungsplandhbw.service.model;
 
 import android.util.Log;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -10,7 +11,7 @@ import java.util.Locale;
  * Created by Gregory Seibert on 10.01.2018.
  */
 
-public class SimpleDate {
+public class SimpleDate implements Serializable {
     private Calendar c;
     private SimpleDateFormat sdfDateTime, sdfDate, sdfTime;
 

@@ -11,8 +11,7 @@ import android.support.annotation.NonNull;
 
 @Entity
 public class Event implements Comparable<Event> {
-    @PrimaryKey(autoGenerate = true)
-    public int eventID;
+    @PrimaryKey
     @ColumnInfo(name = "startdate")
     public SimpleDate startDate;
     @ColumnInfo(name = "enddate")
@@ -26,20 +25,41 @@ public class Event implements Comparable<Event> {
     @ColumnInfo(name = "type")
     public EventType type;
 
+    public Event(SimpleDate startDate, SimpleDate endDate, String title, String room, String lecturer, EventType type) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.title = title;
+        this.room = room;
+        this.lecturer = lecturer;
+        this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        if(type == EventType.EMPTY) {
+            return title;
+        }
+
+        return type.toString() + " '" + title + "': " + startDate.getFormatTime() + " - " + endDate.getFormatTime() + ", " + startDate.getFormatDate();
+    }
+
+    @Override
+    public int compareTo(@NonNull Event event) {
+        SimpleDate date = event.startDate;
+
+        if(this.startDate != null && date != null) {
+            return startDate.getMillis() < date.getMillis() ? -1 : (startDate.getMillis() > date.getMillis()) ? 1 : 0;
+        }
+
+        return 0;
+    }
+
     public EventType getType() {
         return type;
     }
 
     public void setType(EventType type) {
         this.type = type;
-    }
-
-    public int getEventID() {
-        return eventID;
-    }
-
-    public void setEventID(int eventID) {
-        this.eventID = eventID;
     }
 
     public SimpleDate getStartDate() {
@@ -80,34 +100,5 @@ public class Event implements Comparable<Event> {
 
     public void setLecturer(String lecturer) {
         this.lecturer = lecturer;
-    }
-
-    public Event(SimpleDate startDate, SimpleDate endDate, String title, String room, String lecturer, EventType type) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.title = title;
-        this.room = room;
-        this.lecturer = lecturer;
-        this.type = type;
-    }
-
-    @Override
-    public String toString() {
-        if(type == EventType.EMPTY) {
-            return title;
-        }
-
-        return type.toString() + " '" + title + "': " + startDate.getFormatTime() + " - " + endDate.getFormatTime() + ", " + startDate.getFormatDate();
-    }
-
-    @Override
-    public int compareTo(@NonNull Event event) {
-        SimpleDate date = event.startDate;
-
-        if(this.startDate != null && date != null) {
-            return startDate.getMillis() < date.getMillis() ? -1 : (startDate.getMillis() > date.getMillis()) ? 1 : 0;
-        }
-
-        return 0;
     }
 }

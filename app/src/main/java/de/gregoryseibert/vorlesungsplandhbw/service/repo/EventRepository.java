@@ -31,8 +31,8 @@ public class EventRepository {
         this.eventDAO = eventDAO;
     }
 
-    public List<Event> getEvents(String baseURL, SimpleDate date) {
-        refreshEvents(baseURL, date);
+    public List<Event> getEvents(String url, SimpleDate date) {
+        refreshEvents(url, date);
 
         SimpleDate rangeStart = /*date.getFirstDayOfWeek()*/ date;
         SimpleDate rangeEnd = /*date.getLastDayOfWeek()*/ new SimpleDate(date);
@@ -46,13 +46,17 @@ public class EventRepository {
         //return eventDAO.getAll();
     }
 
-    private void refreshEvents(String baseURL, SimpleDate date) {
+    private void refreshEvents(String url, SimpleDate date) {
         //TODO check if it has to reload the data
 
         try {
             eventDAO.deleteAll();
 
-            List<Event> events = fetchEvents(Jsoup.connect(generateURL(baseURL, date.getDay(), date.getMonth(), date.getYear())).get(), date);
+            String fullURL = generateURL(url, date.getDay(), date.getMonth(), date.getYear());
+
+            Log.e("refreshEvents", fullURL);
+
+            List<Event> events = fetchEvents(Jsoup.connect(fullURL).get(), date);
 
             eventDAO.insertAll(events);
         } catch (IOException e) {
@@ -60,16 +64,14 @@ public class EventRepository {
         }
     }
 
-    private String generateURL(String baseURL, int day, int month, int year) {
+    private String generateURL(String url, int day, int month, int year) {
         if(day != 0 && month != 0 && year != 0) {
-            baseURL += "&day=" + day;
-            baseURL += "&month=" + (month + 1);
-            baseURL += "&year=" + year;
+            url += "&day=" + day;
+            url += "&month=" + (month + 1);
+            url += "&year=" + year;
         }
 
-        Log.e("generateURL", baseURL);
-
-        return baseURL;
+        return url;
     }
 
     private List<Event> fetchEvents(Document doc, SimpleDate date) {

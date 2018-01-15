@@ -17,9 +17,6 @@ import de.gregoryseibert.vorlesungsplandhbw.service.model.Event;
 
 @Dao
 public interface EventDAO {
-    @Query("SELECT * FROM event")
-    List<Event> getAll();
-
     @Query("SELECT * FROM event WHERE startDate BETWEEN :rangeStart AND :rangeEnd")
     List<Event> getAllByRange(long rangeStart, long rangeEnd);
 
@@ -28,11 +25,5 @@ public interface EventDAO {
 
     @Insert
     void insertAll(List<Event> event);
-
-    @Insert
-    void insert(Event event);
-
-    @Delete
-    void delete(Event event);
 }
 

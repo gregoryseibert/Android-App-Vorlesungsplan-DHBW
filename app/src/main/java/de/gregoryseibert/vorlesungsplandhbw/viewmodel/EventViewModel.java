@@ -4,10 +4,8 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
-import android.util.Log;
 
 import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -25,15 +23,11 @@ public class EventViewModel extends ViewModel {
     private AppDatabase appDatabase;
     private EventRepository eventRepository;
 
-    private String baseURL;
-
     public EventViewModel() {
 
     }
 
-    public void init(Context context, String baseURL, SimpleDate date) {
-        this.baseURL = baseURL;
-
+    public void init(Context context, String url, SimpleDate date) {
         if(appDatabase == null) {
             appDatabase = AppDatabase.getAppDatabase(context);
         }
@@ -48,7 +42,7 @@ public class EventViewModel extends ViewModel {
         service.submit(new Runnable() {
             @Override
             public void run() {
-                events.postValue(eventRepository.getEvents(baseURL, date));
+                events.postValue(eventRepository.getEvents(url, date));
             }
         });
     }

@@ -1,7 +1,5 @@
 package de.gregoryseibert.vorlesungsplandhbw.view.fragment;
 
-import android.app.DatePickerDialog;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -18,11 +16,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
-import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import de.gregoryseibert.vorlesungsplandhbw.R;
 import de.gregoryseibert.vorlesungsplandhbw.service.model.Event;
@@ -37,40 +32,29 @@ import de.gregoryseibert.vorlesungsplandhbw.viewmodel.EventViewModel;
 
 public class EventListFragment extends Fragment {
     private RecyclerView rv;
-    private DatePickerDialog datePickerDialog;
-    private TextView dateText;
 
     private SimpleDate date;
     private EventViewModel viewModel;
 
-    private String key;
-    private boolean isInitial;
+    private String url;
 
     public EventListFragment() {
-        isInitial = true;
-        setDate(new SimpleDate(14, 10, 2017, 0, 0));
-    }
 
-    public void setDate(SimpleDate date) {
-        this.date = date;
-
-        if(!isInitial) {
-            dateText.setText(date.getFormatDate());
-            viewModel.init(this.getContext(), getString(R.string.base_url) + key, date);
-        }
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        date = (SimpleDate) getArguments().getSerializable("date");
+
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getContext());
-        key = settings.getString(getString(R.string.key_dhbwkey), "");
+        url = settings.getString(getString(R.string.key_dhbwkey), "");
 
         Log.e("onActivityCreated", date.getFormatDate());
 
         viewModel = ViewModelProviders.of(this).get(EventViewModel.class);
-        viewModel.init(this.getContext(), getString(R.string.base_url) + key, date);
+        viewModel.init(this.getContext(), url, date);
 
         viewModel.getEvents().observe(this, eventList -> {
             if(eventList != null) {
@@ -82,9 +66,6 @@ public class EventListFragment extends Fragment {
 
                 EventPlanAdapter adapter = new EventPlanAdapter(events);
                 rv.setAdapter(adapter);
-
-                //for (Event event : events)
-                //   Log.e("onActivityCreated", event.toString());
             }
         });
     }
@@ -98,25 +79,6 @@ public class EventListFragment extends Fragment {
         rv.setLayoutManager(llm);
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this.getContext(), R.dimen.item_offset);
         rv.addItemDecoration(itemDecoration);
-
-        final Calendar newCalendar = Calendar.getInstance();
-        datePickerDialog = new DatePickerDialog(this.getContext(), new DatePickerDialog.OnDateSetListener() {
-            public void onDateSet(DatePicker view, int year, int month, int day) {
-                setDate(new SimpleDate(day, month, year, 0, 0));
-            }
-        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
-
-        dateText = view.findViewById(R.id.dateText);
-        dateText.setText(date.getFormatDate());
-        dateText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                datePickerDialog.updateDate(date.getYear(), date.getMonth(), date.getDay());
-                datePickerDialog.show();
-            }
-        });
-
-        isInitial = false;
 
         return view;
     }
