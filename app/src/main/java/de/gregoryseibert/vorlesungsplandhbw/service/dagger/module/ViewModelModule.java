@@ -1,6 +1,5 @@
 package de.gregoryseibert.vorlesungsplandhbw.service.dagger.module;
 
-import android.app.Application;
 import android.arch.lifecycle.ViewModelProviders;
 
 import dagger.Module;

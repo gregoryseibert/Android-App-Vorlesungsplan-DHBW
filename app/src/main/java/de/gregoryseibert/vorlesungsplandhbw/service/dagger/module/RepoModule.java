@@ -2,11 +2,8 @@ package de.gregoryseibert.vorlesungsplandhbw.service.dagger.module;
 
 import android.app.Application;
 import android.arch.persistence.room.Room;
-import android.content.Context;
 
 import java.io.File;
-
-import javax.inject.Inject;
 
 import dagger.Module;
 import dagger.Provides;
@@ -14,7 +11,6 @@ import de.gregoryseibert.vorlesungsplandhbw.service.dagger.scope.AppComponentSco
 import de.gregoryseibert.vorlesungsplandhbw.service.repo.AppDatabase;
 import de.gregoryseibert.vorlesungsplandhbw.service.repo.EventDAO;
 import de.gregoryseibert.vorlesungsplandhbw.service.repo.EventRepository;
-import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListFragment;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;

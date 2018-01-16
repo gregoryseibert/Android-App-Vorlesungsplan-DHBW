@@ -1,10 +1,8 @@
 package de.gregoryseibert.vorlesungsplandhbw.service.repo;
 
 import android.arch.persistence.room.Database;
-import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
-import android.content.Context;
 
 import de.gregoryseibert.vorlesungsplandhbw.service.model.Event;
 

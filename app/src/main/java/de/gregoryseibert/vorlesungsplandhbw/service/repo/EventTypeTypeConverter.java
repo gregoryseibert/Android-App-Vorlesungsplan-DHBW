@@ -2,7 +2,6 @@ package de.gregoryseibert.vorlesungsplandhbw.service.repo;
 
 import android.arch.persistence.room.TypeConverter;
 
-import de.gregoryseibert.vorlesungsplandhbw.service.model.Event;
 import de.gregoryseibert.vorlesungsplandhbw.service.model.Event.EventType;
 
 /**

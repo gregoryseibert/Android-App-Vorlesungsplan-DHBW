@@ -5,14 +5,11 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import javax.inject.Inject;
-
-import de.gregoryseibert.vorlesungsplandhbw.service.model.SimpleDate;
 import de.gregoryseibert.vorlesungsplandhbw.service.model.Event;
+import de.gregoryseibert.vorlesungsplandhbw.service.model.SimpleDate;
 import de.gregoryseibert.vorlesungsplandhbw.service.repo.EventRepository;
 
 /**
