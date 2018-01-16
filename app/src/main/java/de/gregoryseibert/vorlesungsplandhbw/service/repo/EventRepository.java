@@ -6,9 +6,11 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 import de.gregoryseibert.vorlesungsplandhbw.service.model.Event;
 import de.gregoryseibert.vorlesungsplandhbw.service.model.Event.EventType;
@@ -33,13 +35,18 @@ public class EventRepository {
     }
 
     public List<Event> getEvents(String url, SimpleDate date) {
-        refreshEvents(url, date);
-
         SimpleDate rangeEnd = new SimpleDate(date);
         rangeEnd.getCalendar().add(Calendar.HOUR_OF_DAY, 23);
 
         Timber.i("start: " + date.getFormatDateTime());
         Timber.i("end: " + rangeEnd.getFormatDateTime());
+
+        //TODO
+        boolean shouldRefresh = true;
+
+        if(shouldRefresh) {
+            refreshEvents(url, date);
+        }
 
         return EVENTDAO.getAllByRange(date.getMillis(), rangeEnd.getMillis());
     }
@@ -52,7 +59,7 @@ public class EventRepository {
         Document doc = loadDocument(fullURL);
 
         if(doc != null) {
-            EVENTDAO.deleteAll();
+            EVENTDAO.deleteAllByRange(date.getMillis(), date.getLastDayOfWeek().getMillis());
 
             List<Event> events = parseDocumentForEvents(doc, date);
 
@@ -155,9 +162,9 @@ public class EventRepository {
 
                     Event event;
                     if(linkContent.contains("Klausur")) {
-                        event = new Event(lStartDate, lEndDate, lTitle, lRoom, "", EventType.LECTURE);
+                        event = new Event(new SimpleDate(), lStartDate, lEndDate, lTitle, lRoom, "", EventType.LECTURE);
                     } else {
-                        event = new Event(lStartDate, lEndDate, lTitle, lRoom, lLecturer, EventType.LECTURE);
+                        event = new Event(new SimpleDate(), lStartDate, lEndDate, lTitle, lRoom, lLecturer, EventType.LECTURE);
                     }
 
                     eventList.add(event);

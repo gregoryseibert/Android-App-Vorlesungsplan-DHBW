@@ -50,11 +50,9 @@ public class EventListFragment extends Fragment {
         appComponent = ((MainActivity) getActivity()).getAppComponent();
 
         date = (SimpleDate) getArguments().getSerializable("date");
-        Timber.i(date.getFormatDate());
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getContext());
         url = settings.getString(getString(R.string.key_dhbwkey), "");
-        Timber.i(url);
 
         if(url.length() > 0) {
             viewModel = appComponent.eventViewModel();
@@ -64,19 +62,25 @@ public class EventListFragment extends Fragment {
                 ArrayList<Event> events = new ArrayList<>(eventList);
 
                 if(events.size() == 0) {
-                    events.add(new Event(date, date, "Es sind keine Vorlesungen vorhanden" , "", "", EventType.EMPTY));
+                    events.add(new Event("Es sind keine Vorlesungen vorhanden" , EventType.EMPTY));
                     Timber.i("events.size=0, adding empty event");
                 }
 
-                eventPlanAdapter.changeData(events);
+                eventPlanAdapter.addEvents(events);
             });
         } else {
             ArrayList<Event> events = new ArrayList<>();
 
-            events.add(new Event(date, date, "Die URL deines Vorlesungsplans muss in den Einstellungen dieser App gespeichert werden." , "", "", EventType.EMPTY));
+            events.add(new Event("Die URL deines Vorlesungsplans muss in den Einstellungen dieser App gespeichert werden." , EventType.EMPTY));
 
-            eventPlanAdapter.changeData(events);
+            eventPlanAdapter.addEvents(events);
         }
+    }
+
+    public void setDate(SimpleDate date) {
+        this.date = date;
+        eventPlanAdapter.removeAllEvents();
+        viewModel.init(url, date);
     }
 
     @Override

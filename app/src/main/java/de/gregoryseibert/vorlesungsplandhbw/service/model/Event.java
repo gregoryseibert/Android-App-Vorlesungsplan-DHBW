@@ -11,6 +11,8 @@ import android.support.annotation.NonNull;
 
 @Entity
 public class Event implements Comparable<Event> {
+    @ColumnInfo(name = "loadedat")
+    public SimpleDate loadedAt;
     @PrimaryKey
     @ColumnInfo(name = "startdate")
     public SimpleDate startDate;
@@ -25,13 +27,19 @@ public class Event implements Comparable<Event> {
     @ColumnInfo(name = "type")
     public EventType type;
 
-    public Event(SimpleDate startDate, SimpleDate endDate, String title, String room, String lecturer, EventType type) {
+    public Event(SimpleDate loadedAt, SimpleDate startDate, SimpleDate endDate, String title, String room, String lecturer, EventType type) {
+        this.loadedAt = loadedAt;
         this.startDate = startDate;
         this.endDate = endDate;
         this.title = title;
         this.room = room;
         this.lecturer = lecturer;
         this.type = type;
+    }
+
+    public Event(String title, EventType eventType) {
+        this.title = title;
+        type = eventType;
     }
 
     @Override

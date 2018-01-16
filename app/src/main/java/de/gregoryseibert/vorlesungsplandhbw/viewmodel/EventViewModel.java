@@ -18,6 +18,7 @@ import de.gregoryseibert.vorlesungsplandhbw.service.repo.EventRepository;
 
 public class EventViewModel extends ViewModel {
     private EventRepository eventRepository;
+    private ExecutorService executorService;
 
     private MutableLiveData<List<Event>> events;
 
@@ -29,12 +30,15 @@ public class EventViewModel extends ViewModel {
         this.eventRepository = eventRepository;
     }
 
+    public void setExecutorService(ExecutorService executorService) {
+        this.executorService = executorService;
+    }
+
     public void init(String url, SimpleDate date) {
         if(events == null) {
             this.events = new MutableLiveData<>();
         }
 
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.execute(() -> events.postValue(eventRepository.getEvents(url, date)));
     }
 

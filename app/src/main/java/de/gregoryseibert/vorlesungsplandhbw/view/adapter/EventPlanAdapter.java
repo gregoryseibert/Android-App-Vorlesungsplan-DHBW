@@ -25,12 +25,18 @@ public class EventPlanAdapter extends RecyclerView.Adapter<EventPlanAdapter.Even
         this.eventList = new ArrayList<>();
     }
 
-    public void changeData(ArrayList<Event> eventList) {
-        this.eventList.clear();
+    public void addEvents(ArrayList<Event> eventList) {
+        removeAllEvents();
+
         this.eventList.addAll(eventList);
 
         Timber.i("changeData: " + this.eventList.size());
 
+        notifyDataSetChanged();
+    }
+
+    public void removeAllEvents() {
+        eventList.clear();
         notifyDataSetChanged();
     }
 
@@ -52,12 +58,14 @@ public class EventPlanAdapter extends RecyclerView.Adapter<EventPlanAdapter.Even
         eventViewHolder.titleText.setText(event.title);
 
         if(event.type != EventType.EMPTY) {
-            eventViewHolder.dateText.setText(event.startDate.getFormatTime() + " - " + event.endDate.getFormatTime());
+            eventViewHolder.dateText.setVisibility(View.VISIBLE);
+            eventViewHolder.roomText.setVisibility(View.VISIBLE);
 
+            eventViewHolder.dateText.setText(event.startDate.getFormatTime() + " - " + event.endDate.getFormatTime());
             eventViewHolder.roomText.setText(event.room);
         } else {
-            ((ViewGroup) eventViewHolder.dateText.getParent()).removeView(eventViewHolder.dateText);
-            ((ViewGroup) eventViewHolder.roomText.getParent()).removeView(eventViewHolder.roomText);
+            eventViewHolder.dateText.setVisibility(View.GONE);
+            eventViewHolder.roomText.setVisibility(View.GONE);
         }
     }
 

@@ -2,6 +2,8 @@ package de.gregoryseibert.vorlesungsplandhbw.service.dagger.component;
 
 import android.app.Application;
 
+import java.util.concurrent.ExecutorService;
+
 import dagger.Component;
 import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.AppModule;
 import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.RepoModule;
@@ -22,6 +24,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 @Component(modules = {AppModule.class, ViewModelModule.class, RepoModule.class})
 public interface AppComponent {
     Application application();
+    ExecutorService executorService();
     EventViewModel eventViewModel();
     EventRepository eventRepository();
     EventDAO eventDAO();

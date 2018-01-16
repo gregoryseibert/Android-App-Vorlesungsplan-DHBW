@@ -2,6 +2,9 @@ package de.gregoryseibert.vorlesungsplandhbw.service.dagger.module;
 
 import android.app.Application;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import dagger.Module;
 import dagger.Provides;
 import de.gregoryseibert.vorlesungsplandhbw.service.dagger.scope.AppComponentScope;
@@ -22,5 +25,11 @@ public class AppModule {
     @AppComponentScope
     public Application application() {
         return APPLICATION;
+    }
+
+    @Provides
+    @AppComponentScope
+    public ExecutorService executorService() {
+        return Executors.newSingleThreadExecutor();
     }
 }

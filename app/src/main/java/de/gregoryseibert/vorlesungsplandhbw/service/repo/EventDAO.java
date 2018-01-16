@@ -17,8 +17,8 @@ public interface EventDAO {
     @Query("SELECT * FROM event WHERE startDate BETWEEN :rangeStart AND :rangeEnd")
     List<Event> getAllByRange(long rangeStart, long rangeEnd);
 
-    @Query("DELETE FROM event")
-    void deleteAll();
+    @Query("DELETE FROM event WHERE startDate BETWEEN :rangeStart AND :rangeEnd")
+    void deleteAllByRange(long rangeStart, long rangeEnd);
 
     @Insert
     void insertAll(List<Event> event);

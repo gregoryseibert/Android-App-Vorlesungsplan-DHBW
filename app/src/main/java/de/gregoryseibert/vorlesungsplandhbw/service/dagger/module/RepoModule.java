@@ -26,7 +26,7 @@ public class RepoModule {
     private final Application APPLICATION;
 
     public RepoModule(Application application) {
-        this.APPDATABASE = Room.databaseBuilder(application, AppDatabase.class, "event-database").build();
+        this.APPDATABASE = Room.databaseBuilder(application, AppDatabase.class, "event-database").fallbackToDestructiveMigration().build();
         this.APPLICATION = application;
     }
 

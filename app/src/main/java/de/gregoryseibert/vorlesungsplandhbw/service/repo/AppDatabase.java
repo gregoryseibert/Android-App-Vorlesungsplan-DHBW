@@ -10,7 +10,7 @@ import de.gregoryseibert.vorlesungsplandhbw.service.model.Event;
  * Created by Gregory Seibert on 11.01.2018.
  */
 
-@Database(entities = {Event.class}, version = 1)
+@Database(entities = {Event.class}, version = 2)
 @TypeConverters({SimpleDateTypeConverter.class, EventTypeTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract EventDAO eventDao();

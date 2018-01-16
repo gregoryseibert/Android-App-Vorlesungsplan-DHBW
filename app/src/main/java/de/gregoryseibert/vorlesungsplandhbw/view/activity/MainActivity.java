@@ -9,8 +9,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.DatePicker;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -127,13 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
         dateText.setText(date.getFormatDate());
 
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("date", date);
-
-        eventListFragment = new EventListFragment();
-        eventListFragment.setArguments(bundle);
-
-        getSupportFragmentManager().beginTransaction().replace(R.id.container, eventListFragment).commit();
+        eventListFragment.setDate(date);
     }
 
     @Override

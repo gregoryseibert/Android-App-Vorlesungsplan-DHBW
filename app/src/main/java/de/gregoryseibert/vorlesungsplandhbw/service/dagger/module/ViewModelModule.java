@@ -2,6 +2,8 @@ package de.gregoryseibert.vorlesungsplandhbw.service.dagger.module;
 
 import android.arch.lifecycle.ViewModelProviders;
 
+import java.util.concurrent.ExecutorService;
+
 import dagger.Module;
 import dagger.Provides;
 import de.gregoryseibert.vorlesungsplandhbw.service.dagger.scope.AppComponentScope;
@@ -23,9 +25,10 @@ public class ViewModelModule {
 
         @Provides
         @AppComponentScope
-        public EventViewModel eventViewModel(EventRepository eventRepository) {
+        public EventViewModel eventViewModel(EventRepository eventRepository, ExecutorService executorService) {
             EventViewModel eventViewModel = ViewModelProviders.of(EVENTLISTFRAGMENT).get(EventViewModel.class);
             eventViewModel.setEventRepository(eventRepository);
+            eventViewModel.setExecutorService(executorService);
             return eventViewModel;
         }
 }
