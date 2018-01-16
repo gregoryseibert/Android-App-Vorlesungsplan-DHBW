@@ -18,10 +18,10 @@ import timber.log.Timber;
  * Created by Gregory Seibert on 09.01.2018.
  */
 
-public class EventPlanAdapter extends RecyclerView.Adapter<EventPlanAdapter.EventViewHolder> {
+public class EventDayAdapter extends RecyclerView.Adapter<EventDayAdapter.EventViewHolder> {
     private ArrayList<Event> eventList;
 
-    public EventPlanAdapter(){
+    public EventDayAdapter(){
         this.eventList = new ArrayList<>();
     }
 
@@ -47,7 +47,7 @@ public class EventPlanAdapter extends RecyclerView.Adapter<EventPlanAdapter.Even
 
     @Override
     public EventViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_day, viewGroup, false);
         return new EventViewHolder(view);
     }
 

@@ -51,6 +51,23 @@ public class EventRepository {
         return EVENTDAO.getAllByRange(date.getMillis(), rangeEnd.getMillis());
     }
 
+    public List<Event> getEventsPerWeek(String url, SimpleDate date) {
+        SimpleDate rangeEnd = date.getLastDayOfWeek();
+        rangeEnd.getCalendar().add(Calendar.HOUR_OF_DAY, 23);
+
+        Timber.i("start: " + date.getFormatDateTime());
+        Timber.i("end: " + rangeEnd.getFormatDateTime());
+
+        //TODO
+        boolean shouldRefresh = true;
+
+        if(shouldRefresh) {
+            refreshEvents(url, date);
+        }
+
+        return EVENTDAO.getAllByRange(date.getMillis(), rangeEnd.getMillis());
+    }
+
     private void refreshEvents(String url, SimpleDate date) {
         String fullURL = generateURL(url, date.getDay(), date.getMonth(), date.getYear());
 

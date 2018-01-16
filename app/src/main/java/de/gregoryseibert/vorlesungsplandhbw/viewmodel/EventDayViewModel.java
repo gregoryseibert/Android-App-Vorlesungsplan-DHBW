@@ -16,13 +16,13 @@ import de.gregoryseibert.vorlesungsplandhbw.service.repo.EventRepository;
  * Created by Gregory Seibert on 11.01.2018.
  */
 
-public class EventViewModel extends ViewModel {
+public class EventDayViewModel extends ViewModel {
     private EventRepository eventRepository;
     private ExecutorService executorService;
 
     private MutableLiveData<List<Event>> events;
 
-    public EventViewModel() {
+    public EventDayViewModel() {
 
     }
 

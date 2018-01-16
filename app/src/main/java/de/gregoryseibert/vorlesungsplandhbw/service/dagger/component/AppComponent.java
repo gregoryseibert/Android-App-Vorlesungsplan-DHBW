@@ -7,11 +7,9 @@ import java.util.concurrent.ExecutorService;
 import dagger.Component;
 import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.AppModule;
 import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.RepoModule;
-import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.ViewModelModule;
 import de.gregoryseibert.vorlesungsplandhbw.service.dagger.scope.AppComponentScope;
 import de.gregoryseibert.vorlesungsplandhbw.service.repo.EventDAO;
 import de.gregoryseibert.vorlesungsplandhbw.service.repo.EventRepository;
-import de.gregoryseibert.vorlesungsplandhbw.viewmodel.EventViewModel;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -21,11 +19,10 @@ import okhttp3.logging.HttpLoggingInterceptor;
  */
 
 @AppComponentScope
-@Component(modules = {AppModule.class, ViewModelModule.class, RepoModule.class})
+@Component(modules = {AppModule.class, RepoModule.class})
 public interface AppComponent {
     Application application();
     ExecutorService executorService();
-    EventViewModel eventViewModel();
     EventRepository eventRepository();
     EventDAO eventDAO();
     OkHttpClient okHttpClient();

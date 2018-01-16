@@ -3,17 +3,15 @@ package de.gregoryseibert.vorlesungsplandhbw.view.activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTabHost;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.DatePicker;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -23,9 +21,10 @@ import de.gregoryseibert.vorlesungsplandhbw.service.dagger.component.AppComponen
 import de.gregoryseibert.vorlesungsplandhbw.service.dagger.component.DaggerAppComponent;
 import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.AppModule;
 import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.RepoModule;
-import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.ViewModelModule;
 import de.gregoryseibert.vorlesungsplandhbw.service.model.SimpleDate;
-import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListFragment;
+import de.gregoryseibert.vorlesungsplandhbw.view.fragment.BaseFragment;
+import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListDayFragment;
+import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListWeekFragment;
 import timber.log.Timber;
 
 /**
@@ -33,9 +32,14 @@ import timber.log.Timber;
  */
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAB_1_TAG = "dayly";
+    private static final String TAB_2_TAG = "weekly";
+    private FragmentTabHost tabHost;
+
     private AppComponent appComponent;
 
-    private EventListFragment eventListFragment;
+    private EventListDayFragment eventListDayFragment;
+    private EventListWeekFragment eventListWeekFragment;
 
     private TextView dateText;
 
@@ -58,12 +62,14 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putSerializable("date", date);
 
-        eventListFragment = new EventListFragment();
-        eventListFragment.setArguments(bundle);
+        eventListDayFragment = new EventListDayFragment();
+        eventListDayFragment.setArguments(bundle);
+
+        eventListWeekFragment = new EventListWeekFragment();
+        eventListWeekFragment.setArguments(bundle);
 
         appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this.getApplication()))
-                .viewModelModule(new ViewModelModule(eventListFragment))
                 .repoModule(new RepoModule(getApplication()))
                 .build();
 
@@ -72,8 +78,10 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-            getSupportFragmentManager().beginTransaction().add(R.id.container, eventListFragment).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.container, eventListDayFragment).commit();
         }
+
+        setupTabHost();
 
         setupDatePicker();
 
@@ -82,6 +90,29 @@ public class MainActivity extends AppCompatActivity {
 
     public AppComponent getAppComponent() {
         return appComponent;
+    }
+
+    public void setupTabHost() {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("date", date);
+
+        tabHost = findViewById(R.id.tabHost);
+        tabHost.setup(this, getSupportFragmentManager(), R.id.container);
+
+        tabHost.addTab(tabHost.newTabSpec(TAB_1_TAG).setIndicator("Tagesansicht"), EventListDayFragment.class, bundle);
+        tabHost.addTab(tabHost.newTabSpec(TAB_2_TAG).setIndicator("Wochenansicht"), EventListWeekFragment.class, bundle);
+
+        /* Increase tab height programatically
+         * tabs.getTabWidget().getChildAt(1).getLayoutParams().height = 150;
+         */
+
+        for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
+            final TextView tv = tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+            if (tv == null)
+                continue;
+            else
+                tv.setTextSize(10);
+        }
     }
 
     public void setupDatePicker() {
@@ -130,7 +161,23 @@ public class MainActivity extends AppCompatActivity {
 
         dateText.setText(date.getFormatDate());
 
-        eventListFragment.setDate(date);
+        eventListDayFragment.setDate(date);
+    }
+
+    @Override
+    public void onBackPressed() {
+        boolean isPopFragment = false;
+        String currentTabTag = tabHost.getCurrentTabTag();
+
+        if (currentTabTag.equals(TAB_1_TAG)) {
+            isPopFragment = ((BaseFragment)getSupportFragmentManager().findFragmentByTag(TAB_1_TAG)).popFragment();
+        } else if (currentTabTag.equals(TAB_2_TAG)) {
+            isPopFragment = ((BaseFragment)getSupportFragmentManager().findFragmentByTag(TAB_2_TAG)).popFragment();
+        }
+
+        if (!isPopFragment) {
+            finish();
+        }
     }
 
     @Override
