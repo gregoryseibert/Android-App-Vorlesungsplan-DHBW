@@ -16,17 +16,4 @@ import de.gregoryseibert.vorlesungsplandhbw.service.model.Event;
 @TypeConverters({SimpleDateTypeConverter.class, EventTypeTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract EventDAO eventDao();
-
-    private static AppDatabase INSTANCE;
-
-    public static AppDatabase getAppDatabase(Context context) {
-        if (INSTANCE == null) {
-            INSTANCE = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "event-database").build();
-        }
-        return INSTANCE;
-    }
-
-    public static void destroyInstance() {
-        INSTANCE = null;
-    }
 }

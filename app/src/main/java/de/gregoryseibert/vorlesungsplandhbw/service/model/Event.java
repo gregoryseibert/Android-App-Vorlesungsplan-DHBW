@@ -101,4 +101,8 @@ public class Event implements Comparable<Event> {
     public void setLecturer(String lecturer) {
         this.lecturer = lecturer;
     }
+
+    public enum EventType {
+        EXAM, LECTURE, EMPTY
+    }
 }

@@ -16,14 +16,22 @@ import android.widget.TextView;
 import java.util.Calendar;
 
 import de.gregoryseibert.vorlesungsplandhbw.R;
+import de.gregoryseibert.vorlesungsplandhbw.service.dagger.component.AppComponent;
+import de.gregoryseibert.vorlesungsplandhbw.service.dagger.component.DaggerAppComponent;
+import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.AppModule;
+import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.RepoModule;
+import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.ViewModelModule;
 import de.gregoryseibert.vorlesungsplandhbw.service.model.SimpleDate;
 import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListFragment;
+import timber.log.Timber;
 
 /**
  * Created by Gregory Seibert on 09.01.2018.
  */
 
 public class MainActivity extends AppCompatActivity {
+    private AppComponent appComponent;
+
     private EventListFragment eventListFragment;
 
     private TextView dateText;
@@ -35,6 +43,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Initiate Timber
+        Timber.plant(new Timber.DebugTree());
+
+        //Setup Toolbar
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
@@ -46,6 +58,12 @@ public class MainActivity extends AppCompatActivity {
         eventListFragment = new EventListFragment();
         eventListFragment.setArguments(bundle);
 
+        appComponent = DaggerAppComponent.builder()
+                .appModule(new AppModule(this.getApplication()))
+                .viewModelModule(new ViewModelModule(eventListFragment))
+                .repoModule(new RepoModule(getApplication()))
+                .build();
+
         if (findViewById(R.id.container) != null) {
             if (savedInstanceState != null) {
                 return;
@@ -54,6 +72,16 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.container, eventListFragment).commit();
         }
 
+        setupDatePicker();
+
+        setupButtons();
+    }
+
+    public AppComponent getAppComponent() {
+        return appComponent;
+    }
+
+    public void setupDatePicker() {
         final Calendar newCalendar = Calendar.getInstance();
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int month, int day) {
@@ -70,7 +98,9 @@ public class MainActivity extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
+    }
 
+    public void setupButtons() {
         ImageButton nextButton = findViewById(R.id.nextButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override

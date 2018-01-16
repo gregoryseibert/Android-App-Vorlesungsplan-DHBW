@@ -1,18 +1,12 @@
 package de.gregoryseibert.vorlesungsplandhbw.view.fragment;
 
-import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.DimenRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,18 +14,25 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import de.gregoryseibert.vorlesungsplandhbw.R;
+import de.gregoryseibert.vorlesungsplandhbw.service.dagger.component.AppComponent;
 import de.gregoryseibert.vorlesungsplandhbw.service.model.Event;
-import de.gregoryseibert.vorlesungsplandhbw.service.model.EventType;
+import de.gregoryseibert.vorlesungsplandhbw.service.model.Event.EventType;
 import de.gregoryseibert.vorlesungsplandhbw.service.model.SimpleDate;
+import de.gregoryseibert.vorlesungsplandhbw.view.activity.MainActivity;
 import de.gregoryseibert.vorlesungsplandhbw.view.adapter.EventPlanAdapter;
 import de.gregoryseibert.vorlesungsplandhbw.viewmodel.EventViewModel;
+import timber.log.Timber;
 
 /**
  * Created by Gregory Seibert on 11.01.2018.
  */
 
 public class EventListFragment extends Fragment {
+    private AppComponent appComponent;
+
     private RecyclerView rv;
+
+    private EventPlanAdapter eventPlanAdapter;
 
     private SimpleDate date;
     private EventViewModel viewModel;
@@ -46,28 +47,36 @@ public class EventListFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        appComponent = ((MainActivity) getActivity()).getAppComponent();
+
         date = (SimpleDate) getArguments().getSerializable("date");
+        Timber.i(date.getFormatDate());
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this.getContext());
         url = settings.getString(getString(R.string.key_dhbwkey), "");
+        Timber.i(url);
 
-        Log.e("onActivityCreated", date.getFormatDate());
+        if(url.length() > 0) {
+            viewModel = appComponent.eventViewModel();
+            viewModel.init(url, date);
 
-        viewModel = ViewModelProviders.of(this).get(EventViewModel.class);
-        viewModel.init(this.getContext(), url, date);
-
-        viewModel.getEvents().observe(this, eventList -> {
-            if(eventList != null) {
+            viewModel.getEvents().observe(this, eventList -> {
                 ArrayList<Event> events = new ArrayList<>(eventList);
 
                 if(events.size() == 0) {
                     events.add(new Event(date, date, "Es sind keine Vorlesungen vorhanden" , "", "", EventType.EMPTY));
+                    Timber.i("events.size=0, adding empty event");
                 }
 
-                EventPlanAdapter adapter = new EventPlanAdapter(events);
-                rv.setAdapter(adapter);
-            }
-        });
+                eventPlanAdapter.changeData(events);
+            });
+        } else {
+            ArrayList<Event> events = new ArrayList<>();
+
+            events.add(new Event(date, date, "Die URL deines Vorlesungsplans muss in den Einstellungen dieser App gespeichert werden." , "", "", EventType.EMPTY));
+
+            eventPlanAdapter.changeData(events);
+        }
     }
 
     @Override
@@ -75,29 +84,12 @@ public class EventListFragment extends Fragment {
         View view = inflater.inflate(R.layout.event_list, container, false);
 
         rv = view.findViewById(R.id.recyclerView);
-        LinearLayoutManager llm = new LinearLayoutManager(this.getContext());
-        rv.setLayoutManager(llm);
-        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this.getContext(), R.dimen.item_offset);
-        rv.addItemDecoration(itemDecoration);
+        rv.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        rv.addItemDecoration(new ItemOffsetDecoration(this.getContext(), R.dimen.item_offset));
+
+        eventPlanAdapter = new EventPlanAdapter();
+        rv.setAdapter(eventPlanAdapter);
 
         return view;
-    }
-
-    class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
-        private int mItemOffset;
-
-        public ItemOffsetDecoration(int itemOffset) {
-            mItemOffset = itemOffset;
-        }
-
-        public ItemOffsetDecoration(@NonNull Context context, @DimenRes int itemOffsetId) {
-            this(context.getResources().getDimensionPixelSize(itemOffsetId));
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            super.getItemOffsets(outRect, view, parent, state);
-            outRect.set(0, 0, 0, mItemOffset);
-        }
     }
 }

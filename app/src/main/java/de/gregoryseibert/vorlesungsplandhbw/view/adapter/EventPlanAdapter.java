@@ -2,7 +2,6 @@ package de.gregoryseibert.vorlesungsplandhbw.view.adapter;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,8 @@ import java.util.ArrayList;
 
 import de.gregoryseibert.vorlesungsplandhbw.R;
 import de.gregoryseibert.vorlesungsplandhbw.service.model.Event;
-import de.gregoryseibert.vorlesungsplandhbw.service.model.EventType;
+import de.gregoryseibert.vorlesungsplandhbw.service.model.Event.EventType;
+import timber.log.Timber;
 
 /**
  * Created by Gregory Seibert on 09.01.2018.
@@ -21,8 +21,17 @@ import de.gregoryseibert.vorlesungsplandhbw.service.model.EventType;
 public class EventPlanAdapter extends RecyclerView.Adapter<EventPlanAdapter.EventViewHolder> {
     private ArrayList<Event> eventList;
 
-    public EventPlanAdapter(ArrayList<Event> eventList){
-        this.eventList = eventList;
+    public EventPlanAdapter(){
+        this.eventList = new ArrayList<>();
+    }
+
+    public void changeData(ArrayList<Event> eventList) {
+        this.eventList.clear();
+        this.eventList.addAll(eventList);
+
+        Timber.i("changeData: " + this.eventList.size());
+
+        notifyDataSetChanged();
     }
 
     @Override

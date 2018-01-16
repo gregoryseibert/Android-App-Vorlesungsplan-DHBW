@@ -1,68 +1,66 @@
 package de.gregoryseibert.vorlesungsplandhbw.service.repo;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.util.Log;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
-import de.gregoryseibert.vorlesungsplandhbw.service.model.EventType;
-import de.gregoryseibert.vorlesungsplandhbw.service.model.SimpleDate;
 import de.gregoryseibert.vorlesungsplandhbw.service.model.Event;
+import de.gregoryseibert.vorlesungsplandhbw.service.model.Event.EventType;
+import de.gregoryseibert.vorlesungsplandhbw.service.model.SimpleDate;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import timber.log.Timber;
 
 /**
  * Created by Gregory Seibert on 11.01.2018.
  */
 
 public class EventRepository {
-    private final EventDAO eventDAO;
+    private final EventDAO EVENTDAO;
+    private final OkHttpClient OKHTTPCLIENT;
 
-    public EventRepository(EventDAO eventDAO) {
-        this.eventDAO = eventDAO;
+    public EventRepository(EventDAO eventDAO, OkHttpClient okHttpClient) {
+        this.EVENTDAO = eventDAO;
+        this.OKHTTPCLIENT = okHttpClient;
     }
 
     public List<Event> getEvents(String url, SimpleDate date) {
         refreshEvents(url, date);
 
-        SimpleDate rangeStart = /*date.getFirstDayOfWeek()*/ date;
-        SimpleDate rangeEnd = /*date.getLastDayOfWeek()*/ new SimpleDate(date);
+        SimpleDate rangeEnd = new SimpleDate(date);
         rangeEnd.getCalendar().add(Calendar.HOUR_OF_DAY, 23);
 
+        Timber.i("start: " + date.getFormatDateTime());
+        Timber.i("end: " + rangeEnd.getFormatDateTime());
 
-        Log.e("getEvents", "start: " + rangeStart.getFormatDateTime());
-        Log.e("getEvents", "end: " + rangeEnd.getFormatDateTime());
-
-        return eventDAO.getAllByRange(rangeStart.getMillis(), rangeEnd.getMillis());
-        //return eventDAO.getAll();
+        return EVENTDAO.getAllByRange(date.getMillis(), rangeEnd.getMillis());
     }
 
     private void refreshEvents(String url, SimpleDate date) {
-        //TODO check if it has to reload the data
+        String fullURL = generateURL(url, date.getDay(), date.getMonth(), date.getYear());
 
-        try {
-            eventDAO.deleteAll();
+        Timber.i(fullURL);
 
-            String fullURL = generateURL(url, date.getDay(), date.getMonth(), date.getYear());
+        Document doc = loadDocument(fullURL);
 
-            Log.e("refreshEvents", fullURL);
+        if(doc != null) {
+            EVENTDAO.deleteAll();
 
-            List<Event> events = fetchEvents(Jsoup.connect(fullURL).get(), date);
+            List<Event> events = parseDocumentForEvents(doc, date);
 
-            eventDAO.insertAll(events);
-        } catch (IOException e) {
-            e.printStackTrace();
+            EVENTDAO.insertAll(events);
         }
     }
+
 
     private String generateURL(String url, int day, int month, int year) {
         if(day != 0 && month != 0 && year != 0) {
@@ -74,7 +72,25 @@ public class EventRepository {
         return url;
     }
 
-    private List<Event> fetchEvents(Document doc, SimpleDate date) {
+    private Document loadDocument(String url) {
+        Request request = new Request.Builder().url(url).build();
+
+        try {
+            Response response = OKHTTPCLIENT.newCall(request).execute();
+            ResponseBody responseBody = response.body();
+            if(responseBody != null) {
+                return Jsoup.parse(responseBody.string());
+            } else {
+                throw new IOException("response null!");
+            }
+        } catch(IOException e) {
+            Timber.e(e.getMessage());
+        }
+
+        return null;
+    }
+
+    private List<Event> parseDocumentForEvents(Document doc, SimpleDate date) {
         List<Event> eventList = new ArrayList<>();
 
         Elements tableRows = doc.select("#calendar .week_table tbody tr");
