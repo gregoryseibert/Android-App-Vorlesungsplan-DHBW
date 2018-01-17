@@ -3,12 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_settings"
+        android:icon="@drawable/settings"
         android:orderInCategory="100"
-        app:showAsAction="never"
+        app:showAsAction="always"
         android:title="Einstellungen"/>
     <item
         android:id="@+id/action_about"
+        android:icon="@drawable/info"
         android:orderInCategory="101"
-        app:showAsAction="never"
+        app:showAsAction="always"
         android:title="Informationen"/>
 </menu>
