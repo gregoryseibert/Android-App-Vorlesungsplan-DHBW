@@ -25,9 +25,19 @@ public class EventWeekAdapter extends RecyclerView.Adapter<EventWeekAdapter.Even
     public void addEvents(ArrayList<Event> eventList) {
         removeAllEvents();
 
-        this.eventList.addAll(eventList);
+        if(eventList.size() > 0) {
+            this.eventList.addAll(eventList);
 
-        notifyDataSetChanged();
+//            Timber.i("changeData: " + this.eventList.size());
+
+            notifyDataSetChanged();
+        } else {
+            this.eventList.add(new Event("Für heute wurden keine Vorlesungen gefunden.", Event.EventType.EMPTY));
+
+//            Timber.i("changeData: " + this.eventList.size());
+
+            notifyDataSetChanged();
+        }
     }
 
     public void removeAllEvents() {
@@ -50,7 +60,11 @@ public class EventWeekAdapter extends RecyclerView.Adapter<EventWeekAdapter.Even
     public void onBindViewHolder(EventViewHolder eventViewHolder, int i) {
         Event event = eventList.get(i);
 
-        eventViewHolder.timeText.setText(event.startDate.getFormatTime() + " - " + event.endDate.getFormatTime());
+        if(event.type != Event.EventType.EMPTY) {
+            eventViewHolder.timeText.setText(event.startDate.getFormatTime() + " - " + event.endDate.getFormatTime());
+        } else {
+            eventViewHolder.timeText.setText("-");
+        }
     }
 
     @Override
