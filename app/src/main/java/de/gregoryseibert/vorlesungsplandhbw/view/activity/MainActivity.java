@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -150,16 +151,28 @@ public class MainActivity extends AppCompatActivity {
         url = settings.getString(getString(R.string.key_dhbwkey), "");
 
         if(url.length() > 0) {
-            viewModel = appComponent.eventViewModel();
-            viewModel.init(url, date);
+            if(validURL(url)) {
+                viewModel = appComponent.eventViewModel();
+                viewModel.init(url, date);
 
-            viewModel.getEvents().observe(this, eventList -> {
-                eventListDayFragment.setEvents(eventList.get(date.getDayOfWeek()).getAllEvents());
-                eventListWeekFragment.setEvents(eventList, date.getFirstDayOfWeek());
-            });
+                viewModel.getEvents().observe(this, eventList -> {
+                    eventListDayFragment.setEvents(eventList.get(date.getDayOfWeek()).getAllEvents());
+                    eventListWeekFragment.setEvents(eventList, date.getFirstDayOfWeek());
+                });
+            } else {
+                Toast.makeText(this, "Die in den Einstellungen gespeicherte URL deines Vorlesungsplans ist fehlerhaft.", Toast.LENGTH_LONG).show();
+            }
         } else {
-            //"Die URL deines Vorlesungsplans muss in den Einstellungen dieser App gespeichert werden."
+            Toast.makeText(this, "Die URL deines Vorlesungsplans muss in den Einstellungen dieser App gespeichert werden.", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private boolean validURL(String url) {
+        if(!url.startsWith("https://rapla.dhbw-stuttgart.de/rapla?key=")) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
