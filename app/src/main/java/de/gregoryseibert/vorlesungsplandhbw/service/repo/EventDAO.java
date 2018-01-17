@@ -6,7 +6,7 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
-import de.gregoryseibert.vorlesungsplandhbw.service.model.Event;
+import de.gregoryseibert.vorlesungsplandhbw.model.Event;
 
 /**
  * Created by Gregory Seibert on 11.01.2018.

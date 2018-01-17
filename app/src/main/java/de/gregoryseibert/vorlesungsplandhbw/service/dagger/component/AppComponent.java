@@ -10,6 +10,7 @@ import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.RepoModule;
 import de.gregoryseibert.vorlesungsplandhbw.service.dagger.scope.AppComponentScope;
 import de.gregoryseibert.vorlesungsplandhbw.service.repo.EventDAO;
 import de.gregoryseibert.vorlesungsplandhbw.service.repo.EventRepository;
+import de.gregoryseibert.vorlesungsplandhbw.viewmodel.EventViewModel;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -22,6 +23,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 @Component(modules = {AppModule.class, RepoModule.class})
 public interface AppComponent {
     Application application();
+    EventViewModel eventViewModel();
     ExecutorService executorService();
     EventRepository eventRepository();
     EventDAO eventDAO();

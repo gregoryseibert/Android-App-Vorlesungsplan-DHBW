@@ -1,6 +1,5 @@
 package de.gregoryseibert.vorlesungsplandhbw.view.adapter;
 
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,9 +9,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import de.gregoryseibert.vorlesungsplandhbw.R;
-import de.gregoryseibert.vorlesungsplandhbw.service.model.Event;
-import de.gregoryseibert.vorlesungsplandhbw.service.model.Event.EventType;
-import timber.log.Timber;
+import de.gregoryseibert.vorlesungsplandhbw.model.Event;
 
 /**
  * Created by Gregory Seibert on 09.01.2018.
@@ -29,8 +26,6 @@ public class EventWeekAdapter extends RecyclerView.Adapter<EventWeekAdapter.Even
         removeAllEvents();
 
         this.eventList.addAll(eventList);
-
-        Timber.i("changeData: " + this.eventList.size());
 
         notifyDataSetChanged();
     }
@@ -55,9 +50,7 @@ public class EventWeekAdapter extends RecyclerView.Adapter<EventWeekAdapter.Even
     public void onBindViewHolder(EventViewHolder eventViewHolder, int i) {
         Event event = eventList.get(i);
 
-        if(event.type != EventType.EMPTY) {
-            eventViewHolder.timeText.setText(event.startDate.getFormatTime() + " - " + event.endDate.getFormatTime());
-        }
+        eventViewHolder.timeText.setText(event.startDate.getFormatTime() + " - " + event.endDate.getFormatTime());
     }
 
     @Override
@@ -70,7 +63,6 @@ public class EventWeekAdapter extends RecyclerView.Adapter<EventWeekAdapter.Even
 
         EventViewHolder(View itemView) {
             super(itemView);
-
             timeText = itemView.findViewById(R.id.timeText);
         }
     }

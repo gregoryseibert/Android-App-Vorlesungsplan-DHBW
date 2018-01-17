@@ -13,48 +13,5 @@
         android:layout_marginTop="8dp"
         android:orientation="vertical"
         android:padding="4dp">
-
-        <include
-            android:id="@+id/week_item_1"
-            layout="@layout/item_week">
-
-        </include>
-
-        <include
-            android:id="@+id/week_item_2"
-            layout="@layout/item_week">
-
-        </include>
-
-        <include
-            android:id="@+id/week_item_3"
-            layout="@layout/item_week">
-
-        </include>
-
-        <include
-            android:id="@+id/week_item_4"
-            layout="@layout/item_week">
-
-        </include>
-
-        <include
-            android:id="@+id/week_item_5"
-            layout="@layout/item_week">
-
-        </include>
-
-        <include
-            android:id="@+id/week_item_6"
-            layout="@layout/item_week">
-
-        </include>
-
-        <include
-            android:id="@+id/week_item_7"
-            layout="@layout/item_week">
-
-        </include>
-
     </LinearLayout>
 </RelativeLayout>

@@ -1,4 +1,4 @@
-package de.gregoryseibert.vorlesungsplandhbw.service.model;
+package de.gregoryseibert.vorlesungsplandhbw.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -44,10 +44,6 @@ public class Event implements Comparable<Event> {
 
     @Override
     public String toString() {
-        if(type == EventType.EMPTY) {
-            return title;
-        }
-
         return type.toString() + " '" + title + "': " + startDate.getFormatTime() + " - " + endDate.getFormatTime() + ", " + startDate.getFormatDate();
     }
 

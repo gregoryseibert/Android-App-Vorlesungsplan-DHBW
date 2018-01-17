@@ -13,18 +13,25 @@ import android.view.View;
 
 public class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
     private int mItemOffset;
+    private boolean horizontal;
 
-    public ItemOffsetDecoration(int itemOffset) {
+    public ItemOffsetDecoration(int itemOffset, boolean horizontal) {
         mItemOffset = itemOffset;
+        this.horizontal = horizontal;
     }
 
-    public ItemOffsetDecoration(@NonNull Context context, @DimenRes int itemOffsetId) {
-        this(context.getResources().getDimensionPixelSize(itemOffsetId));
+    public ItemOffsetDecoration(@NonNull Context context, @DimenRes int itemOffsetId, boolean horizontal) {
+        this(context.getResources().getDimensionPixelSize(itemOffsetId), horizontal);
     }
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
-        outRect.set(0, 0, 0, mItemOffset);
+
+        if(horizontal) {
+            outRect.set(0, 0, mItemOffset, 0);
+        } else {
+            outRect.set(0, 0, 0, mItemOffset);
+        }
     }
 }

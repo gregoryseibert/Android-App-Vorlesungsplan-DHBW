@@ -6,23 +6,22 @@ import android.arch.lifecycle.ViewModel;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-import de.gregoryseibert.vorlesungsplandhbw.service.model.Event;
-import de.gregoryseibert.vorlesungsplandhbw.service.model.SimpleDate;
+import de.gregoryseibert.vorlesungsplandhbw.model.EventHolder;
+import de.gregoryseibert.vorlesungsplandhbw.model.SimpleDate;
 import de.gregoryseibert.vorlesungsplandhbw.service.repo.EventRepository;
 
 /**
  * Created by Gregory Seibert on 11.01.2018.
  */
 
-public class EventDayViewModel extends ViewModel {
+public class EventViewModel extends ViewModel {
     private EventRepository eventRepository;
     private ExecutorService executorService;
 
-    private MutableLiveData<List<Event>> events;
+    private MutableLiveData<List<EventHolder>> events;
 
-    public EventDayViewModel() {
+    public EventViewModel() {
 
     }
 
@@ -39,10 +38,10 @@ public class EventDayViewModel extends ViewModel {
             this.events = new MutableLiveData<>();
         }
 
-        executorService.execute(() -> events.postValue(eventRepository.getEvents(url, date)));
+        executorService.execute(() -> events.postValue(eventRepository.getAllEventsOfWeek(url, date)));
     }
 
-    public LiveData<List<Event>> getEvents() {
+    public LiveData<List<EventHolder>> getEvents() {
         return this.events;
     }
 }

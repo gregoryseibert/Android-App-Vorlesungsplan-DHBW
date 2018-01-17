@@ -4,7 +4,7 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 
-import de.gregoryseibert.vorlesungsplandhbw.service.model.Event;
+import de.gregoryseibert.vorlesungsplandhbw.model.Event;
 
 /**
  * Created by Gregory Seibert on 11.01.2018.

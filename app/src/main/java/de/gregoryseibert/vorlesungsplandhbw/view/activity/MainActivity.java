@@ -2,8 +2,11 @@ package de.gregoryseibert.vorlesungsplandhbw.view.activity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTabHost;
+import android.preference.PreferenceManager;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -17,14 +20,15 @@ import android.widget.TextView;
 import java.util.Calendar;
 
 import de.gregoryseibert.vorlesungsplandhbw.R;
+import de.gregoryseibert.vorlesungsplandhbw.model.SimpleDate;
 import de.gregoryseibert.vorlesungsplandhbw.service.dagger.component.AppComponent;
 import de.gregoryseibert.vorlesungsplandhbw.service.dagger.component.DaggerAppComponent;
 import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.AppModule;
 import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.RepoModule;
-import de.gregoryseibert.vorlesungsplandhbw.service.model.SimpleDate;
-import de.gregoryseibert.vorlesungsplandhbw.view.fragment.BaseFragment;
+import de.gregoryseibert.vorlesungsplandhbw.view.adapter.FragmentAdapter;
 import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListDayFragment;
 import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListWeekFragment;
+import de.gregoryseibert.vorlesungsplandhbw.viewmodel.EventViewModel;
 import timber.log.Timber;
 
 /**
@@ -32,18 +36,20 @@ import timber.log.Timber;
  */
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAB_1_TAG = "dayly";
-    private static final String TAB_2_TAG = "weekly";
-    private FragmentTabHost tabHost;
-
-    private AppComponent appComponent;
+    private Toolbar toolbar;
+    private ViewPager viewPager;
 
     private EventListDayFragment eventListDayFragment;
     private EventListWeekFragment eventListWeekFragment;
 
     private TextView dateText;
 
+    private AppComponent appComponent;
+
     private SimpleDate date;
+    private EventViewModel viewModel;
+
+    private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,65 +60,37 @@ public class MainActivity extends AppCompatActivity {
         Timber.plant(new Timber.DebugTree());
 
         //Setup Toolbar
-        Toolbar myToolbar = findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        date = new SimpleDate(14, 10, 2017, 0, 0);
+        FragmentAdapter fragmentPagerAdapter = new FragmentAdapter(this, getSupportFragmentManager());
+        viewPager = findViewById(R.id.viewPager);
+        viewPager.setAdapter(fragmentPagerAdapter);
 
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("date", date);
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(viewPager);
 
-        eventListDayFragment = new EventListDayFragment();
-        eventListDayFragment.setArguments(bundle);
-
-        eventListWeekFragment = new EventListWeekFragment();
-        eventListWeekFragment.setArguments(bundle);
+        //date = new SimpleDate(14, 10, 2017, 0, 0);
+        date = new SimpleDate();
 
         appComponent = DaggerAppComponent.builder()
-                .appModule(new AppModule(this.getApplication()))
+                .appModule(new AppModule(this))
                 .repoModule(new RepoModule(getApplication()))
                 .build();
-
-        if (findViewById(R.id.container) != null) {
-            if (savedInstanceState != null) {
-                return;
-            }
-
-            getSupportFragmentManager().beginTransaction().add(R.id.container, eventListDayFragment).commit();
-        }
-
-        setupTabHost();
 
         setupDatePicker();
 
         setupButtons();
+
+        initViewModel();
     }
 
-    public AppComponent getAppComponent() {
-        return appComponent;
+    public void setEventListDayFragment(EventListDayFragment eventListDayFragment) {
+        this.eventListDayFragment = eventListDayFragment;
     }
 
-    public void setupTabHost() {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("date", date);
-
-        tabHost = findViewById(R.id.tabHost);
-        tabHost.setup(this, getSupportFragmentManager(), R.id.container);
-
-        tabHost.addTab(tabHost.newTabSpec(TAB_1_TAG).setIndicator("Tagesansicht"), EventListDayFragment.class, bundle);
-        tabHost.addTab(tabHost.newTabSpec(TAB_2_TAG).setIndicator("Wochenansicht"), EventListWeekFragment.class, bundle);
-
-        /* Increase tab height programatically
-         * tabs.getTabWidget().getChildAt(1).getLayoutParams().height = 150;
-         */
-
-        for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
-            final TextView tv = tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
-            if (tv == null)
-                continue;
-            else
-                tv.setTextSize(10);
-        }
+    public void setEventListWeekFragment(EventListWeekFragment eventListWeekFragment) {
+        this.eventListWeekFragment = eventListWeekFragment;
     }
 
     public void setupDatePicker() {
@@ -161,22 +139,26 @@ public class MainActivity extends AppCompatActivity {
 
         dateText.setText(date.getFormatDate());
 
-        eventListDayFragment.setDate(date);
+        viewModel.init(url, date);
+
+        eventListDayFragment.removeAllEvents();
+        eventListWeekFragment.removeAllEvents();
     }
 
-    @Override
-    public void onBackPressed() {
-        boolean isPopFragment = false;
-        String currentTabTag = tabHost.getCurrentTabTag();
+    public void initViewModel() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        url = settings.getString(getString(R.string.key_dhbwkey), "");
 
-        if (currentTabTag.equals(TAB_1_TAG)) {
-            isPopFragment = ((BaseFragment)getSupportFragmentManager().findFragmentByTag(TAB_1_TAG)).popFragment();
-        } else if (currentTabTag.equals(TAB_2_TAG)) {
-            isPopFragment = ((BaseFragment)getSupportFragmentManager().findFragmentByTag(TAB_2_TAG)).popFragment();
-        }
+        if(url.length() > 0) {
+            viewModel = appComponent.eventViewModel();
+            viewModel.init(url, date);
 
-        if (!isPopFragment) {
-            finish();
+            viewModel.getEvents().observe(this, eventList -> {
+                eventListDayFragment.setEvents(eventList.get(date.getDayOfWeek()).getAllEvents());
+                eventListWeekFragment.setEvents(eventList, date.getFirstDayOfWeek());
+            });
+        } else {
+            //"Die URL deines Vorlesungsplans muss in den Einstellungen dieser App gespeichert werden."
         }
     }
 

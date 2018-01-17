@@ -1,4 +1,4 @@
-package de.gregoryseibert.vorlesungsplandhbw.service.model;
+package de.gregoryseibert.vorlesungsplandhbw.model;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -11,7 +11,7 @@ import java.util.Locale;
 
 public class SimpleDate implements Serializable {
     private Calendar c;
-    private SimpleDateFormat sdfDateTime, sdfDate, sdfTime;
+    private static SimpleDateFormat sdfDateTime, sdfDate, sdfDateShort, sdfTime;
 
     public SimpleDate(int day, int month, int year, int hour, int minute) {
         c = Calendar.getInstance();
@@ -23,6 +23,7 @@ public class SimpleDate implements Serializable {
         c = Calendar.getInstance();
         c.setTimeInMillis(date.getMillis());
         initSimpleDateFormat();
+
     }
 
     public SimpleDate(long millis) {
@@ -39,6 +40,7 @@ public class SimpleDate implements Serializable {
     private void initSimpleDateFormat() {
         sdfDateTime = new SimpleDateFormat("HH:mm 'Uhr, am' dd.MM.yyyy", Locale.GERMAN);
         sdfDate = new SimpleDateFormat("EEEE, dd.MM.yyyy", Locale.GERMAN);
+        sdfDateShort = new SimpleDateFormat("EEE, dd.MM", Locale.GERMAN);
         sdfTime = new SimpleDateFormat("HH:mm", Locale.GERMAN);
     }
 
@@ -62,6 +64,10 @@ public class SimpleDate implements Serializable {
         lastDay.getCalendar().add(Calendar.DAY_OF_WEEK, Calendar.SATURDAY - lastDay.getCalendar().get(Calendar.DAY_OF_WEEK) + 1);
 
         return lastDay;
+    }
+
+    public int getDayOfWeek() {
+        return c.get(Calendar.DAY_OF_WEEK) - 2;
     }
 
     public void addDays(int amount) {
@@ -96,6 +102,10 @@ public class SimpleDate implements Serializable {
 
     public String getFormatDate() {
         return sdfDate.format(c.getTime());
+    }
+
+    public String getFormatDateShort() {
+        return sdfDateShort.format(c.getTime());
     }
 
     public String getFormatTime() {

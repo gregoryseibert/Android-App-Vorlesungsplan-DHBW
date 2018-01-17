@@ -1,6 +1,5 @@
 package de.gregoryseibert.vorlesungsplandhbw.view.adapter;
 
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +9,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import de.gregoryseibert.vorlesungsplandhbw.R;
-import de.gregoryseibert.vorlesungsplandhbw.service.model.Event;
-import de.gregoryseibert.vorlesungsplandhbw.service.model.Event.EventType;
+import de.gregoryseibert.vorlesungsplandhbw.model.Event;
+import de.gregoryseibert.vorlesungsplandhbw.model.Event.EventType;
 import timber.log.Timber;
 
 /**
@@ -28,11 +27,19 @@ public class EventDayAdapter extends RecyclerView.Adapter<EventDayAdapter.EventV
     public void addEvents(ArrayList<Event> eventList) {
         removeAllEvents();
 
-        this.eventList.addAll(eventList);
+        if(eventList.size() > 0) {
+            this.eventList.addAll(eventList);
 
-        Timber.i("changeData: " + this.eventList.size());
+            Timber.i("changeData: " + this.eventList.size());
 
-        notifyDataSetChanged();
+            notifyDataSetChanged();
+        } else {
+            this.eventList.add(new Event("Für heute wurden keine Vorlesungen gefunden.", EventType.EMPTY));
+
+            Timber.i("changeData: " + this.eventList.size());
+
+            notifyDataSetChanged();
+        }
     }
 
     public void removeAllEvents() {
@@ -75,7 +82,6 @@ public class EventDayAdapter extends RecyclerView.Adapter<EventDayAdapter.EventV
     }
 
     class EventViewHolder extends RecyclerView.ViewHolder {
-        CardView cv;
         TextView titleText;
         TextView dateText;
         TextView roomText;
@@ -83,7 +89,6 @@ public class EventDayAdapter extends RecyclerView.Adapter<EventDayAdapter.EventV
         EventViewHolder(View itemView) {
             super(itemView);
 
-            cv = itemView.findViewById(R.id.cv);
             titleText = itemView.findViewById(R.id.titleText);
             dateText = itemView.findViewById(R.id.timeText);
             roomText = itemView.findViewById(R.id.roomText);

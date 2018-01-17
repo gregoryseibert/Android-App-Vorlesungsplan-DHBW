@@ -2,7 +2,7 @@ package de.gregoryseibert.vorlesungsplandhbw.service.repo;
 
 import android.arch.persistence.room.TypeConverter;
 
-import de.gregoryseibert.vorlesungsplandhbw.service.model.SimpleDate;
+import de.gregoryseibert.vorlesungsplandhbw.model.SimpleDate;
 
 /**
  * Created by Gregory Seibert on 12.01.2018.

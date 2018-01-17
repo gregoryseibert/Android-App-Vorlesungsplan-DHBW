@@ -6,15 +6,14 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
-import de.gregoryseibert.vorlesungsplandhbw.service.model.Event;
-import de.gregoryseibert.vorlesungsplandhbw.service.model.Event.EventType;
-import de.gregoryseibert.vorlesungsplandhbw.service.model.SimpleDate;
+import de.gregoryseibert.vorlesungsplandhbw.model.Event;
+import de.gregoryseibert.vorlesungsplandhbw.model.Event.EventType;
+import de.gregoryseibert.vorlesungsplandhbw.model.EventHolder;
+import de.gregoryseibert.vorlesungsplandhbw.model.SimpleDate;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -29,43 +28,51 @@ public class EventRepository {
     private final EventDAO EVENTDAO;
     private final OkHttpClient OKHTTPCLIENT;
 
+    private ArrayList<EventHolder> eventHolders;
+
     public EventRepository(EventDAO eventDAO, OkHttpClient okHttpClient) {
         this.EVENTDAO = eventDAO;
         this.OKHTTPCLIENT = okHttpClient;
-    }
 
-    public List<Event> getEvents(String url, SimpleDate date) {
-        SimpleDate rangeEnd = new SimpleDate(date);
-        rangeEnd.getCalendar().add(Calendar.HOUR_OF_DAY, 23);
+        eventHolders = new ArrayList<>();
 
-        Timber.i("start: " + date.getFormatDateTime());
-        Timber.i("end: " + rangeEnd.getFormatDateTime());
-
-        //TODO
-        boolean shouldRefresh = true;
-
-        if(shouldRefresh) {
-            refreshEvents(url, date);
+        for(int i = 0; i < 7; i++) {
+            eventHolders.add(new EventHolder());
         }
-
-        return EVENTDAO.getAllByRange(date.getMillis(), rangeEnd.getMillis());
     }
 
-    public List<Event> getEventsPerWeek(String url, SimpleDate date) {
+    public List<EventHolder> getAllEventsOfWeek(String url, SimpleDate date) {
+        SimpleDate rangeStart = date.getFirstDayOfWeek();
         SimpleDate rangeEnd = date.getLastDayOfWeek();
         rangeEnd.getCalendar().add(Calendar.HOUR_OF_DAY, 23);
 
-        Timber.i("start: " + date.getFormatDateTime());
+        Timber.i("start: " + rangeStart.getFormatDateTime());
         Timber.i("end: " + rangeEnd.getFormatDateTime());
 
         //TODO
         boolean shouldRefresh = true;
 
         if(shouldRefresh) {
-            refreshEvents(url, date);
+            refreshEvents(url, rangeStart);
         }
 
-        return EVENTDAO.getAllByRange(date.getMillis(), rangeEnd.getMillis());
+        List<Event> events = EVENTDAO.getAllByRange(rangeStart.getMillis(), rangeEnd.getMillis());
+
+        for(int i = 0; i < 7; i++) {
+            eventHolders.get(i).removeAllEvents();
+        }
+
+        for(int i = 0; i < events.size(); i++) {
+            Event event = events.get(i);
+
+            int dayOfWeek = event.getStartDate().getDayOfWeek();
+
+            Timber.i("inserting '" + event.getTitle() + "' from '" + event.getStartDate().getFormatDate() + "' to index " + dayOfWeek);
+
+            eventHolders.get(dayOfWeek).addEvent(event);
+        }
+
+        return eventHolders;
     }
 
     private void refreshEvents(String url, SimpleDate date) {
