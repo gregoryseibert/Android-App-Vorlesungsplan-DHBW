@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void setupDatePicker() {
         final Calendar newCalendar = Calendar.getInstance();
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.MyDatePickerDialogTheme, new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 setDate(new SimpleDate(day, month, year, 0, 0));
             }
@@ -104,7 +104,9 @@ public class MainActivity extends AppCompatActivity {
 
         dateText = findViewById(R.id.dateText);
         dateText.setText(date.getFormatDate());
-        dateText.setOnClickListener(new View.OnClickListener() {
+
+        ImageButton calendarButton = findViewById(R.id.calendarButton);
+        calendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 datePickerDialog.updateDate(date.getYear(), date.getMonth(), date.getDay());
