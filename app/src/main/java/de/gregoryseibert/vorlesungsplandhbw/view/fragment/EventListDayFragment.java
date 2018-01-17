@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import de.gregoryseibert.vorlesungsplandhbw.R;
 import de.gregoryseibert.vorlesungsplandhbw.model.Event;
 import de.gregoryseibert.vorlesungsplandhbw.view.adapter.EventDayAdapter;
-import timber.log.Timber;
 
 /**
  * Created by Gregory Seibert on 11.01.2018.
@@ -36,7 +35,7 @@ public class EventListDayFragment extends Fragment {
     public void setEvents(ArrayList<Event> events) {
         eventDayAdapter.addEvents(events);
 
-        Timber.i("events.size=" + events.size());
+        //Timber.i("events.size=" + events.size());
     }
 
     @Override

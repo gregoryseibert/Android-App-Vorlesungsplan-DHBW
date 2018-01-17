@@ -6,4 +6,9 @@
         android:orderInCategory="100"
         app:showAsAction="never"
         android:title="Einstellungen"/>
+    <item
+        android:id="@+id/action_about"
+        android:orderInCategory="101"
+        app:showAsAction="never"
+        android:title="Informationen"/>
 </menu>

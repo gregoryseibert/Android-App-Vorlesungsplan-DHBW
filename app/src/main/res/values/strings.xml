@@ -6,4 +6,5 @@
     <string name="key_dhbwkey">dhbwkey</string>
     <string name="title_dhbwkey">DHBW URL</string>
     <string name="summary_dhbwkey">Füge hier die URL des DHBW Vorlesungsplans ein</string>
+    <string name="title_activity_about">AboutActivity</string>
 </resources>

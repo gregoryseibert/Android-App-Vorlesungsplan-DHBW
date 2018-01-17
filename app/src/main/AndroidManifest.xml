@@ -20,7 +20,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.activity.SettingsActivity"></activity>
+        <activity android:name=".view.activity.SettingsActivity" />
+        <activity
+            android:name=".view.activity.AboutActivity"
+            android:label="@string/title_activity_about"
+            android:parentActivityName=".view.activity.MainActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="de.gregoryseibert.vorlesungsplandhbw.view.activity.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

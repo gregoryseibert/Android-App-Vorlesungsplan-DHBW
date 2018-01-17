@@ -46,8 +46,8 @@ public class EventRepository {
         SimpleDate rangeEnd = date.getLastDayOfWeek();
         rangeEnd.getCalendar().add(Calendar.HOUR_OF_DAY, 23);
 
-        Timber.i("start: " + rangeStart.getFormatDateTime());
-        Timber.i("end: " + rangeEnd.getFormatDateTime());
+//        Timber.i("start: " + rangeStart.getFormatDateTime());
+//        Timber.i("end: " + rangeEnd.getFormatDateTime());
 
         //TODO
         boolean shouldRefresh = true;
@@ -67,7 +67,7 @@ public class EventRepository {
 
             int dayOfWeek = event.getStartDate().getDayOfWeek();
 
-            Timber.i("inserting '" + event.getTitle() + "' from '" + event.getStartDate().getFormatDate() + "' to index " + dayOfWeek);
+//            Timber.i("inserting '" + event.getTitle() + "' from '" + event.getStartDate().getFormatDate() + "' to index " + dayOfWeek);
 
             eventHolders.get(dayOfWeek).addEvent(event);
         }
@@ -78,7 +78,7 @@ public class EventRepository {
     private void refreshEvents(String url, SimpleDate date) {
         String fullURL = generateURL(url, date.getDay(), date.getMonth(), date.getYear());
 
-        Timber.i(fullURL);
+//        Timber.i(fullURL);
 
         Document doc = loadDocument(fullURL);
 
