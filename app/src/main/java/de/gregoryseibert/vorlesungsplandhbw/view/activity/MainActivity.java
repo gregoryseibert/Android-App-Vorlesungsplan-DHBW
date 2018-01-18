@@ -116,6 +116,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setupButtons() {
+        ImageButton todayButton = findViewById(R.id.todayButton);
+        todayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setDate(new SimpleDate());
+            }
+        });
+
         ImageButton nextButton = findViewById(R.id.nextButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,14 +146,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setDate(SimpleDate date) {
-        this.date = date;
+        if(!date.equals(this.date)) {
+            this.date = date;
 
-        dateText.setText(date.getFormatDate());
+            dateText.setText(date.getFormatDate());
 
-        viewModel.init(url, date);
+            viewModel.init(url, date);
 
-        eventListDayFragment.removeAllEvents();
-        eventListWeekFragment.removeAllEvents();
+            eventListDayFragment.removeAllEvents();
+            eventListWeekFragment.removeAllEvents();
+        }
     }
 
     public void initViewModel() {
