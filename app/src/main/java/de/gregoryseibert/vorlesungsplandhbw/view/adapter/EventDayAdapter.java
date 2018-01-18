@@ -33,7 +33,7 @@ public class EventDayAdapter extends RecyclerView.Adapter<EventDayAdapter.EventV
 
             notifyDataSetChanged();
         } else {
-            this.eventList.add(new Event("Für heute wurden keine Vorlesungen gefunden.", EventType.EMPTY));
+            this.eventList.add(new Event("Es wurden keine Vorlesungen gefunden.", EventType.EMPTY));
 
 //            Timber.i("changeData: " + this.eventList.size());
 

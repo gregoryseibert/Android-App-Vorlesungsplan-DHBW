@@ -2,12 +2,12 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cv"
+    style="@style/CardView.Dark"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/item_offset"
     android:clickable="false"
-    app:cardBackgroundColor="#333333"
-    style="@style/CardView.Dark">
+    app:cardBackgroundColor="@color/colorCardBackground">
 
 
     <LinearLayout
@@ -26,21 +26,19 @@
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:text="Mo., 14.11."
-                android:textColor="#FFF"
+                android:textColor="@color/colorCardText"
                 android:textStyle="bold" />
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="#FFFFFF">
-            </View>
+                android:background="@color/colorCardText"></View>
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:reverseLayout="false">
-        </android.support.v7.widget.RecyclerView>
+            app:reverseLayout="false"></android.support.v7.widget.RecyclerView>
     </LinearLayout>
 </android.support.v7.widget.CardView>

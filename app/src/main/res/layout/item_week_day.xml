@@ -12,6 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="09:00 - 11:30"
-        android:textColor="#FFF"
+        android:textColor="@color/colorAccentText"
         android:textStyle="bold" />
 </RelativeLayout>

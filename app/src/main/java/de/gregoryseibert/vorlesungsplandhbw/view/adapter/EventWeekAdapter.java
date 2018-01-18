@@ -32,7 +32,7 @@ public class EventWeekAdapter extends RecyclerView.Adapter<EventWeekAdapter.Even
 
             notifyDataSetChanged();
         } else {
-            this.eventList.add(new Event("Für heute wurden keine Vorlesungen gefunden.", Event.EventType.EMPTY));
+            this.eventList.add(new Event("Es wurden keine Vorlesungen gefunden.", Event.EventType.EMPTY));
 
 //            Timber.i("changeData: " + this.eventList.size());
 
@@ -63,7 +63,7 @@ public class EventWeekAdapter extends RecyclerView.Adapter<EventWeekAdapter.Even
         if(event.type != Event.EventType.EMPTY) {
             eventViewHolder.timeText.setText(event.startDate.getFormatTime() + " - " + event.endDate.getFormatTime());
         } else {
-            eventViewHolder.timeText.setText("-");
+            eventViewHolder.timeText.setText("Frei");
         }
     }
 

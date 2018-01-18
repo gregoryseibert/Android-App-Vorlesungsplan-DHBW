@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3f51b5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#c0ca33</color>
-    <color name="date_bar_background">#eee</color>
+    <color name="colorPrimary">#233237</color>
+    <color name="colorPrimaryDark">#182326</color>
+    <color name="colorAccent">#dcb239</color>
+
+    <color name="colorPrimaryText">#FFFFFF</color>
+    <color name="colorAccentText">#FFFFFF</color>
+
+    <color name="colorBackground">#FFFFFF</color>
+
+    <color name="colorCardBackground">#182326</color>
+    <color name="colorCardText">#FFFFFF</color>
 </resources>
