@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void initViewModel() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        url = settings.getString(getString(R.string.key_dhbwkey), "");
+        url = settings.getString(getString(R.string.key_dhbwurl), "");
 
         if(url.length() > 0) {
             if(validURL(url)) {

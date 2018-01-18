@@ -9,3 +9,4 @@
 .externalNativeBuild
 app/release/output.json
 app/release/app-release.apk
+.idea/modules.xml
