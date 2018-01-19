@@ -9,6 +9,6 @@
 
     <color name="colorBackground">#FFFFFF</color>
 
-    <color name="colorCardBackground">#182326</color>
-    <color name="colorCardText">#FFFFFF</color>
+    <color name="colorCardBackground">@color/colorPrimary</color>
+    <color name="colorCardText">@color/colorPrimaryText</color>
 </resources>

@@ -72,6 +72,16 @@
             android:scaleType="centerCrop"
             android:src="@drawable/date_range" />
 
+        <ImageButton
+            android:id="@+id/restoreButton"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:backgroundTint="@color/colorAccent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/refresh" />
+
         <TextView
             android:id="@+id/dateText"
             android:layout_width="0dp"

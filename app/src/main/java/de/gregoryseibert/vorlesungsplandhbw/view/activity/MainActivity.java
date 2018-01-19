@@ -126,6 +126,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        ImageButton restoreButton = findViewById(R.id.restoreButton);
+        restoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setDate(new SimpleDate());
+            }
+        });
+
         ImageButton prevButton = findViewById(R.id.prevButton);
         prevButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,19 +146,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setDate(SimpleDate date) {
-        this.date = date;
+        if(!date.equals(this.date)) {
+            this.date = date;
 
-        dateText.setText(date.getFormatDate());
+            dateText.setText(date.getFormatDate());
 
-        viewModel.init(url, date);
+            viewModel.init(url, date);
 
-        eventListDayFragment.removeAllEvents();
-        eventListWeekFragment.removeAllEvents();
+            eventListDayFragment.removeAllEvents();
+            eventListWeekFragment.removeAllEvents();
+        }
     }
 
     public void initViewModel() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        url = settings.getString(getString(R.string.key_dhbwkey), "");
+        url = settings.getString(getString(R.string.key_dhbwurl), "");
 
         if(url.length() > 0) {
             if(validURL(url)) {

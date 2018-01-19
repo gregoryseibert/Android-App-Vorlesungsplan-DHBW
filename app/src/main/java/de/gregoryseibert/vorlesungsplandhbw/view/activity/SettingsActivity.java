@@ -12,6 +12,7 @@ public class SettingsActivity extends AppCompatSettingsActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         getFragmentManager().beginTransaction().replace(android.R.id.content, new MainPreferenceFragment()).commit();
     }
 
@@ -21,7 +22,7 @@ public class SettingsActivity extends AppCompatSettingsActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_main);
 
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.key_dhbwkey)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.key_dhbwurl)));
         }
     }
 
@@ -46,10 +47,7 @@ public class SettingsActivity extends AppCompatSettingsActivity {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             String stringValue = newValue.toString();
-
-            if (preference.getKey().equals("dhbwkey")) {
-                preference.setSummary(stringValue);
-            }
+            preference.setSummary(stringValue);
 
             return true;
         }

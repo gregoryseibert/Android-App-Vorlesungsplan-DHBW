@@ -58,6 +58,17 @@ public class Event implements Comparable<Event> {
         return 0;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof SimpleDate) {
+            if(((SimpleDate) obj).getFormatDate().equals(this.getStartDate().getFormatDate())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public EventType getType() {
         return type;
     }
