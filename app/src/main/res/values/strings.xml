@@ -4,8 +4,7 @@
     <string name="title_activity_about">Informationen</string>
 
     <!-- Strings related to Settings -->
-    <string name="header_title">Allgemein</string>
-    <string name="key_dhbwurl">dhbwurl</string>
-    <string name="title_dhbwurl">DHBW Vorlesungsplan URL</string>
-    <string name="summary_dhbwurl">Füge hier die URL deines DHBW Vorlesungsplans ein</string>
+    <string name="key_dhbwkey">dhbwkey</string>
+    <string name="title_dhbwkey">DHBW URL</string>
+    <string name="summary_dhbwkey">Füge hier die URL des DHBW Vorlesungsplans ein</string>
 </resources>

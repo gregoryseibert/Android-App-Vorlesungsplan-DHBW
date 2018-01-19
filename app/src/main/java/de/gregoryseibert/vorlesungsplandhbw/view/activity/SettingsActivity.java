@@ -1,43 +1,57 @@
 package de.gregoryseibert.vorlesungsplandhbw.view.activity;
 
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
+import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.view.MenuItem;
 
-import java.util.List;
-
 import de.gregoryseibert.vorlesungsplandhbw.R;
-import de.gregoryseibert.vorlesungsplandhbw.view.fragment.SettingsFragment;
 
 public class SettingsActivity extends AppCompatSettingsActivity {
     @Override
-    public void onBuildHeaders(List<Header> target) {
-        loadHeadersFromResource(R.xml.settings, target);
-
-        setContentView(R.layout.activity_settings);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        ActionBar bar = getSupportActionBar();
-        bar.setHomeButtonEnabled(true);
-        bar.setDisplayHomeAsUpEnabled(true);
-        bar.setDisplayShowTitleEnabled(true);
-        bar.setHomeAsUpIndicator(R.drawable.arrow_left);
-        bar.setTitle(getTitle());
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getFragmentManager().beginTransaction().replace(android.R.id.content, new MainPreferenceFragment()).commit();
     }
 
-    @Override
-    protected boolean isValidFragment(String fragmentName) {
-        return SettingsFragment.class.getName().equals(fragmentName);
+    public static class MainPreferenceFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(final Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_main);
+
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.key_dhbwkey)));
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                break;
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private static void bindPreferenceSummaryToValue(Preference preference) {
+        preference.setOnPreferenceChangeListener(sBindPreferenceSummaryToValueListener);
+
+        sBindPreferenceSummaryToValueListener.onPreferenceChange(preference,
+                PreferenceManager
+                        .getDefaultSharedPreferences(preference.getContext())
+                        .getString(preference.getKey(), ""));
+    }
+
+    private static Preference.OnPreferenceChangeListener sBindPreferenceSummaryToValueListener = new Preference.OnPreferenceChangeListener() {
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+            String stringValue = newValue.toString();
+
+            if (preference.getKey().equals("dhbwkey")) {
+                preference.setSummary(stringValue);
+            }
+
+            return true;
+        }
+    };
 }
