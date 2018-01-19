@@ -16,7 +16,7 @@ import de.gregoryseibert.vorlesungsplandhbw.view.activity.AppCompatSettingsActiv
  * Created by Gregory Seibert on 18.01.2018.
  */
 
-public class SettingsFragment extends PreferenceFragment {
+public class SettingsFragment  extends PreferenceFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,6 +29,9 @@ public class SettingsFragment extends PreferenceFragment {
                 switch (page) {
                     case "page1":
                         addPreferencesFromResource(R.xml.settings_page1);
+                        break;
+                    case "page2":
+                        //addPreferencesFromResource(R.xml.settings_page2);
                         break;
                 }
         }

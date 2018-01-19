@@ -66,15 +66,6 @@ public class SimpleDate implements Serializable {
         return lastDay;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if(obj instanceof SimpleDate) {
-            return ((SimpleDate) obj).getFormatDate().equals(this.getFormatDate());
-        }
-
-        return false;
-    }
-
     public int getDayOfWeek() {
         return c.get(Calendar.DAY_OF_WEEK) - 2;
     }
