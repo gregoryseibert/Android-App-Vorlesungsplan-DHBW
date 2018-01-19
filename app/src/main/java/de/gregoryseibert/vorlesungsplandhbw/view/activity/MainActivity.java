@@ -30,6 +30,8 @@ import de.gregoryseibert.vorlesungsplandhbw.view.adapter.FragmentAdapter;
 import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListDayFragment;
 import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListWeekFragment;
 import de.gregoryseibert.vorlesungsplandhbw.viewmodel.EventViewModel;
+import devs.mulham.horizontalcalendar.HorizontalCalendar;
+import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
 import timber.log.Timber;
 
 /**
@@ -57,10 +59,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Initiate Timber
         Timber.plant(new Timber.DebugTree());
 
-        //Setup Toolbar
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -71,17 +71,14 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
-        //date = new SimpleDate(14, 10, 2017, 0, 0);
-        date = new SimpleDate();
-
         appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .repoModule(new RepoModule(getApplication()))
                 .build();
 
-        setupDatePicker();
+        date = new SimpleDate();
 
-        setupButtons();
+        setupDatePicker();
 
         initViewModel();
     }
@@ -95,52 +92,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setupDatePicker() {
-        final Calendar newCalendar = Calendar.getInstance();
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.MyDatePickerDialogTheme, new DatePickerDialog.OnDateSetListener() {
-            public void onDateSet(DatePicker view, int year, int month, int day) {
-                setDate(new SimpleDate(day, month, year, 0, 0));
-            }
-        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+        Calendar startDate = Calendar.getInstance();
+        startDate.add(Calendar.MONTH, -3);
 
-        dateText = findViewById(R.id.dateText);
-        dateText.setText(date.getFormatDate());
+        Calendar endDate = Calendar.getInstance();
+        endDate.add(Calendar.MONTH, 3);
 
-        ImageButton calendarButton = findViewById(R.id.calendarButton);
-        calendarButton.setOnClickListener(new View.OnClickListener() {
+        HorizontalCalendar horizontalCalendar = new HorizontalCalendar.Builder(this, R.id.calendarView)
+                .range(startDate, endDate)
+                .datesNumberOnScreen(7)
+                .build();
+
+        horizontalCalendar.setCalendarListener(new HorizontalCalendarListener() {
             @Override
-            public void onClick(View v) {
-                datePickerDialog.updateDate(date.getYear(), date.getMonth(), date.getDay());
-                datePickerDialog.show();
-            }
-        });
-    }
-
-    public void setupButtons() {
-        ImageButton nextButton = findViewById(R.id.nextButton);
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SimpleDate newDate = new SimpleDate(date);
-                newDate.addDays(1);
-                setDate(newDate);
-            }
-        });
-
-        ImageButton restoreButton = findViewById(R.id.restoreButton);
-        restoreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setDate(new SimpleDate());
-            }
-        });
-
-        ImageButton prevButton = findViewById(R.id.prevButton);
-        prevButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SimpleDate newDate = new SimpleDate(date);
-                newDate.addDays(-1);
-                setDate(newDate);
+            public void onDateSelected(Calendar date, int position) {
+                SimpleDate simpleDate = new SimpleDate(date.getTimeInMillis());
+                setDate(simpleDate);
             }
         });
     }
@@ -148,8 +115,6 @@ public class MainActivity extends AppCompatActivity {
     public void setDate(SimpleDate date) {
         if(!date.equals(this.date)) {
             this.date = date;
-
-            dateText.setText(date.getFormatDate());
 
             viewModel.init(url, date);
 
@@ -168,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
                 viewModel.init(url, date);
 
                 viewModel.getEvents().observe(this, eventList -> {
+                    Timber.i("observed");
                     eventListDayFragment.setEvents(eventList.get(date.getDayOfWeek()).getAllEvents());
                     eventListWeekFragment.setEvents(eventList, date.getFirstDayOfWeek());
                 });

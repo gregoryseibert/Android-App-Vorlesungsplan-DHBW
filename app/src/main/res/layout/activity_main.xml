@@ -39,79 +39,16 @@
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/divider"
+        android:layout_above="@id/calendarView"
         android:layout_below="@id/appbar">
 
     </android.support.v4.view.ViewPager>
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/colorAccent"
-        android:layout_above="@id/linearLayout">
-
-    </View>
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <devs.mulham.horizontalcalendar.HorizontalCalendarView
+        android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/colorPrimary"
-        android:orientation="horizontal"
-        android:padding="8dp">
-
-        <ImageButton
-            android:id="@+id/calendarButton"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:backgroundTint="@color/colorAccent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/date_range" />
-
-        <ImageButton
-            android:id="@+id/restoreButton"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:backgroundTint="@color/colorAccent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/refresh" />
-
-        <TextView
-            android:id="@+id/dateText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:text="13.11.2017"
-            android:textAlignment="center"
-            android:textColor="@color/colorPrimaryText"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <ImageButton
-            android:id="@+id/prevButton"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:backgroundTint="@color/colorAccent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/arrow_left" />
-
-        <ImageButton
-            android:id="@+id/nextButton"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:backgroundTint="@color/colorAccent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/arrow_right" />
-    </LinearLayout>
+        app:textColorSelected="#FFFF"/>
 </RelativeLayout>
