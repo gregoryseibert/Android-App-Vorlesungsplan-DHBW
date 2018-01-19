@@ -12,11 +12,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import de.gregoryseibert.vorlesungsplandhbw.R;
-import de.gregoryseibert.vorlesungsplandhbw.model.EventHolder;
+import de.gregoryseibert.vorlesungsplandhbw.model.Day;
 import de.gregoryseibert.vorlesungsplandhbw.model.SimpleDate;
+import de.gregoryseibert.vorlesungsplandhbw.model.Week;
 import de.gregoryseibert.vorlesungsplandhbw.view.adapter.EventWeekAdapter;
 
 /**
@@ -34,21 +34,19 @@ public class EventListWeekFragment extends Fragment {
 
     }
 
-    public void removeAllEvents() {
+    public void setEvents(Week week) {
         if(weekTextViews.size() > 0) {
-            for(int i = 0; i < 7; i++) {
-                eventWeekAdapters.get(i).removeAllEvents();
-            }
-        }
-    }
+            SimpleDate firstDate = week.getFirstDate();
 
-    public void setEvents(List<EventHolder> events, SimpleDate firstDate) {
-        if(weekTextViews.size() > 0) {
-            for(int i = 0; i < 7; i++) {
-                TextView dayText = weekTextViews.get(i);
+            for(Day day : week.getDays()) {
+                int index = week.getDays().indexOf(day);
+
+                eventWeekAdapters.get(index).removeAllEvents();
+
+                TextView dayText = weekTextViews.get(index);
                 dayText.setText(firstDate.getFormatDateShort());
 
-                eventWeekAdapters.get(i).addEvents(events.get(i).getAllEvents());
+                eventWeekAdapters.get(index).addEvents(day.getEvents());
 
                 firstDate.addDays(1);
             }

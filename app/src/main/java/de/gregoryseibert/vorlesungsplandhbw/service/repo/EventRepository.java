@@ -14,6 +14,7 @@ import de.gregoryseibert.vorlesungsplandhbw.model.Event;
 import de.gregoryseibert.vorlesungsplandhbw.model.Event.EventType;
 import de.gregoryseibert.vorlesungsplandhbw.model.EventHolder;
 import de.gregoryseibert.vorlesungsplandhbw.model.SimpleDate;
+import de.gregoryseibert.vorlesungsplandhbw.model.Week;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -41,13 +42,13 @@ public class EventRepository {
         }
     }
 
-    public List<EventHolder> getAllEventsOfWeek(String url, SimpleDate date) {
+    public Week getAllEventsOfWeek(String url, SimpleDate date) {
         SimpleDate rangeStart = date.getFirstDayOfWeek();
         SimpleDate rangeEnd = date.getLastDayOfWeek();
         rangeEnd.getCalendar().add(Calendar.HOUR_OF_DAY, 23);
 
-//        Timber.i("start: " + rangeStart.getFormatDateTime());
-//        Timber.i("end: " + rangeEnd.getFormatDateTime());
+        Timber.i("start: " + rangeStart.getFormatDateTime());
+        Timber.i("end: " + rangeEnd.getFormatDateTime());
 
         //TODO
         boolean shouldRefresh = true;
@@ -58,21 +59,10 @@ public class EventRepository {
 
         List<Event> events = EVENTDAO.getAllByRange(rangeStart.getMillis(), rangeEnd.getMillis());
 
-        for(int i = 0; i < 7; i++) {
-            eventHolders.get(i).removeAllEvents();
-        }
+        Week week = new Week(rangeStart);
+        week.insertEvents(events);
 
-        for(int i = 0; i < events.size(); i++) {
-            Event event = events.get(i);
-
-            int dayOfWeek = event.getStartDate().getDayOfWeek();
-
-//            Timber.i("inserting '" + event.getTitle() + "' from '" + event.getStartDate().getFormatDate() + "' to index " + dayOfWeek);
-
-            eventHolders.get(dayOfWeek).addEvent(event);
-        }
-
-        return eventHolders;
+        return week;
     }
 
     private void refreshEvents(String url, SimpleDate date) {

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.gregoryseibert.vorlesungsplandhbw.R;
 import de.gregoryseibert.vorlesungsplandhbw.model.Event;
@@ -23,10 +24,10 @@ public class EventDayAdapter extends RecyclerView.Adapter<EventDayAdapter.EventV
         this.eventList = new ArrayList<>();
     }
 
-    public void addEvents(ArrayList<Event> eventList) {
+    public void addEvents(List<Event> eventList) {
         removeAllEvents();
 
-        if(eventList.size() > 0) {
+        if(eventList != null && eventList.size() > 0) {
             this.eventList.addAll(eventList);
 
 //            Timber.i("changeData: " + this.eventList.size());

@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import de.gregoryseibert.vorlesungsplandhbw.R;
 import de.gregoryseibert.vorlesungsplandhbw.model.Event;
@@ -28,14 +28,9 @@ public class EventListDayFragment extends Fragment {
 
     }
 
-    public void removeAllEvents() {
+    public void setEvents(List<Event> events) {
         eventDayAdapter.removeAllEvents();
-    }
-
-    public void setEvents(ArrayList<Event> events) {
         eventDayAdapter.addEvents(events);
-
-        //Timber.i("events.size=" + events.size());
     }
 
     @Override

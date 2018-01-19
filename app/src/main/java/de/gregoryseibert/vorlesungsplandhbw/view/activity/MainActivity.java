@@ -1,6 +1,5 @@
 package de.gregoryseibert.vorlesungsplandhbw.view.activity;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,9 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.DatePicker;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -117,9 +113,6 @@ public class MainActivity extends AppCompatActivity {
             this.date = date;
 
             viewModel.init(url, date);
-
-            eventListDayFragment.removeAllEvents();
-            eventListWeekFragment.removeAllEvents();
         }
     }
 
@@ -132,10 +125,10 @@ public class MainActivity extends AppCompatActivity {
                 viewModel = appComponent.eventViewModel();
                 viewModel.init(url, date);
 
-                viewModel.getEvents().observe(this, eventList -> {
+                viewModel.getEvents().observe(this, week -> {
                     Timber.i("observed");
-                    eventListDayFragment.setEvents(eventList.get(date.getDayOfWeek()).getAllEvents());
-                    eventListWeekFragment.setEvents(eventList, date.getFirstDayOfWeek());
+                    eventListDayFragment.setEvents(week.getEventsOfDay(date.getDayOfWeek()));
+                    eventListWeekFragment.setEvents(week);
                 });
             } else {
                 Toast.makeText(this, "Die in den Einstellungen gespeicherte URL deines Vorlesungsplans ist fehlerhaft.", Toast.LENGTH_LONG).show();

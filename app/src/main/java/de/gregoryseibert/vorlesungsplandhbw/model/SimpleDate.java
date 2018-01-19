@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import timber.log.Timber;
+
 /**
  * Created by Gregory Seibert on 10.01.2018.
  */
@@ -54,14 +56,17 @@ public class SimpleDate implements Serializable {
 
     public SimpleDate getFirstDayOfWeek() {
         SimpleDate firstDay = new SimpleDate(this);
-        firstDay.getCalendar().set(Calendar.DAY_OF_WEEK, this.getCalendar().getFirstDayOfWeek());
+        firstDay.getCalendar().add(Calendar.DAY_OF_MONTH, - firstDay.getDayOfWeek());
+
+        Timber.i(this.getFormatDate());
+        Timber.i(firstDay.getFormatDate());
 
         return firstDay;
     }
 
     public SimpleDate getLastDayOfWeek() {
-        SimpleDate lastDay = getFirstDayOfWeek();
-        lastDay.getCalendar().add(Calendar.DAY_OF_WEEK, Calendar.SATURDAY - lastDay.getCalendar().get(Calendar.DAY_OF_WEEK) + 1);
+        SimpleDate lastDay = new SimpleDate(this);
+        lastDay.getCalendar().add(Calendar.DAY_OF_MONTH, 6 - lastDay.getDayOfWeek());
 
         return lastDay;
     }

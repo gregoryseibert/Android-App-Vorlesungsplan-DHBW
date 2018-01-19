@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.gregoryseibert.vorlesungsplandhbw.R;
 import de.gregoryseibert.vorlesungsplandhbw.model.Event;
@@ -22,7 +23,7 @@ public class EventWeekAdapter extends RecyclerView.Adapter<EventWeekAdapter.Even
         this.eventList = new ArrayList<>();
     }
 
-    public void addEvents(ArrayList<Event> eventList) {
+    public void addEvents(List<Event> eventList) {
         removeAllEvents();
 
         if(eventList.size() > 0) {
