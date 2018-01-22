@@ -16,14 +16,17 @@ public class Week {
         this.firstDate = new SimpleDate(firstDate);
 
         SimpleDate date = new SimpleDate(firstDate);
-        for(int i = 0; i < 7; i++) {
+        for(int i = 0; i < 6; i++) {
             days.add(new Day(date.getFormatDateShort()));
             date.addDays(1);
         }
     }
 
     public void insertEvent(Event event) {
-        days.get(event.getStartDate().getDayOfWeek()).addEvent(event);
+        int index = event.getStartDate().getDayOfWeek();
+        if(index < 6) {
+            days.get(index).addEvent(event);
+        }
     }
 
     public void insertEvents(List<Event> events) {
@@ -33,7 +36,7 @@ public class Week {
     }
 
     public List<Event> getEventsOfDay(int day) {
-        if(day > 0 && day < 7) {
+        if(day > 0 && day < 6) {
             return days.get(day).getEvents();
         }
 

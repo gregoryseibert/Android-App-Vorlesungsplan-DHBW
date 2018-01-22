@@ -1,5 +1,7 @@
 package de.gregoryseibert.vorlesungsplandhbw.view.adapter;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +19,11 @@ import de.gregoryseibert.vorlesungsplandhbw.model.Event;
  */
 
 public class EventWeekAdapter extends RecyclerView.Adapter<EventWeekAdapter.EventViewHolder> {
+    private Context context;
     private ArrayList<Event> eventList;
 
-    public EventWeekAdapter(){
+    public EventWeekAdapter(Context context){
+        this.context = context;
         this.eventList = new ArrayList<>();
     }
 
@@ -33,11 +37,9 @@ public class EventWeekAdapter extends RecyclerView.Adapter<EventWeekAdapter.Even
 
             notifyDataSetChanged();
         } else {
-            this.eventList.add(new Event("Es wurden keine Vorlesungen gefunden.", Event.EventType.EMPTY));
+            this.eventList.add(new Event("Freier Tag", Event.EventType.EMPTY));
 
-//            Timber.i("changeData: " + this.eventList.size());
-
-            notifyDataSetChanged();
+            //notifyDataSetChanged();
         }
     }
 
@@ -61,10 +63,17 @@ public class EventWeekAdapter extends RecyclerView.Adapter<EventWeekAdapter.Even
     public void onBindViewHolder(EventViewHolder eventViewHolder, int i) {
         Event event = eventList.get(i);
 
+        eventViewHolder.titleText.setText(event.getTitle());
+
         if(event.type != Event.EventType.EMPTY) {
             eventViewHolder.timeText.setText(event.startDate.getFormatTime() + " - " + event.endDate.getFormatTime());
+
+            if(event.type == Event.EventType.EXAM) {
+                eventViewHolder.divider.setBackgroundColor(context.getResources().getColor(R.color.colorDividerExam));
+            }
         } else {
-            eventViewHolder.timeText.setText("Frei");
+            eventViewHolder.timeText.setText("");
+            eventViewHolder.divider.setBackgroundColor(context.getResources().getColor(R.color.colorDividerFree));
         }
     }
 
@@ -75,10 +84,14 @@ public class EventWeekAdapter extends RecyclerView.Adapter<EventWeekAdapter.Even
 
     class EventViewHolder extends RecyclerView.ViewHolder {
         TextView timeText;
+        TextView titleText;
+        View divider;
 
         EventViewHolder(View itemView) {
             super(itemView);
             timeText = itemView.findViewById(R.id.timeText);
+            titleText = itemView.findViewById(R.id.titleText);
+            divider = itemView.findViewById(R.id.divider);
         }
     }
 }

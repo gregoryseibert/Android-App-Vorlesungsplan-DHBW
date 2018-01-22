@@ -42,7 +42,7 @@ public class SimpleDate implements Serializable {
     private void initSimpleDateFormat() {
         sdfDateTime = new SimpleDateFormat("HH:mm 'Uhr, am' dd.MM.yyyy", Locale.GERMAN);
         sdfDate = new SimpleDateFormat("EEEE, dd.MM.yyyy", Locale.GERMAN);
-        sdfDateShort = new SimpleDateFormat("EEE, dd.MM", Locale.GERMAN);
+        sdfDateShort = new SimpleDateFormat("EEEE", Locale.GERMAN);
         sdfTime = new SimpleDateFormat("HH:mm", Locale.GERMAN);
     }
 

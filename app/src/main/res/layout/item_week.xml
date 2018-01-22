@@ -1,44 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cv"
-    style="@style/CardView.Dark"
+    android:id="@+id/week_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/item_offset"
-    android:clickable="false"
-    app:cardBackgroundColor="@color/colorCardBackground">
+    android:background="@color/colorCardBackground">
 
-
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/week_container_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:padding="@dimen/item_offset">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/dayText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_centerVertical="true"
+            android:paddingBottom="@dimen/item_offset"
+            android:paddingEnd="@dimen/item_offset"
+            android:paddingTop="@dimen/item_offset"
+            android:text="Montag"
+            android:textColor="@color/colorCardText"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/dayText"
-                android:layout_width="96dp"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="Mo., 14.11."
-                android:textColor="@color/colorCardText"
-                android:textStyle="bold" />
+        <TextView
+            android:id="@+id/eventCounter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="96dp"
+            android:background="@drawable/circle"
+            android:gravity="center"
+            android:text="3"
+            android:textAlignment="center"
+            android:textColor="@color/colorCardBackground"
+            android:textStyle="bold" />
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/colorCardText"></View>
-        </LinearLayout>
+        <ToggleButton
+            android:id="@+id/toggleButton"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/toggle_selector"
+            android:checked="false"
+            android:text=""
+            android:textOff=""
+            android:textOn="" />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/week_container_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/week_container_top"
+        android:background="@color/colorCardBackgroundIndent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="@dimen/item_offset"
             app:reverseLayout="false"></android.support.v7.widget.RecyclerView>
-    </LinearLayout>
-</android.support.v7.widget.CardView>
+    </FrameLayout>
+
+</RelativeLayout>

@@ -45,6 +45,9 @@ dependencies {
     //Horizontal Calendar
     compile 'devs.mulham.horizontalcalendar:horizontalcalendar:1.3.2'
 
+    //Animations
+    compile 'com.daimajia.easing:library:2.1@aar'
+
     //Dagger 2
     compile 'com.google.dagger:dagger:2.14.1'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.14.1'

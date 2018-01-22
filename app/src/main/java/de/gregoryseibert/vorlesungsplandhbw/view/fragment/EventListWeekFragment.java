@@ -8,23 +8,29 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.gregoryseibert.vorlesungsplandhbw.R;
 import de.gregoryseibert.vorlesungsplandhbw.model.Day;
+import de.gregoryseibert.vorlesungsplandhbw.model.Event;
 import de.gregoryseibert.vorlesungsplandhbw.model.SimpleDate;
 import de.gregoryseibert.vorlesungsplandhbw.model.Week;
 import de.gregoryseibert.vorlesungsplandhbw.view.adapter.EventWeekAdapter;
+import de.gregoryseibert.vorlesungsplandhbw.view.util.Animator;
 
 /**
  * Created by Gregory Seibert on 16.01.2018.
  */
 
 public class EventListWeekFragment extends Fragment {
-    private ArrayList<TextView> weekTextViews;
+    private ArrayList<View> itemWeeks;
 
     private ArrayList<RecyclerView> recyclerViews;
 
@@ -35,7 +41,7 @@ public class EventListWeekFragment extends Fragment {
     }
 
     public void setEvents(Week week) {
-        if(weekTextViews.size() > 0) {
+        if(itemWeeks.size() > 0) {
             SimpleDate firstDate = week.getFirstDate();
 
             for(Day day : week.getDays()) {
@@ -43,10 +49,20 @@ public class EventListWeekFragment extends Fragment {
 
                 eventWeekAdapters.get(index).removeAllEvents();
 
-                TextView dayText = weekTextViews.get(index);
+                List<Event> events = day.getEvents();
+
+                TextView dayText = itemWeeks.get(index).findViewById(R.id.dayText);
                 dayText.setText(firstDate.getFormatDateShort());
 
-                eventWeekAdapters.get(index).addEvents(day.getEvents());
+                TextView eventCounter = itemWeeks.get(index).findViewById(R.id.eventCounter);
+
+                if(events != null && events.size() > 0) {
+                    eventCounter.setText("" + events.size());
+                } else {
+                    eventCounter.setText("0");
+                }
+
+                eventWeekAdapters.get(index).addEvents(events);
 
                 firstDate.addDays(1);
             }
@@ -64,23 +80,41 @@ public class EventListWeekFragment extends Fragment {
 
         LinearLayout linearLayout = view.findViewById(R.id.linearLayout);
 
-        weekTextViews = new ArrayList<>();
+        itemWeeks = new ArrayList<>();
         recyclerViews = new ArrayList<>();
         eventWeekAdapters = new ArrayList<>();
 
-        for(int i = 0; i < 7; i++) {
+        for(int i = 0; i < 6; i++) {
             View itemWeek = inflater.inflate(R.layout.item_week, linearLayout, false);
             linearLayout.addView(itemWeek);
 
             RecyclerView itemWeekRecyclerView = itemWeek.findViewById(R.id.recyclerView);
-            itemWeekRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.HORIZONTAL, false));
-            itemWeekRecyclerView.addItemDecoration(new ItemOffsetDecoration(this.getContext(), R.dimen.item_offset, true));
+            itemWeekRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-            EventWeekAdapter eventWeekAdapter = new EventWeekAdapter();
+            ToggleButton toggleButton = itemWeek.findViewById(R.id.toggleButton);
+            toggleButton.setChecked(true);
+            toggleButton.setClickable(false);
+
+            FrameLayout containerBottom = itemWeek.findViewById(R.id.week_container_bottom);
+
+            itemWeek.findViewById(R.id.week_container_top).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(toggleButton.isChecked()) {
+                        Animator.collapse(containerBottom);
+                        toggleButton.setChecked(false);
+                    } else {
+                        Animator.expand(containerBottom);
+                        toggleButton.setChecked(true);
+                    }
+                }
+            });
+
+            EventWeekAdapter eventWeekAdapter = new EventWeekAdapter(getContext());
 
             itemWeekRecyclerView.setAdapter(eventWeekAdapter);
 
-            weekTextViews.add(itemWeek.findViewById(R.id.dayText));
+            itemWeeks.add(itemWeek);
             recyclerViews.add(itemWeekRecyclerView);
             eventWeekAdapters.add(eventWeekAdapter);
         }

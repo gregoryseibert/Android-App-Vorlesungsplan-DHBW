@@ -44,7 +44,7 @@ public class EventListDayFragment extends Fragment {
 
         rv = view.findViewById(R.id.recyclerView);
         rv.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        rv.addItemDecoration(new ItemOffsetDecoration(this.getContext(), R.dimen.item_offset, false));
+        //rv.addItemDecoration(new ItemOffsetDecoration(this.getContext(), R.dimen.item_offset, false));
 
         eventDayAdapter = new EventDayAdapter();
         rv.setAdapter(eventDayAdapter);

@@ -105,6 +105,11 @@ public class MainActivity extends AppCompatActivity {
                 SimpleDate simpleDate = new SimpleDate(date.getTimeInMillis());
                 setDate(simpleDate);
             }
+
+            @Override
+            public boolean onDateLongClicked(Calendar date, int position) {
+                return true;
+            }
         });
     }
 

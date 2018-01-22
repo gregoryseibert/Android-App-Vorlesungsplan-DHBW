@@ -176,7 +176,7 @@ public class EventRepository {
 
                     Event event;
                     if(linkContent.contains("Klausur")) {
-                        event = new Event(new SimpleDate(), lStartDate, lEndDate, lTitle, lRoom, "", EventType.LECTURE);
+                        event = new Event(new SimpleDate(), lStartDate, lEndDate, lTitle, lRoom, "", EventType.EXAM);
                     } else {
                         event = new Event(new SimpleDate(), lStartDate, lEndDate, lTitle, lRoom, lLecturer, EventType.LECTURE);
                     }
