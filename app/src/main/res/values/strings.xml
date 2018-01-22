@@ -7,4 +7,12 @@
     <string name="key_dhbwurl">dhbwurl</string>
     <string name="title_dhbwurl">DHBW URL</string>
     <string name="summary_dhbwurl">Füge hier die URL des DHBW Vorlesungsplans ein</string>
+
+    <string name="key_weeklyexpanded">weeklyexpanded</string>
+    <string name="title_weeklyexpanded">Ausgeklappte Wochenansicht</string>
+
+    <string name="key_datepickertop">datepickertop</string>
+    <string name="title_datepickertop">Datumsauswahl oben</string>
+    <string name="title_datepickertop_off">Datumsauswahl unten</string>
+
 </resources>

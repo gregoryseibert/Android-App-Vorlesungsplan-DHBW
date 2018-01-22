@@ -4,4 +4,12 @@
         android:key="@string/key_dhbwurl"
         android:summary="@string/summary_dhbwurl"
         android:title="@string/title_dhbwurl"/>
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="@string/key_weeklyexpanded"
+        android:title="@string/title_weeklyexpanded" />
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="@string/key_datepickertop"
+        android:title="@string/title_datepickertop" />
 </PreferenceScreen>

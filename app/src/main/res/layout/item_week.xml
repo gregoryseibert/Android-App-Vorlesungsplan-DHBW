@@ -33,7 +33,7 @@
             android:layout_marginLeft="96dp"
             android:background="@drawable/circle"
             android:gravity="center"
-            android:text="3"
+            android:text="99"
             android:textAlignment="center"
             android:textColor="@color/colorCardBackground"
             android:textStyle="bold" />

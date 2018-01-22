@@ -14,7 +14,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +34,7 @@ import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListWeekFragment;
 import de.gregoryseibert.vorlesungsplandhbw.view.util.ZoomOutAndSlideTransformer;
 import de.gregoryseibert.vorlesungsplandhbw.viewmodel.EventViewModel;
 import devs.mulham.horizontalcalendar.HorizontalCalendar;
+import devs.mulham.horizontalcalendar.HorizontalCalendarView;
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
 import timber.log.Timber;
 
@@ -43,12 +46,13 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ViewPager viewPager;
 
+    private SharedPreferences settings;
+    private SharedPreferences.OnSharedPreferenceChangeListener settingsListener;
+
     private EventListDayFragment eventListDayFragment;
     private EventListWeekFragment eventListWeekFragment;
 
-    private TextView dateText;
-
-    private AppComponent appComponent;
+    public static AppComponent appComponent;
 
     private SimpleDate date;
     private EventViewModel viewModel;
@@ -64,6 +68,16 @@ public class MainActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        settings = PreferenceManager.getDefaultSharedPreferences(this);
+        settingsListener = (SharedPreferences sharedPreferences, String key) -> {
+            /*if(key.equals(getString(R.string.key_datepickertop))) {
+                initLayout();
+            } else */if (key.equals(getString(R.string.key_dhbwurl))) {
+                initViewModel();
+            }
+        };
+        settings.registerOnSharedPreferenceChangeListener(settingsListener);
 
         FragmentAdapter fragmentPagerAdapter = new FragmentAdapter(this, getSupportFragmentManager());
         viewPager = findViewById(R.id.viewPager);
@@ -83,6 +97,13 @@ public class MainActivity extends AppCompatActivity {
         setupDatePicker();
 
         initViewModel();
+
+        initLayout();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     public void setEventListDayFragment(EventListDayFragment eventListDayFragment) {
@@ -106,12 +127,10 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         final Calendar newCalendar = Calendar.getInstance();
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.MyDatePickerDialogTheme, new DatePickerDialog.OnDateSetListener() {
-            public void onDateSet(DatePicker view, int year, int month, int day) {
-                SimpleDate date = new SimpleDate(day, month, year, 0, 0);
-                setDate(date);
-                horizontalCalendar.selectDate(date.getCalendar(), true);
-            }
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.MyDatePickerDialogTheme, (DatePicker view, int year, int month, int day) -> {
+            SimpleDate date = new SimpleDate(day, month, year, 0, 0);
+            setDate(date);
+            horizontalCalendar.selectDate(date.getCalendar(), true);
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
 
         horizontalCalendar.setCalendarListener(new HorizontalCalendarListener() {
@@ -141,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initViewModel() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         url = settings.getString(getString(R.string.key_dhbwurl), "");
 
         if(url.length() > 0) {
@@ -150,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
                 viewModel.init(url, date);
 
                 viewModel.getEvents().observe(this, week -> {
-                    Timber.i("observed");
+                    //Timber.i("observed");
                     eventListDayFragment.setEvents(week.getEventsOfDay(date.getDayOfWeek()));
                     eventListWeekFragment.setEvents(week);
                 });
@@ -168,6 +186,24 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    public void initLayout() {
+        if(!settings.getBoolean(getString(R.string.key_datepickertop), true)) {
+            HorizontalCalendarView calendarView = findViewById(R.id.calendarView);
+            ((ViewGroup) calendarView.getParent()).removeView(calendarView);
+            ((ViewGroup) findViewById(R.id.relativeLayout)).addView(calendarView);
+
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) calendarView.getLayoutParams();
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            params.topMargin = 0;
+            calendarView.setLayoutParams(params);
+
+            params = (RelativeLayout.LayoutParams) viewPager.getLayoutParams();
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 0);
+            params.addRule(RelativeLayout.ABOVE, R.id.calendarView);
+            viewPager.setLayoutParams(params);
+        }
     }
 
     @Override

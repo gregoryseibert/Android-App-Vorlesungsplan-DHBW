@@ -4,26 +4,36 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import de.gregoryseibert.vorlesungsplandhbw.R;
+import de.gregoryseibert.vorlesungsplandhbw.service.dagger.component.AppComponent;
+import de.gregoryseibert.vorlesungsplandhbw.service.dagger.component.DaggerAppComponent;
+import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.AppModule;
+import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.RepoModule;
 
 public class SettingsActivity extends AppCompatSettingsActivity {
+    private AppComponent appComponent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getFragmentManager().beginTransaction().replace(android.R.id.content, new MainPreferenceFragment()).commit();
-    }
+        setContentView(R.layout.activity_settings);
 
-    public static class MainPreferenceFragment extends PreferenceFragment {
-        @Override
-        public void onCreate(final Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setTitle(getTitle());
 
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.key_dhbwurl)));
-        }
+        findViewById(R.id.emptyDatabaseButton).setOnClickListener((View view) -> {
+            MainActivity.appComponent.executorService().execute(() -> MainActivity.appComponent.eventRepository().emptyDatabase());
+        });
+
+        getFragmentManager().beginTransaction().replace(R.id.content, new MainPreferenceFragment()).commit();
     }
 
     @Override
@@ -52,4 +62,15 @@ public class SettingsActivity extends AppCompatSettingsActivity {
             return true;
         }
     };
+
+    public static class MainPreferenceFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(final Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            addPreferencesFromResource(R.xml.pref_main);
+
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.key_dhbwurl)));
+        }
+    }
 }

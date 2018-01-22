@@ -1,6 +1,9 @@
 package de.gregoryseibert.vorlesungsplandhbw.view.fragment;
 
+import android.content.SharedPreferences;
+import android.opengl.Visibility;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -78,6 +81,9 @@ public class EventListWeekFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.event_week_list, container, false);
 
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
+        boolean maximizedWeekly = settings.getBoolean(getString(R.string.key_weeklyexpanded), true);
+
         LinearLayout linearLayout = view.findViewById(R.id.linearLayout);
 
         itemWeeks = new ArrayList<>();
@@ -92,10 +98,14 @@ public class EventListWeekFragment extends Fragment {
             itemWeekRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
             ToggleButton toggleButton = itemWeek.findViewById(R.id.toggleButton);
-            toggleButton.setChecked(true);
+            toggleButton.setChecked(maximizedWeekly);
             toggleButton.setClickable(false);
 
             FrameLayout containerBottom = itemWeek.findViewById(R.id.week_container_bottom);
+
+            if(!maximizedWeekly) {
+                containerBottom.setVisibility(View.GONE);
+            }
 
             itemWeek.findViewById(R.id.week_container_top).setOnClickListener(new View.OnClickListener() {
                 @Override

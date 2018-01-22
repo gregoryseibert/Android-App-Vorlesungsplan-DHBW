@@ -81,6 +81,9 @@ public class EventRepository {
         }
     }
 
+    public void emptyDatabase() {
+        EVENTDAO.deleteAll();
+    }
 
     private String generateURL(String url, int day, int month, int year) {
         if(day != 0 && month != 0 && year != 0) {
