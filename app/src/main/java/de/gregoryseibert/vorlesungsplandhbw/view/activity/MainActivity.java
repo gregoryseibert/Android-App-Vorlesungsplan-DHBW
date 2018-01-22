@@ -1,9 +1,11 @@
 package de.gregoryseibert.vorlesungsplandhbw.view.activity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +29,7 @@ import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.RepoModule;
 import de.gregoryseibert.vorlesungsplandhbw.view.adapter.FragmentAdapter;
 import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListDayFragment;
 import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListWeekFragment;
+import de.gregoryseibert.vorlesungsplandhbw.view.util.ZoomOutAndSlideTransformer;
 import de.gregoryseibert.vorlesungsplandhbw.viewmodel.EventViewModel;
 import devs.mulham.horizontalcalendar.HorizontalCalendar;
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
@@ -63,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentAdapter fragmentPagerAdapter = new FragmentAdapter(this, getSupportFragmentManager());
         viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(fragmentPagerAdapter);
+        viewPager.setPageTransformer(true, new ZoomOutAndSlideTransformer());
 
         TabLayout tabLayout = findViewById(R.id.tabLayout);
         tabLayout.setupWithViewPager(viewPager);
@@ -99,6 +105,15 @@ public class MainActivity extends AppCompatActivity {
                 .datesNumberOnScreen(7)
                 .build();
 
+        final Calendar newCalendar = Calendar.getInstance();
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.MyDatePickerDialogTheme, new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                SimpleDate date = new SimpleDate(day, month, year, 0, 0);
+                setDate(date);
+                horizontalCalendar.selectDate(date.getCalendar(), true);
+            }
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+
         horizontalCalendar.setCalendarListener(new HorizontalCalendarListener() {
             @Override
             public void onDateSelected(Calendar date, int position) {
@@ -107,7 +122,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public boolean onDateLongClicked(Calendar date, int position) {
+            public boolean onDateLongClicked(Calendar cal, int position) {
+                SimpleDate date = new SimpleDate(cal.getTimeInMillis());
+                datePickerDialog.updateDate(date.getYear(), date.getMonth(), date.getDay());
+                datePickerDialog.show();
+
                 return true;
             }
         });
