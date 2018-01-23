@@ -4,6 +4,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -63,12 +65,14 @@ public class EventDayAdapter extends RecyclerView.Adapter<EventDayAdapter.EventV
         if(event.type != EventType.EMPTY) {
             eventViewHolder.dateText.setVisibility(View.VISIBLE);
             eventViewHolder.roomText.setVisibility(View.VISIBLE);
+            eventViewHolder.dividerLayout.setVisibility(View.VISIBLE);
 
             eventViewHolder.dateText.setText(String.format("%s - %s", event.startDate.getFormatTime(), event.endDate.getFormatTime()));
             eventViewHolder.roomText.setText(event.room);
         } else {
             eventViewHolder.dateText.setVisibility(View.GONE);
             eventViewHolder.roomText.setVisibility(View.GONE);
+            eventViewHolder.dividerLayout.setVisibility(View.GONE);
         }
     }
 
@@ -81,6 +85,7 @@ public class EventDayAdapter extends RecyclerView.Adapter<EventDayAdapter.EventV
         TextView titleText;
         TextView dateText;
         TextView roomText;
+        RelativeLayout dividerLayout;
 
         EventViewHolder(View itemView) {
             super(itemView);
@@ -88,6 +93,7 @@ public class EventDayAdapter extends RecyclerView.Adapter<EventDayAdapter.EventV
             titleText = itemView.findViewById(R.id.titleText);
             dateText = itemView.findViewById(R.id.timeText);
             roomText = itemView.findViewById(R.id.roomText);
+            dividerLayout = itemView.findViewById(R.id.dividerLayout);
         }
     }
 }

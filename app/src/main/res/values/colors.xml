@@ -16,4 +16,6 @@
     <color name="colorDividerNormal">@color/colorAccent</color>
     <color name="colorDividerExam">@color/colorAccent</color>
     <color name="colorDividerFree">@color/colorAccent</color>
+
+    <color name="colorTimelineCircle">@color/colorDividerNormal</color>
 </resources>

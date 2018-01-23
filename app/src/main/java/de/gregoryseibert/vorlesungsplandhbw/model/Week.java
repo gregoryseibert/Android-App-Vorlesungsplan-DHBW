@@ -36,7 +36,7 @@ public class Week {
     }
 
     public List<Event> getEventsOfDay(int day) {
-        if(day > 0 && day < 6) {
+        if(day >= 0 && day < 6) {
             return days.get(day).getEvents();
         }
 
