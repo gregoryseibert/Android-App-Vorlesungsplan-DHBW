@@ -1,7 +1,6 @@
 package de.gregoryseibert.vorlesungsplandhbw.view.fragment;
 
 import android.content.SharedPreferences;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -13,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -60,7 +58,7 @@ public class EventListWeekFragment extends Fragment {
                 TextView eventCounter = itemWeeks.get(index).findViewById(R.id.eventCounter);
 
                 if(events != null && events.size() > 0) {
-                    eventCounter.setText("" + events.size());
+                    eventCounter.setText(String.format("%d", events.size()));
                 } else {
                     eventCounter.setText("0");
                 }

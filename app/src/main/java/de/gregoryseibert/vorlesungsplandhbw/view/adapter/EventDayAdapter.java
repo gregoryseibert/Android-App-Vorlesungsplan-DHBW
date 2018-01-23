@@ -24,26 +24,21 @@ public class EventDayAdapter extends RecyclerView.Adapter<EventDayAdapter.EventV
         this.eventList = new ArrayList<>();
     }
 
-    public void addEvents(List<Event> eventList) {
+    public void addEvents(List<Event> newEventList) {
         removeAllEvents();
 
-        if(eventList != null && eventList.size() > 0) {
-            this.eventList.addAll(eventList);
-
-//            Timber.i("changeData: " + this.eventList.size());
-
-            notifyDataSetChanged();
+        if(newEventList != null && newEventList.size() > 0) {
+            eventList.addAll(newEventList);
         } else {
-            this.eventList.add(new Event("Es wurden keine Vorlesungen gefunden.", EventType.EMPTY));
-
-//            Timber.i("changeData: " + this.eventList.size());
-
-            notifyDataSetChanged();
+            eventList.add(new Event("Es wurden keine Vorlesungen gefunden.", EventType.EMPTY));
         }
+
+        notifyDataSetChanged();
     }
 
     public void removeAllEvents() {
         eventList.clear();
+
         notifyDataSetChanged();
     }
 
@@ -55,6 +50,7 @@ public class EventDayAdapter extends RecyclerView.Adapter<EventDayAdapter.EventV
     @Override
     public EventViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_day, viewGroup, false);
+
         return new EventViewHolder(view);
     }
 
@@ -68,7 +64,7 @@ public class EventDayAdapter extends RecyclerView.Adapter<EventDayAdapter.EventV
             eventViewHolder.dateText.setVisibility(View.VISIBLE);
             eventViewHolder.roomText.setVisibility(View.VISIBLE);
 
-            eventViewHolder.dateText.setText(event.startDate.getFormatTime() + " - " + event.endDate.getFormatTime());
+            eventViewHolder.dateText.setText(String.format("%s - %s", event.startDate.getFormatTime(), event.endDate.getFormatTime()));
             eventViewHolder.roomText.setText(event.room);
         } else {
             eventViewHolder.dateText.setVisibility(View.GONE);

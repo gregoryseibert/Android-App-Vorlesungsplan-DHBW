@@ -1,6 +1,7 @@
 package de.gregoryseibert.vorlesungsplandhbw.view.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,8 +21,6 @@ import de.gregoryseibert.vorlesungsplandhbw.view.adapter.EventDayAdapter;
  */
 
 public class EventListDayFragment extends Fragment {
-    private RecyclerView rv;
-
     private EventDayAdapter eventDayAdapter;
 
     public EventListDayFragment() {
@@ -30,6 +29,7 @@ public class EventListDayFragment extends Fragment {
 
     public void setEvents(List<Event> events) {
         eventDayAdapter.removeAllEvents();
+
         eventDayAdapter.addEvents(events);
     }
 
@@ -39,14 +39,14 @@ public class EventListDayFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.event_day_list, container, false);
 
-        rv = view.findViewById(R.id.recyclerView);
-        rv.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        //rv.addItemDecoration(new ItemOffsetDecoration(this.getContext(), R.dimen.item_offset, false));
-
         eventDayAdapter = new EventDayAdapter();
+
+        RecyclerView rv = view.findViewById(R.id.recyclerView);
+        rv.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        //rv.addItemDecoration(new ItemOffsetDecoration(getContext(), R.dimen.item_offset, false));
         rv.setAdapter(eventDayAdapter);
 
         return view;

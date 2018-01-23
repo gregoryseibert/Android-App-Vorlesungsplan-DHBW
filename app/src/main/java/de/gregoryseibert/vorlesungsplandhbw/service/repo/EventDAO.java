@@ -1,7 +1,6 @@
 package de.gregoryseibert.vorlesungsplandhbw.service.repo;
 
 import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
@@ -17,6 +16,9 @@ import de.gregoryseibert.vorlesungsplandhbw.model.Event;
 public interface EventDAO {
     @Query("SELECT * FROM event WHERE startDate BETWEEN :rangeStart AND :rangeEnd")
     List<Event> getAllByRange(long rangeStart, long rangeEnd);
+
+    @Query("SELECT * FROM event")
+    List<Event> getAll();
 
     @Query("DELETE FROM event WHERE startDate BETWEEN :rangeStart AND :rangeEnd")
     void deleteAllByRange(long rangeStart, long rangeEnd);

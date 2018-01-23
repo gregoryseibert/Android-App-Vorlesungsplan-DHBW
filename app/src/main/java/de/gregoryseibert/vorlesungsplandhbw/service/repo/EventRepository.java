@@ -12,7 +12,6 @@ import java.util.List;
 
 import de.gregoryseibert.vorlesungsplandhbw.model.Event;
 import de.gregoryseibert.vorlesungsplandhbw.model.Event.EventType;
-import de.gregoryseibert.vorlesungsplandhbw.model.EventHolder;
 import de.gregoryseibert.vorlesungsplandhbw.model.SimpleDate;
 import de.gregoryseibert.vorlesungsplandhbw.model.Week;
 import okhttp3.OkHttpClient;
@@ -29,17 +28,13 @@ public class EventRepository {
     private final EventDAO EVENTDAO;
     private final OkHttpClient OKHTTPCLIENT;
 
-    private ArrayList<EventHolder> eventHolders;
-
     public EventRepository(EventDAO eventDAO, OkHttpClient okHttpClient) {
         this.EVENTDAO = eventDAO;
         this.OKHTTPCLIENT = okHttpClient;
+    }
 
-        eventHolders = new ArrayList<>();
-
-        for(int i = 0; i < 7; i++) {
-            eventHolders.add(new EventHolder());
-        }
+    public List<Event> getAllEvents() {
+        return EVENTDAO.getAll();
     }
 
     public Week getAllEventsOfWeek(String url, SimpleDate date) {
@@ -47,8 +42,8 @@ public class EventRepository {
         SimpleDate rangeEnd = date.getLastDayOfWeek();
         rangeEnd.getCalendar().add(Calendar.HOUR_OF_DAY, 23);
 
-        Timber.i("start: " + rangeStart.getFormatDateTime());
-        Timber.i("end: " + rangeEnd.getFormatDateTime());
+        Timber.i("start: %s", rangeStart.getFormatDateTime());
+        Timber.i("end: %s", rangeEnd.getFormatDateTime());
 
         //TODO
         boolean shouldRefresh = true;
@@ -57,18 +52,14 @@ public class EventRepository {
             refreshEvents(url, rangeStart);
         }
 
-        List<Event> events = EVENTDAO.getAllByRange(rangeStart.getMillis(), rangeEnd.getMillis());
-
         Week week = new Week(rangeStart);
-        week.insertEvents(events);
+        week.insertEvents(EVENTDAO.getAllByRange(rangeStart.getMillis(), rangeEnd.getMillis()));
 
         return week;
     }
 
     private void refreshEvents(String url, SimpleDate date) {
         String fullURL = generateURL(url, date.getDay(), date.getMonth(), date.getYear());
-
-//        Timber.i(fullURL);
 
         Document doc = loadDocument(fullURL);
 
@@ -86,11 +77,11 @@ public class EventRepository {
     }
 
     private String generateURL(String url, int day, int month, int year) {
-        if(day != 0 && month != 0 && year != 0) {
-            url += "&day=" + day;
-            url += "&month=" + (month + 1);
-            url += "&year=" + year;
-        }
+        url += "&day=" + day;
+        url += "&month=" + (month + 1);
+        url += "&year=" + year;
+
+        Timber.i("URL: %s", url);
 
         return url;
     }
@@ -101,10 +92,11 @@ public class EventRepository {
         try {
             Response response = OKHTTPCLIENT.newCall(request).execute();
             ResponseBody responseBody = response.body();
+
             if(responseBody != null) {
                 return Jsoup.parse(responseBody.string());
             } else {
-                throw new IOException("response null!");
+                throw new IOException("Response null!");
             }
         } catch(IOException e) {
             Timber.e(e.getMessage());
@@ -113,17 +105,10 @@ public class EventRepository {
         return null;
     }
 
-    private List<Event> parseDocumentForEvents(Document doc, SimpleDate date) {
+    private List<Event> parseDocumentForEvents(Document doc, SimpleDate firstDate) {
         List<Event> eventList = new ArrayList<>();
 
         Elements tableRows = doc.select("#calendar .week_table tbody tr");
-
-        Element weekHeader = tableRows.first().getElementsByClass("week_header").first();
-        String firstDateStr = weekHeader.getElementsByTag("nobr").first().text().split(" ")[1];
-        int firstDay = Integer.parseInt(firstDateStr.substring(0, firstDateStr.length()-1).split("\\.")[0]);
-
-        SimpleDate firstDate = new SimpleDate(date);
-        firstDate.setDay(firstDay);
 
         for(Element tableRow : tableRows) {
             Elements tableRowElements = tableRow.select(":root > td");
@@ -142,27 +127,32 @@ public class EventRepository {
                     String[] startTime = linkSplit[0].split(":");
                     String[] endTime = linkSplit[1].split(":");
 
-                    SimpleDate lStartDate = new SimpleDate(firstDay, date.getMonth(), date.getYear(), Integer.parseInt(startTime[0]), Integer.parseInt(startTime[1]));
+                    SimpleDate lStartDate = new SimpleDate(firstDate.getDay(), firstDate.getMonth(), firstDate.getYear(), Integer.parseInt(startTime[0]), Integer.parseInt(startTime[1]));
                     lStartDate.addDays(indexOfBlock);
 
-                    SimpleDate lEndDate = new SimpleDate(firstDay, date.getMonth(), date.getYear(), Integer.parseInt(endTime[0]), Integer.parseInt(endTime[1]));
+                    SimpleDate lEndDate = new SimpleDate(firstDate.getDay(), firstDate.getMonth(), firstDate.getYear(), Integer.parseInt(endTime[0]), Integer.parseInt(endTime[1]));
                     lEndDate.addDays(indexOfBlock);
 
                     StringBuilder titleBuilder = new StringBuilder();
+
                     for(int i = 2; i < linkSplit.length; i++) {
                         titleBuilder.append(linkSplit[i]);
                         titleBuilder.append(" ");
                     }
+
                     if (titleBuilder.length() > 0) {
-                        titleBuilder.deleteCharAt(titleBuilder.length()-1);
+                        titleBuilder.deleteCharAt(titleBuilder.length() - 1);
                     }
+
                     String lTitle = titleBuilder.toString();
 
                     Elements person = tableBlock.getElementsByClass("person");
 
                     String lLecturer = "";
+
                     if(person.size() > 0) {
                         lLecturer = person.first().text();
+
                         if(lLecturer.endsWith(",")) {
                             lLecturer = lLecturer.substring(0, lLecturer.length() - 1);
                         }
@@ -171,6 +161,7 @@ public class EventRepository {
                     Elements resources = tableBlock.getElementsByClass("resource");
 
                     String lRoom = "";
+
                     for(int i = 0; i < resources.size(); i++) {
                         if(resources.get(i).text().contains(".")) {
                             lRoom = resources.get(i).text();
@@ -178,6 +169,7 @@ public class EventRepository {
                     }
 
                     Event event;
+
                     if(linkContent.contains("Klausur")) {
                         event = new Event(new SimpleDate(), lStartDate, lEndDate, lTitle, lRoom, "", EventType.EXAM);
                     } else {

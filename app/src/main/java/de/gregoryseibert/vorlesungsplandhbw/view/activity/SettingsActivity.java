@@ -10,9 +10,7 @@ import android.view.View;
 
 import de.gregoryseibert.vorlesungsplandhbw.R;
 import de.gregoryseibert.vorlesungsplandhbw.service.dagger.component.AppComponent;
-import de.gregoryseibert.vorlesungsplandhbw.service.dagger.component.DaggerAppComponent;
-import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.AppModule;
-import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.RepoModule;
+import de.gregoryseibert.vorlesungsplandhbw.view.util.Toaster;
 
 public class SettingsActivity extends AppCompatSettingsActivity {
     private AppComponent appComponent;
@@ -30,7 +28,13 @@ public class SettingsActivity extends AppCompatSettingsActivity {
         getSupportActionBar().setTitle(getTitle());
 
         findViewById(R.id.emptyDatabaseButton).setOnClickListener((View view) -> {
-            MainActivity.appComponent.executorService().execute(() -> MainActivity.appComponent.eventRepository().emptyDatabase());
+            MainActivity.appComponent.executorService().execute(() -> {
+                int preSize = MainActivity.appComponent.eventRepository().getAllEvents().size();
+                MainActivity.appComponent.eventRepository().emptyDatabase();
+                int postSize = MainActivity.appComponent.eventRepository().getAllEvents().size();
+
+                Toaster.toast(this, "Es wurden " + (preSize - postSize) + " Events gelöscht.");
+            });
         });
 
         getFragmentManager().beginTransaction().replace(R.id.content, new MainPreferenceFragment()).commit();

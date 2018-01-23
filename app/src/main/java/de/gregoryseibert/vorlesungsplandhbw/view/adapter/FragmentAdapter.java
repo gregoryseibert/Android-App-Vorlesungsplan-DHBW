@@ -13,8 +13,12 @@ import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListWeekFragment;
  */
 
 public class FragmentAdapter extends FragmentPagerAdapter {
-    private final String tabTitles[] = new String[]{"Tagesansicht", "Wochenansicht"};
     private final MainActivity MAINACTIVITY;
+
+    private final String tabTitles[] = new String[] {
+            "Tagesansicht",
+            "Wochenansicht"
+    };
 
     public FragmentAdapter(MainActivity mainActivity, FragmentManager fm) {
         super(fm);
@@ -26,11 +30,15 @@ public class FragmentAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         if(position == 0) {
             EventListDayFragment eventListDayFragment = new EventListDayFragment();
+
             MAINACTIVITY.setEventListDayFragment(eventListDayFragment);
+
             return eventListDayFragment;
         } else {
             EventListWeekFragment eventListWeekFragment = new EventListWeekFragment();
+
             MAINACTIVITY.setEventListWeekFragment(eventListWeekFragment);
+
             return eventListWeekFragment;
         }
     }

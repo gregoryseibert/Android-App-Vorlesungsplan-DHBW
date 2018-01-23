@@ -1,7 +1,6 @@
 package de.gregoryseibert.vorlesungsplandhbw.view.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,24 +26,21 @@ public class EventWeekAdapter extends RecyclerView.Adapter<EventWeekAdapter.Even
         this.eventList = new ArrayList<>();
     }
 
-    public void addEvents(List<Event> eventList) {
+    public void addEvents(List<Event> newEventList) {
         removeAllEvents();
 
-        if(eventList.size() > 0) {
-            this.eventList.addAll(eventList);
-
-//            Timber.i("changeData: " + this.eventList.size());
-
-            notifyDataSetChanged();
+        if(newEventList.size() > 0) {
+            eventList.addAll(newEventList);
         } else {
-            this.eventList.add(new Event("Freier Tag", Event.EventType.EMPTY));
-
-            //notifyDataSetChanged();
+            eventList.add(new Event("Freier Tag", Event.EventType.EMPTY));
         }
+
+        notifyDataSetChanged();
     }
 
     public void removeAllEvents() {
         eventList.clear();
+
         notifyDataSetChanged();
     }
 
@@ -56,6 +52,7 @@ public class EventWeekAdapter extends RecyclerView.Adapter<EventWeekAdapter.Even
     @Override
     public EventViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_week_day, viewGroup, false);
+
         return new EventViewHolder(view);
     }
 

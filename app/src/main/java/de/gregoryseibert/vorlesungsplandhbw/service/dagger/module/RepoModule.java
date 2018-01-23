@@ -51,12 +51,7 @@ public class RepoModule {
     @Provides
     @AppComponentScope
     public HttpLoggingInterceptor httpLoggingInterceptor() {
-        return new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-            @Override
-            public void log(String message) {
-                Timber.i(message);
-            }
-        });
+        return new HttpLoggingInterceptor((String message) -> Timber.i(message));
     }
 
     @Provides

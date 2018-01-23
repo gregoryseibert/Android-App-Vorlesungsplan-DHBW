@@ -46,5 +46,6 @@
             android:text="RB4444"
             android:textColor="@color/colorCardText"
             android:textStyle="bold" />
+
     </LinearLayout>
 </LinearLayout>

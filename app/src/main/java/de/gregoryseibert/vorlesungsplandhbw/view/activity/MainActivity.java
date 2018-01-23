@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -13,12 +12,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -31,6 +27,8 @@ import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.RepoModule;
 import de.gregoryseibert.vorlesungsplandhbw.view.adapter.FragmentAdapter;
 import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListDayFragment;
 import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListWeekFragment;
+import de.gregoryseibert.vorlesungsplandhbw.view.util.Toaster;
+import de.gregoryseibert.vorlesungsplandhbw.view.util.Validator;
 import de.gregoryseibert.vorlesungsplandhbw.view.util.ZoomOutAndSlideTransformer;
 import de.gregoryseibert.vorlesungsplandhbw.viewmodel.EventViewModel;
 import devs.mulham.horizontalcalendar.HorizontalCalendar;
@@ -43,49 +41,30 @@ import timber.log.Timber;
  */
 
 public class MainActivity extends AppCompatActivity {
-    private Toolbar toolbar;
-    private ViewPager viewPager;
+    public static AppComponent appComponent;
 
     private SharedPreferences settings;
     private SharedPreferences.OnSharedPreferenceChangeListener settingsListener;
 
+    private ViewPager viewPager;
     private EventListDayFragment eventListDayFragment;
     private EventListWeekFragment eventListWeekFragment;
 
-    public static AppComponent appComponent;
-
-    private SimpleDate date;
     private EventViewModel viewModel;
 
+    private SimpleDate date;
     private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         Timber.plant(new Timber.DebugTree());
 
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        settings = PreferenceManager.getDefaultSharedPreferences(this);
-        settingsListener = (SharedPreferences sharedPreferences, String key) -> {
-            /*if(key.equals(getString(R.string.key_datepickertop))) {
-                initLayout();
-            } else */if (key.equals(getString(R.string.key_dhbwurl))) {
-                initViewModel();
-            }
-        };
-        settings.registerOnSharedPreferenceChangeListener(settingsListener);
-
-        FragmentAdapter fragmentPagerAdapter = new FragmentAdapter(this, getSupportFragmentManager());
-        viewPager = findViewById(R.id.viewPager);
-        viewPager.setAdapter(fragmentPagerAdapter);
-        viewPager.setPageTransformer(true, new ZoomOutAndSlideTransformer());
-
-        TabLayout tabLayout = findViewById(R.id.tabLayout);
-        tabLayout.setupWithViewPager(viewPager);
 
         appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
@@ -94,24 +73,37 @@ public class MainActivity extends AppCompatActivity {
 
         date = new SimpleDate();
 
+        setupSharedPreferences();
+
+        setupViewPager();
+
         setupDatePicker();
 
-        initViewModel();
+        setupViewModel();
 
-        initLayout();
+        setupDatePickerLayout();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    private void setupSharedPreferences() {
+        settingsListener = (SharedPreferences sharedPreferences, String key) -> {
+            if(key.equals(getString(R.string.key_dhbwurl))) {
+                setupViewModel();
+            }
+        };
+
+        settings = PreferenceManager.getDefaultSharedPreferences(this);
+        settings.registerOnSharedPreferenceChangeListener(settingsListener);
     }
 
-    public void setEventListDayFragment(EventListDayFragment eventListDayFragment) {
-        this.eventListDayFragment = eventListDayFragment;
-    }
+    private void setupViewPager() {
+        FragmentAdapter fragmentPagerAdapter = new FragmentAdapter(this, getSupportFragmentManager());
 
-    public void setEventListWeekFragment(EventListWeekFragment eventListWeekFragment) {
-        this.eventListWeekFragment = eventListWeekFragment;
+        viewPager = findViewById(R.id.viewPager);
+        viewPager.setAdapter(fragmentPagerAdapter);
+        viewPager.setPageTransformer(true, new ZoomOutAndSlideTransformer());
+
+        TabLayout tabLayout = findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     public void setupDatePicker() {
@@ -143,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onDateLongClicked(Calendar cal, int position) {
                 SimpleDate date = new SimpleDate(cal.getTimeInMillis());
+
                 datePickerDialog.updateDate(date.getYear(), date.getMonth(), date.getDay());
                 datePickerDialog.show();
 
@@ -151,44 +144,29 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void setDate(SimpleDate date) {
-        if(!date.equals(this.date)) {
-            this.date = date;
-
-            viewModel.init(url, date);
-        }
-    }
-
-    public void initViewModel() {
+    public void setupViewModel() {
         url = settings.getString(getString(R.string.key_dhbwurl), "");
 
         if(url.length() > 0) {
-            if(validURL(url)) {
+            if(Validator.validateURL(url)) {
                 viewModel = appComponent.eventViewModel();
                 viewModel.init(url, date);
 
                 viewModel.getEvents().observe(this, week -> {
-                    //Timber.i("observed");
-                    eventListDayFragment.setEvents(week.getEventsOfDay(date.getDayOfWeek()));
-                    eventListWeekFragment.setEvents(week);
+                    if(week != null) {
+                        eventListDayFragment.setEvents(week.getEventsOfDay(date.getDayOfWeek()));
+                        eventListWeekFragment.setEvents(week);
+                    }
                 });
             } else {
-                Toast.makeText(this, "Die in den Einstellungen gespeicherte URL deines Vorlesungsplans ist fehlerhaft.", Toast.LENGTH_LONG).show();
+                Toaster.toast(this, "Die in den Einstellungen gespeicherte URL deines Vorlesungsplans ist fehlerhaft.", true);
             }
         } else {
-            Toast.makeText(this, "Die URL deines Vorlesungsplans muss in den Einstellungen dieser App gespeichert werden.", Toast.LENGTH_LONG).show();
+            Toaster.toast(this, "Die URL deines Vorlesungsplans muss in den Einstellungen dieser App gespeichert werden.", true);
         }
     }
 
-    private boolean validURL(String url) {
-        if(!url.startsWith("https://rapla.dhbw-stuttgart.de/rapla?key=")) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public void initLayout() {
+    public void setupDatePickerLayout() {
         if(!settings.getBoolean(getString(R.string.key_datepickertop), true)) {
             HorizontalCalendarView calendarView = findViewById(R.id.calendarView);
             ((ViewGroup) calendarView.getParent()).removeView(calendarView);
@@ -206,6 +184,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void setEventListDayFragment(EventListDayFragment eventListDayFragment) {
+        this.eventListDayFragment = eventListDayFragment;
+    }
+
+    public void setEventListWeekFragment(EventListWeekFragment eventListWeekFragment) {
+        this.eventListWeekFragment = eventListWeekFragment;
+    }
+
+    public void setDate(SimpleDate date) {
+        if(!date.equals(this.date)) {
+            this.date = date;
+
+            viewModel.init(url, date);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -216,17 +210,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = null;
+
         switch (item.getItemId()) {
             case R.id.action_settings:
-                Intent settingsIntent = new Intent(this, SettingsActivity.class);
-                startActivity(settingsIntent);
+                intent = new Intent(this, SettingsActivity.class);
                 break;
             case R.id.action_about:
-                Intent aboutIntent = new Intent(this, AboutActivity.class);
-                startActivity(aboutIntent);
+                intent = new Intent(this, AboutActivity.class);
                 break;
             default:
                 break;
+        }
+
+        if(intent != null) {
+            startActivity(intent);
         }
 
         return true;
