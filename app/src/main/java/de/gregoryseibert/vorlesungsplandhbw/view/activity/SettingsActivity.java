@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import de.gregoryseibert.vorlesungsplandhbw.R;
-import de.gregoryseibert.vorlesungsplandhbw.service.dagger.component.AppComponent;
+import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application.AppComponent;
 import de.gregoryseibert.vorlesungsplandhbw.view.util.Toaster;
 
 public class SettingsActivity extends AppCompatSettingsActivity {

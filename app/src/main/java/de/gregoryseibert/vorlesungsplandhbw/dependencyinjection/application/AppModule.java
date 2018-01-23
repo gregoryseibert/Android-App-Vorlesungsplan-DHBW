@@ -1,4 +1,4 @@
-package de.gregoryseibert.vorlesungsplandhbw.service.dagger.module;
+package de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application;
 
 import android.app.Application;
 import android.arch.lifecycle.ViewModelProviders;
@@ -8,8 +8,7 @@ import java.util.concurrent.Executors;
 
 import dagger.Module;
 import dagger.Provides;
-import de.gregoryseibert.vorlesungsplandhbw.service.dagger.scope.AppComponentScope;
-import de.gregoryseibert.vorlesungsplandhbw.service.repo.EventRepository;
+import de.gregoryseibert.vorlesungsplandhbw.service.EventRepository;
 import de.gregoryseibert.vorlesungsplandhbw.view.activity.MainActivity;
 import de.gregoryseibert.vorlesungsplandhbw.viewmodel.EventViewModel;
 

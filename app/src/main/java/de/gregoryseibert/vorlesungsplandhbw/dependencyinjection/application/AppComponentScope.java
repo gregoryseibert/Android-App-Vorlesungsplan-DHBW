@@ -1,4 +1,4 @@
-package de.gregoryseibert.vorlesungsplandhbw.service.dagger.scope;
+package de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application;
 
 import javax.inject.Scope;
 

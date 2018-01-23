@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutorService;
 
 import de.gregoryseibert.vorlesungsplandhbw.model.SimpleDate;
 import de.gregoryseibert.vorlesungsplandhbw.model.Week;
-import de.gregoryseibert.vorlesungsplandhbw.service.repo.EventRepository;
+import de.gregoryseibert.vorlesungsplandhbw.service.EventRepository;
 
 /**
  * Created by Gregory Seibert on 11.01.2018.

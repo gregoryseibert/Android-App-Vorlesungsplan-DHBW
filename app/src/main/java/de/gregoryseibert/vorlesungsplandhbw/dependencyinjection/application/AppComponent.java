@@ -1,15 +1,12 @@
-package de.gregoryseibert.vorlesungsplandhbw.service.dagger.component;
+package de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application;
 
 import android.app.Application;
 
 import java.util.concurrent.ExecutorService;
 
 import dagger.Component;
-import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.AppModule;
-import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.RepoModule;
-import de.gregoryseibert.vorlesungsplandhbw.service.dagger.scope.AppComponentScope;
-import de.gregoryseibert.vorlesungsplandhbw.service.repo.EventDAO;
-import de.gregoryseibert.vorlesungsplandhbw.service.repo.EventRepository;
+import de.gregoryseibert.vorlesungsplandhbw.service.EventDAO;
+import de.gregoryseibert.vorlesungsplandhbw.service.EventRepository;
 import de.gregoryseibert.vorlesungsplandhbw.viewmodel.EventViewModel;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;

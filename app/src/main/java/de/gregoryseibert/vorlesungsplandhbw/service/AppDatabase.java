@@ -1,4 +1,4 @@
-package de.gregoryseibert.vorlesungsplandhbw.service.repo;
+package de.gregoryseibert.vorlesungsplandhbw.service;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.RoomDatabase;

@@ -1,4 +1,4 @@
-package de.gregoryseibert.vorlesungsplandhbw.service.dagger.module;
+package de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application;
 
 import android.app.Application;
 import android.arch.persistence.room.Room;
@@ -7,10 +7,10 @@ import java.io.File;
 
 import dagger.Module;
 import dagger.Provides;
-import de.gregoryseibert.vorlesungsplandhbw.service.dagger.scope.AppComponentScope;
-import de.gregoryseibert.vorlesungsplandhbw.service.repo.AppDatabase;
-import de.gregoryseibert.vorlesungsplandhbw.service.repo.EventDAO;
-import de.gregoryseibert.vorlesungsplandhbw.service.repo.EventRepository;
+import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application.AppComponentScope;
+import de.gregoryseibert.vorlesungsplandhbw.service.AppDatabase;
+import de.gregoryseibert.vorlesungsplandhbw.service.EventDAO;
+import de.gregoryseibert.vorlesungsplandhbw.service.EventRepository;
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;

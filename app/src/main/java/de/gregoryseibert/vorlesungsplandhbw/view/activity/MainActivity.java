@@ -19,11 +19,11 @@ import android.widget.RelativeLayout;
 import java.util.Calendar;
 
 import de.gregoryseibert.vorlesungsplandhbw.R;
+import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application.AppComponent;
+import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.component.DaggerAppComponent;
+import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application.AppModule;
+import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application.RepoModule;
 import de.gregoryseibert.vorlesungsplandhbw.model.SimpleDate;
-import de.gregoryseibert.vorlesungsplandhbw.service.dagger.component.AppComponent;
-import de.gregoryseibert.vorlesungsplandhbw.service.dagger.component.DaggerAppComponent;
-import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.AppModule;
-import de.gregoryseibert.vorlesungsplandhbw.service.dagger.module.RepoModule;
 import de.gregoryseibert.vorlesungsplandhbw.view.adapter.FragmentAdapter;
 import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListDayFragment;
 import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListWeekFragment;
