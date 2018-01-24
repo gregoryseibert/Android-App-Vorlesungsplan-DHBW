@@ -4,7 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import de.gregoryseibert.vorlesungsplandhbw.view.activity.MainActivity;
 import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListDayFragment;
 import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListWeekFragment;
 
@@ -13,33 +12,40 @@ import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListWeekFragment;
  */
 
 public class FragmentAdapter extends FragmentPagerAdapter {
-    private final MainActivity MAINACTIVITY;
+    private EventListDayFragment mEventListDayFragment;
+    private EventListWeekFragment mEventListWeekFragment;
 
     private final String tabTitles[] = new String[] {
             "Tagesansicht",
             "Wochenansicht"
     };
 
-    public FragmentAdapter(MainActivity mainActivity, FragmentManager fm) {
+    public FragmentAdapter(FragmentManager fm) {
         super(fm);
+    }
 
-        this.MAINACTIVITY = mainActivity;
+    public EventListDayFragment getEventListDayFragment() {
+        return mEventListDayFragment;
+    }
+
+    public EventListWeekFragment getEventListWeekFragment() {
+        return mEventListWeekFragment;
     }
 
     @Override
     public Fragment getItem(int position) {
         if(position == 0) {
-            EventListDayFragment eventListDayFragment = new EventListDayFragment();
+            if(mEventListDayFragment == null) {
+                mEventListDayFragment = new EventListDayFragment();
+            }
 
-            MAINACTIVITY.setEventListDayFragment(eventListDayFragment);
-
-            return eventListDayFragment;
+            return mEventListDayFragment;
         } else {
-            EventListWeekFragment eventListWeekFragment = new EventListWeekFragment();
+            if(mEventListWeekFragment == null) {
+                mEventListWeekFragment = new EventListWeekFragment();
+            }
 
-            MAINACTIVITY.setEventListWeekFragment(eventListWeekFragment);
-
-            return eventListWeekFragment;
+            return mEventListWeekFragment;
         }
     }
 

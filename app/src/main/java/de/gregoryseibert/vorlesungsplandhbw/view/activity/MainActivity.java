@@ -20,13 +20,11 @@ import java.util.Calendar;
 
 import de.gregoryseibert.vorlesungsplandhbw.R;
 import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application.AppComponent;
-import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.component.DaggerAppComponent;
 import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application.AppModule;
+import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application.DaggerAppComponent;
 import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application.RepoModule;
 import de.gregoryseibert.vorlesungsplandhbw.model.SimpleDate;
 import de.gregoryseibert.vorlesungsplandhbw.view.adapter.FragmentAdapter;
-import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListDayFragment;
-import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListWeekFragment;
 import de.gregoryseibert.vorlesungsplandhbw.view.util.Toaster;
 import de.gregoryseibert.vorlesungsplandhbw.view.util.Validator;
 import de.gregoryseibert.vorlesungsplandhbw.view.util.ZoomOutAndSlideTransformer;
@@ -46,9 +44,9 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences settings;
     private SharedPreferences.OnSharedPreferenceChangeListener settingsListener;
 
+    private FragmentAdapter fragmentPagerAdapter;
+
     private ViewPager viewPager;
-    private EventListDayFragment eventListDayFragment;
-    private EventListWeekFragment eventListWeekFragment;
 
     private EventViewModel viewModel;
 
@@ -96,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViewPager() {
-        FragmentAdapter fragmentPagerAdapter = new FragmentAdapter(this, getSupportFragmentManager());
+        fragmentPagerAdapter = new FragmentAdapter(getSupportFragmentManager());
 
         viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(fragmentPagerAdapter);
@@ -154,8 +152,8 @@ public class MainActivity extends AppCompatActivity {
 
                 viewModel.getEvents().observe(this, week -> {
                     if(week != null) {
-                        eventListDayFragment.setEvents(week.getEventsOfDay(date.getDayOfWeek()));
-                        eventListWeekFragment.setEvents(week);
+                        fragmentPagerAdapter.getEventListDayFragment().setEvents(week.getEventsOfDay(date.getDayOfWeek()));
+                        fragmentPagerAdapter.getEventListWeekFragment().setEvents(week);
                     }
                 });
             } else {
@@ -182,14 +180,6 @@ public class MainActivity extends AppCompatActivity {
             params.addRule(RelativeLayout.ABOVE, R.id.calendarView);
             viewPager.setLayoutParams(params);
         }
-    }
-
-    public void setEventListDayFragment(EventListDayFragment eventListDayFragment) {
-        this.eventListDayFragment = eventListDayFragment;
-    }
-
-    public void setEventListWeekFragment(EventListWeekFragment eventListWeekFragment) {
-        this.eventListWeekFragment = eventListWeekFragment;
     }
 
     public void setDate(SimpleDate date) {

@@ -7,7 +7,6 @@ import java.io.File;
 
 import dagger.Module;
 import dagger.Provides;
-import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application.AppComponentScope;
 import de.gregoryseibert.vorlesungsplandhbw.service.AppDatabase;
 import de.gregoryseibert.vorlesungsplandhbw.service.EventDAO;
 import de.gregoryseibert.vorlesungsplandhbw.service.EventRepository;
