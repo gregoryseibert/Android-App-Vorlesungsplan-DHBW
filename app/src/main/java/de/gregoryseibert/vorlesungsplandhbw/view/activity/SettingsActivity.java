@@ -8,13 +8,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import de.gregoryseibert.vorlesungsplandhbw.MyApplication;
 import de.gregoryseibert.vorlesungsplandhbw.R;
 import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application.AppComponent;
 import de.gregoryseibert.vorlesungsplandhbw.view.util.Toaster;
 
 public class SettingsActivity extends AppCompatSettingsActivity {
-    private AppComponent appComponent;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,11 +26,13 @@ public class SettingsActivity extends AppCompatSettingsActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle(getTitle());
 
+        AppComponent appComponent = ((MyApplication) getApplication()).getAppComponent();
+
         findViewById(R.id.emptyDatabaseButton).setOnClickListener((View view) -> {
-            MainActivity.appComponent.executorService().execute(() -> {
-                int preSize = MainActivity.appComponent.eventRepository().getAllEvents().size();
-                MainActivity.appComponent.eventRepository().emptyDatabase();
-                int postSize = MainActivity.appComponent.eventRepository().getAllEvents().size();
+            appComponent.executorService().execute(() -> {
+                int preSize = appComponent.eventRepository().getAllEvents().size();
+                appComponent.eventRepository().emptyDatabase();
+                int postSize = appComponent.eventRepository().getAllEvents().size();
 
                 Toaster.toast(this, "Es wurden " + (preSize - postSize) + " Events gelöscht.");
             });

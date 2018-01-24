@@ -21,24 +21,16 @@ import timber.log.Timber;
 
 @Module
 public class RepoModule {
-    private final AppDatabase APPDATABASE;
-    private final Application APPLICATION;
-
-    public RepoModule(Application application) {
-        this.APPDATABASE = Room.databaseBuilder(application, AppDatabase.class, "event-database").fallbackToDestructiveMigration().build();
-        this.APPLICATION = application;
+    @Provides
+    @AppComponentScope
+    public AppDatabase appDatabase(Application application) {
+        return Room.databaseBuilder(application, AppDatabase.class, "event-database").fallbackToDestructiveMigration().build();
     }
 
     @Provides
     @AppComponentScope
-    public AppDatabase appDatabase() {
-        return APPDATABASE;
-    }
-
-    @Provides
-    @AppComponentScope
-    public EventDAO eventDAO() {
-        return APPDATABASE.eventDao();
+    public EventDAO eventDAO(AppDatabase appDatabase) {
+        return appDatabase.eventDao();
     }
 
     @Provides
@@ -55,8 +47,8 @@ public class RepoModule {
 
     @Provides
     @AppComponentScope
-    public File file() {
-        return new File(APPLICATION.getCacheDir(), "okhttp_cache");
+    public File file(Application application) {
+        return new File(application.getCacheDir(), "okhttp_cache");
     }
 
     @Provides

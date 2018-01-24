@@ -20,15 +20,8 @@ public class EventViewModel extends ViewModel {
 
     private MutableLiveData<Week> week;
 
-    public EventViewModel() {
-
-    }
-
-    public void setEventRepository(EventRepository eventRepository) {
+    public EventViewModel(EventRepository eventRepository, ExecutorService executorService) {
         this.eventRepository = eventRepository;
-    }
-
-    public void setExecutorService(ExecutorService executorService) {
         this.executorService = executorService;
     }
 

@@ -1,6 +1,7 @@
 package de.gregoryseibert.vorlesungsplandhbw.view.activity;
 
 import android.app.DatePickerDialog;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,11 +19,9 @@ import android.widget.RelativeLayout;
 
 import java.util.Calendar;
 
+import de.gregoryseibert.vorlesungsplandhbw.MyApplication;
 import de.gregoryseibert.vorlesungsplandhbw.R;
 import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application.AppComponent;
-import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application.AppModule;
-import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application.DaggerAppComponent;
-import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application.RepoModule;
 import de.gregoryseibert.vorlesungsplandhbw.model.SimpleDate;
 import de.gregoryseibert.vorlesungsplandhbw.view.adapter.FragmentAdapter;
 import de.gregoryseibert.vorlesungsplandhbw.view.util.Toaster;
@@ -32,15 +31,12 @@ import de.gregoryseibert.vorlesungsplandhbw.viewmodel.EventViewModel;
 import devs.mulham.horizontalcalendar.HorizontalCalendar;
 import devs.mulham.horizontalcalendar.HorizontalCalendarView;
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
-import timber.log.Timber;
 
 /**
  * Created by Gregory Seibert on 09.01.2018.
  */
 
 public class MainActivity extends AppCompatActivity {
-    public static AppComponent appComponent;
-
     private SharedPreferences settings;
     private SharedPreferences.OnSharedPreferenceChangeListener settingsListener;
 
@@ -59,15 +55,12 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        Timber.plant(new Timber.DebugTree());
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        appComponent = DaggerAppComponent.builder()
-                .appModule(new AppModule(this))
-                .repoModule(new RepoModule(getApplication()))
-                .build();
+        AppComponent appComponent = ((MyApplication) getApplication()).getAppComponent();
+
+        viewModel = ViewModelProviders.of(this, appComponent.eventViewModelFactory()).get(EventViewModel.class);
 
         date = new SimpleDate();
 
@@ -147,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
 
         if(url.length() > 0) {
             if(Validator.validateURL(url)) {
-                viewModel = appComponent.eventViewModel();
                 viewModel.init(url, date);
 
                 viewModel.getEvents().observe(this, week -> {

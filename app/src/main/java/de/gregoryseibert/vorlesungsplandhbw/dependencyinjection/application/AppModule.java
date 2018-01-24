@@ -1,16 +1,15 @@
 package de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application;
 
 import android.app.Application;
-import android.arch.lifecycle.ViewModelProviders;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import dagger.Module;
 import dagger.Provides;
+import de.gregoryseibert.vorlesungsplandhbw.MyApplication;
 import de.gregoryseibert.vorlesungsplandhbw.service.EventRepository;
-import de.gregoryseibert.vorlesungsplandhbw.view.activity.MainActivity;
-import de.gregoryseibert.vorlesungsplandhbw.viewmodel.EventViewModel;
+import de.gregoryseibert.vorlesungsplandhbw.viewmodel.EventViewModelFactory;
 
 /**
  * Created by Gregory Seibert on 16.01.2018.
@@ -18,16 +17,16 @@ import de.gregoryseibert.vorlesungsplandhbw.viewmodel.EventViewModel;
 
 @Module
 public class AppModule {
-    private final MainActivity MAINACTIVITY;
+    private final MyApplication application;
 
-    public AppModule(MainActivity mainActivity) {
-        this.MAINACTIVITY = mainActivity;
+    public AppModule(MyApplication application) {
+        this.application = application;
     }
 
     @Provides
     @AppComponentScope
     public Application application() {
-        return MAINACTIVITY.getApplication();
+        return application;
     }
 
     @Provides
@@ -38,10 +37,7 @@ public class AppModule {
 
     @Provides
     @AppComponentScope
-    public EventViewModel eventViewModel(EventRepository eventRepository, ExecutorService executorService) {
-        EventViewModel viewModel = ViewModelProviders.of(MAINACTIVITY).get(EventViewModel.class);
-        viewModel.setEventRepository(eventRepository);
-        viewModel.setExecutorService(executorService);
-        return viewModel;
+    public EventViewModelFactory eventViewModelFactory(EventRepository eventRepository, ExecutorService executorService) {
+        return new EventViewModelFactory(eventRepository, executorService);
     }
 }
