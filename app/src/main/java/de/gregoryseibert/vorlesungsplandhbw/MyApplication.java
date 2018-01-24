@@ -22,9 +22,7 @@ public class MyApplication extends Application {
             Timber.plant(new Timber.DebugTree());
         }
 
-        appComponent = DaggerAppComponent.builder()
-                .appModule(new AppModule(this))
-                .build();
+        appComponent = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
     }
 
     public AppComponent getAppComponent() {

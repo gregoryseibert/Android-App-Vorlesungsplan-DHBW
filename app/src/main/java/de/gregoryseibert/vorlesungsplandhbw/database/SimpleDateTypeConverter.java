@@ -1,4 +1,4 @@
-package de.gregoryseibert.vorlesungsplandhbw.service;
+package de.gregoryseibert.vorlesungsplandhbw.database;
 
 import android.arch.persistence.room.TypeConverter;
 

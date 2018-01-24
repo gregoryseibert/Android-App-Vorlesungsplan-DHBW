@@ -1,4 +1,4 @@
-package de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application;
+package de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.service;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -11,5 +11,5 @@ import javax.inject.Scope;
 
 @Scope
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AppComponentScope {
+public @interface ServiceComponentScope {
 }

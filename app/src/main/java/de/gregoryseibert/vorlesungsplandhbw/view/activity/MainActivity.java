@@ -1,11 +1,9 @@
 package de.gregoryseibert.vorlesungsplandhbw.view.activity;
 
 import android.app.DatePickerDialog;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -19,9 +17,12 @@ import android.widget.RelativeLayout;
 
 import java.util.Calendar;
 
+import javax.inject.Inject;
+
 import de.gregoryseibert.vorlesungsplandhbw.MyApplication;
 import de.gregoryseibert.vorlesungsplandhbw.R;
-import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application.AppComponent;
+import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.service.ServiceComponent;
+import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.service.ServiceModule;
 import de.gregoryseibert.vorlesungsplandhbw.model.SimpleDate;
 import de.gregoryseibert.vorlesungsplandhbw.view.adapter.FragmentAdapter;
 import de.gregoryseibert.vorlesungsplandhbw.view.util.Toaster;
@@ -37,30 +38,30 @@ import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
  */
 
 public class MainActivity extends AppCompatActivity {
-    private SharedPreferences settings;
+    private ServiceComponent serviceComponent;
+
+    @Inject SharedPreferences sharedPreferences;
+    @Inject EventViewModel eventViewModel;
+
     private SharedPreferences.OnSharedPreferenceChangeListener settingsListener;
 
     private FragmentAdapter fragmentPagerAdapter;
 
     private ViewPager viewPager;
 
-    private EventViewModel viewModel;
-
     private SimpleDate date;
     private String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getServiceComponent().inject(this);
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        AppComponent appComponent = ((MyApplication) getApplication()).getAppComponent();
-
-        viewModel = ViewModelProviders.of(this, appComponent.eventViewModelFactory()).get(EventViewModel.class);
 
         date = new SimpleDate();
 
@@ -75,6 +76,14 @@ public class MainActivity extends AppCompatActivity {
         setupDatePickerLayout();
     }
 
+    public ServiceComponent getServiceComponent() {
+        if (serviceComponent == null) {
+            serviceComponent = ((MyApplication) getApplication()).getAppComponent().newServiceComponent(new ServiceModule(this));
+        }
+
+        return serviceComponent;
+    }
+
     private void setupSharedPreferences() {
         settingsListener = (SharedPreferences sharedPreferences, String key) -> {
             if(key.equals(getString(R.string.key_dhbwurl))) {
@@ -82,8 +91,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        settings = PreferenceManager.getDefaultSharedPreferences(this);
-        settings.registerOnSharedPreferenceChangeListener(settingsListener);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(settingsListener);
     }
 
     private void setupViewPager() {
@@ -136,13 +144,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setupViewModel() {
-        url = settings.getString(getString(R.string.key_dhbwurl), "");
+        url = sharedPreferences.getString(getString(R.string.key_dhbwurl), "");
 
         if(url.length() > 0) {
             if(Validator.validateURL(url)) {
-                viewModel.init(url, date);
+                eventViewModel.init(url, date);
 
-                viewModel.getEvents().observe(this, week -> {
+                eventViewModel.getEvents().observe(this, week -> {
                     if(week != null) {
                         fragmentPagerAdapter.getEventListDayFragment().setEvents(week.getEventsOfDay(date.getDayOfWeek()));
                         fragmentPagerAdapter.getEventListWeekFragment().setEvents(week);
@@ -157,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setupDatePickerLayout() {
-        if(!settings.getBoolean(getString(R.string.key_datepickertop), true)) {
+        if(!sharedPreferences.getBoolean(getString(R.string.key_datepickertop), true)) {
             HorizontalCalendarView calendarView = findViewById(R.id.calendarView);
             ((ViewGroup) calendarView.getParent()).removeView(calendarView);
             ((ViewGroup) findViewById(R.id.relativeLayout)).addView(calendarView);
@@ -178,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         if(!date.equals(this.date)) {
             this.date = date;
 
-            viewModel.init(url, date);
+            eventViewModel.init(url, date);
         }
     }
 

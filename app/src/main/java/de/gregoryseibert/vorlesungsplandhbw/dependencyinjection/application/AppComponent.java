@@ -1,22 +1,15 @@
 package de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application;
 
-import android.app.Application;
-
-import java.util.concurrent.ExecutorService;
-
 import dagger.Component;
-import de.gregoryseibert.vorlesungsplandhbw.service.EventRepository;
-import de.gregoryseibert.vorlesungsplandhbw.viewmodel.EventViewModelFactory;
+import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.service.ServiceComponent;
+import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.service.ServiceModule;
 
 /**
  * Created by Gregory Seibert on 16.01.2018.
  */
 
 @AppComponentScope
-@Component(modules = {AppModule.class, RepoModule.class})
+@Component(modules = {AppModule.class})
 public interface AppComponent {
-    Application application();
-    EventViewModelFactory eventViewModelFactory();
-    ExecutorService executorService();
-    EventRepository eventRepository();
+    ServiceComponent newServiceComponent(ServiceModule serviceModule);
 }

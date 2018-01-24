@@ -1,4 +1,4 @@
-package de.gregoryseibert.vorlesungsplandhbw.service;
+package de.gregoryseibert.vorlesungsplandhbw.repository;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import de.gregoryseibert.vorlesungsplandhbw.database.EventDAO;
 import de.gregoryseibert.vorlesungsplandhbw.model.Event;
 import de.gregoryseibert.vorlesungsplandhbw.model.Event.EventType;
 import de.gregoryseibert.vorlesungsplandhbw.model.SimpleDate;

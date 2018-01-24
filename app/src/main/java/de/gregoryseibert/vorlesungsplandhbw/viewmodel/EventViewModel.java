@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutorService;
 
 import de.gregoryseibert.vorlesungsplandhbw.model.SimpleDate;
 import de.gregoryseibert.vorlesungsplandhbw.model.Week;
-import de.gregoryseibert.vorlesungsplandhbw.service.EventRepository;
+import de.gregoryseibert.vorlesungsplandhbw.repository.EventRepository;
 
 /**
  * Created by Gregory Seibert on 11.01.2018.
@@ -20,9 +20,8 @@ public class EventViewModel extends ViewModel {
 
     private MutableLiveData<Week> week;
 
-    public EventViewModel(EventRepository eventRepository, ExecutorService executorService) {
-        this.eventRepository = eventRepository;
-        this.executorService = executorService;
+    public EventViewModel() {
+
     }
 
     public void init(String url, SimpleDate date) {
@@ -35,5 +34,13 @@ public class EventViewModel extends ViewModel {
 
     public LiveData<Week> getEvents() {
         return this.week;
+    }
+
+    public void setEventRepository(EventRepository eventRepository) {
+        this.eventRepository = eventRepository;
+    }
+
+    public void setExecutorService(ExecutorService executorService) {
+        this.executorService = executorService;
     }
 }

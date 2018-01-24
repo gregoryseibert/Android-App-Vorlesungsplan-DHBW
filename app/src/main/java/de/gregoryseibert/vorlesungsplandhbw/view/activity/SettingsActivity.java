@@ -8,14 +8,27 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.concurrent.ExecutorService;
+
+import javax.inject.Inject;
+
 import de.gregoryseibert.vorlesungsplandhbw.MyApplication;
 import de.gregoryseibert.vorlesungsplandhbw.R;
-import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.application.AppComponent;
+import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.service.ServiceComponent;
+import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.service.ServiceModule;
+import de.gregoryseibert.vorlesungsplandhbw.repository.EventRepository;
 import de.gregoryseibert.vorlesungsplandhbw.view.util.Toaster;
 
 public class SettingsActivity extends AppCompatSettingsActivity {
+    private ServiceComponent serviceComponent;
+
+    @Inject EventRepository eventRepository;
+    @Inject ExecutorService executorService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getServiceComponent().inject(this);
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_settings);
@@ -26,19 +39,25 @@ public class SettingsActivity extends AppCompatSettingsActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle(getTitle());
 
-        AppComponent appComponent = ((MyApplication) getApplication()).getAppComponent();
-
         findViewById(R.id.emptyDatabaseButton).setOnClickListener((View view) -> {
-            appComponent.executorService().execute(() -> {
-                int preSize = appComponent.eventRepository().getAllEvents().size();
-                appComponent.eventRepository().emptyDatabase();
-                int postSize = appComponent.eventRepository().getAllEvents().size();
+            executorService.execute(() -> {
+                int preSize = eventRepository.getAllEvents().size();
+                eventRepository.emptyDatabase();
+                int postSize = eventRepository.getAllEvents().size();
 
                 Toaster.toast(this, "Es wurden " + (preSize - postSize) + " Events gelöscht.");
             });
         });
 
         getFragmentManager().beginTransaction().replace(R.id.content, new MainPreferenceFragment()).commit();
+    }
+
+    public ServiceComponent getServiceComponent() {
+        if (serviceComponent == null) {
+            serviceComponent = ((MyApplication) getApplication()).getAppComponent().newServiceComponent(new ServiceModule(this));
+        }
+
+        return serviceComponent;
     }
 
     @Override
