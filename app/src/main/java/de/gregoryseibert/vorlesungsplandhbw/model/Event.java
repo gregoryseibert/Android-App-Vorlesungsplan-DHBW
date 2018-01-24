@@ -77,6 +77,10 @@ public class Event implements Comparable<Event> {
         this.type = type;
     }
 
+    public SimpleDate getLoadedAt() {
+        return loadedAt;
+    }
+
     public SimpleDate getStartDate() {
         return startDate;
     }

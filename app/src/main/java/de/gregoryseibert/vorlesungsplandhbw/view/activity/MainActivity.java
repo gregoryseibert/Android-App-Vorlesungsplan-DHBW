@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViewPager() {
-        fragmentPagerAdapter = new FragmentAdapter(getSupportFragmentManager());
+        fragmentPagerAdapter = new FragmentAdapter(getSupportFragmentManager(), sharedPreferences.getBoolean(getResources().getString(R.string.key_hideweekend), true));
 
         viewPager = findViewById(R.id.viewPager);
         viewPager.setAdapter(fragmentPagerAdapter);

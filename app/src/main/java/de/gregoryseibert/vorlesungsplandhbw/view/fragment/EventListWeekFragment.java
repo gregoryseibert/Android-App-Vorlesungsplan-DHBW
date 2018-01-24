@@ -33,29 +33,33 @@ import de.gregoryseibert.vorlesungsplandhbw.view.util.Animator;
 public class EventListWeekFragment extends Fragment {
     private ArrayList<View> itemWeeks;
 
-    private ArrayList<RecyclerView> recyclerViews;
-
     private ArrayList<EventWeekAdapter> eventWeekAdapters;
 
-    public EventListWeekFragment() {
+    private int numberOfDays;
 
+    public EventListWeekFragment() {
+        numberOfDays = 6;
+    }
+
+    public void hideWeekend() {
+        numberOfDays = 5;
     }
 
     public void setEvents(Week week) {
         if(itemWeeks.size() > 0) {
             SimpleDate firstDate = week.getFirstDate();
 
-            for(Day day : week.getDays()) {
-                int index = week.getDays().indexOf(day);
+            for(int i = 0; i < numberOfDays; i++) {
+                Day day = week.getDays().get(i);
 
-                eventWeekAdapters.get(index).removeAllEvents();
+                eventWeekAdapters.get(i).removeAllEvents();
 
                 List<Event> events = day.getEvents();
 
-                TextView dayText = itemWeeks.get(index).findViewById(R.id.dayText);
+                TextView dayText = itemWeeks.get(i).findViewById(R.id.dayText);
                 dayText.setText(firstDate.getFormatDateShort());
 
-                TextView eventCounter = itemWeeks.get(index).findViewById(R.id.eventCounter);
+                TextView eventCounter = itemWeeks.get(i).findViewById(R.id.eventCounter);
 
                 if(events != null && events.size() > 0) {
                     eventCounter.setText(String.format("%d", events.size()));
@@ -63,7 +67,7 @@ public class EventListWeekFragment extends Fragment {
                     eventCounter.setText("0");
                 }
 
-                eventWeekAdapters.get(index).addEvents(events);
+                eventWeekAdapters.get(i).addEvents(events);
 
                 firstDate.addDays(1);
             }
@@ -85,10 +89,9 @@ public class EventListWeekFragment extends Fragment {
         LinearLayout linearLayout = view.findViewById(R.id.linearLayout);
 
         itemWeeks = new ArrayList<>();
-        recyclerViews = new ArrayList<>();
         eventWeekAdapters = new ArrayList<>();
 
-        for(int i = 0; i < 6; i++) {
+        for(int i = 0; i < numberOfDays; i++) {
             View itemWeek = inflater.inflate(R.layout.item_week, linearLayout, false);
             linearLayout.addView(itemWeek);
 
@@ -123,7 +126,6 @@ public class EventListWeekFragment extends Fragment {
             itemWeekRecyclerView.setAdapter(eventWeekAdapter);
 
             itemWeeks.add(itemWeek);
-            recyclerViews.add(itemWeekRecyclerView);
             eventWeekAdapters.add(eventWeekAdapter);
         }
 

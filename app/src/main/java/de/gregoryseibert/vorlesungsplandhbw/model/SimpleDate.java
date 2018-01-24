@@ -91,6 +91,10 @@ public class SimpleDate implements Serializable {
         c.add(Calendar.DAY_OF_MONTH, amount);
     }
 
+    public void addHours(int amount) {
+        c.add(Calendar.HOUR, amount);
+    }
+
     public void setDay(int day) {
         c.set(Calendar.DAY_OF_MONTH, day);
     }

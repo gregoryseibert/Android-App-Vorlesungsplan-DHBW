@@ -26,12 +26,14 @@ import timber.log.Timber;
  */
 
 public class EventRepository {
+    private final int REFRESH_TRESHOLD;
     private final EventDAO EVENTDAO;
     private final OkHttpClient OKHTTPCLIENT;
 
-    public EventRepository(EventDAO eventDAO, OkHttpClient okHttpClient) {
+    public EventRepository(EventDAO eventDAO, OkHttpClient okHttpClient, int refreshTreshold) {
         this.EVENTDAO = eventDAO;
         this.OKHTTPCLIENT = okHttpClient;
+        this.REFRESH_TRESHOLD = refreshTreshold;
     }
 
     public List<Event> getAllEvents() {
@@ -46,20 +48,41 @@ public class EventRepository {
         Timber.i("start: %s", rangeStart.getFormatDateTime());
         Timber.i("end: %s", rangeEnd.getFormatDateTime());
 
-        //TODO
-        boolean shouldRefresh = true;
+        List<Event> events = EVENTDAO.getAllByRange(rangeStart.getMillis(), rangeEnd.getMillis());
 
-        if(shouldRefresh) {
-            refreshEvents(url, rangeStart);
+        if(hasToRefresh(events)) {
+            events = refreshEvents(url, rangeStart);
         }
 
         Week week = new Week(rangeStart);
-        week.insertEvents(EVENTDAO.getAllByRange(rangeStart.getMillis(), rangeEnd.getMillis()));
+
+        if(events != null) {
+            week.insertEvents(events);
+        }
 
         return week;
     }
 
-    private void refreshEvents(String url, SimpleDate date) {
+    public boolean hasToRefresh(List<Event> events) {
+        SimpleDate dateTreshold = new SimpleDate();
+        dateTreshold.addHours(-REFRESH_TRESHOLD);
+
+        // TODO: check connectivity
+        if(events.size() == 0) {
+            return true;
+        }
+
+        for(Event event : events) {
+            if(event.getStartDate().getMillis() > dateTreshold.getMillis()) {
+                Timber.i("Event was too old [Loaded at: " + event.getLoadedAt().getFormatDateTime() + "]; [Treshold-Date: " + dateTreshold.getFormatDateTime() + "]; [Treshold: " + REFRESH_TRESHOLD + "]");
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private List<Event> refreshEvents(String url, SimpleDate date) {
         String fullURL = generateURL(url, date.getDay(), date.getMonth(), date.getYear());
 
         Document doc = loadDocument(fullURL);
@@ -70,7 +93,13 @@ public class EventRepository {
             List<Event> events = parseDocumentForEvents(doc, date);
 
             EVENTDAO.insertAll(events);
+
+            return events;
         }
+
+        Timber.i("Document was null");
+
+        return null;
     }
 
     public void emptyDatabase() {

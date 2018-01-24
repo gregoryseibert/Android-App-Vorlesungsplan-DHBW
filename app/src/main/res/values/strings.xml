@@ -4,15 +4,36 @@
     <string name="title_activity_about">Informationen</string>
 
     <!-- Strings related to Settings -->
+    <string name="category_general">Allgemein</string>
+    <string name="category_design">Aussehen</string>
+
     <string name="key_dhbwurl">dhbwurl</string>
     <string name="title_dhbwurl">DHBW URL</string>
     <string name="summary_dhbwurl">Füge hier die URL des DHBW Vorlesungsplans ein</string>
 
     <string name="key_weeklyexpanded">weeklyexpanded</string>
-    <string name="title_weeklyexpanded">Ausgeklappte Wochenansicht</string>
+    <string name="title_weeklyexpanded">Standardmäßig ausgeklappte Wochenansicht</string>
 
     <string name="key_datepickertop">datepickertop</string>
     <string name="title_datepickertop">Datumsauswahl oben</string>
     <string name="title_datepickertop_off">Datumsauswahl unten</string>
+
+    <string name="key_refresh">refresh</string>
+    <string name="title_refresh">Alterung der bereits geladenen Vorlesungen</string>
+
+    <string name="key_hideweekend">hideweekend</string>
+    <string name="title_hideweekend">Samstage ausblenden</string>
+
+    <string-array name="refresh_options">
+        <item>Eine Stunde</item>
+        <item>Vier Stunden</item>
+        <item>Ein Tag</item>
+    </string-array>
+
+    <string-array name="refresh_options_values">
+        <item>1</item>
+        <item>4</item>
+        <item>24</item>
+    </string-array>
 
 </resources>

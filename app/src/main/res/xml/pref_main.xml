@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <EditTextPreference
-        android:key="@string/key_dhbwurl"
-        android:summary="@string/summary_dhbwurl"
-        android:title="@string/title_dhbwurl"/>
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="@string/key_weeklyexpanded"
-        android:title="@string/title_weeklyexpanded" />
-    <SwitchPreference
-        android:defaultValue="true"
-        android:key="@string/key_datepickertop"
-        android:title="@string/title_datepickertop" />
+    <PreferenceCategory android:title="@string/category_general">
+
+        <EditTextPreference
+            android:key="@string/key_dhbwurl"
+            android:summary="@string/summary_dhbwurl"
+            android:title="@string/title_dhbwurl" />
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/refresh_options"
+            android:entryValues="@array/refresh_options_values"
+            android:key="@string/key_refresh"
+            android:title="@string/title_refresh" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/category_design">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_datepickertop"
+            android:title="@string/title_datepickertop" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_weeklyexpanded"
+            android:title="@string/title_weeklyexpanded" />
+        <SwitchPreference
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:defaultValue="true"
+            android:key="@string/key_hideweekend"
+            android:title="@string/title_hideweekend" />
+    </PreferenceCategory>
 </PreferenceScreen>

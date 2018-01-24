@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.arch.lifecycle.ViewModelProviders;
 import android.arch.persistence.room.Room;
+import android.content.SharedPreferences;
 import android.support.v4.app.FragmentActivity;
 
 import java.io.File;
@@ -50,8 +51,8 @@ public class ServiceModule {
 
     @Provides
     @ServiceComponentScope
-    public EventRepository eventRepository(EventDAO eventDAO, OkHttpClient okHttpClient) {
-        return new EventRepository(eventDAO, okHttpClient);
+    public EventRepository eventRepository(EventDAO eventDAO, OkHttpClient okHttpClient, SharedPreferences sharedPreferences) {
+        return new EventRepository(eventDAO, okHttpClient, Integer.parseInt(sharedPreferences.getString("refresh", "1")));
     }
 
     @Provides

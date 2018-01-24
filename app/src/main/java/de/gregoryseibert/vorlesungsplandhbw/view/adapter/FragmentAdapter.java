@@ -12,6 +12,7 @@ import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListWeekFragment;
  */
 
 public class FragmentAdapter extends FragmentPagerAdapter {
+    private boolean hideWeekend;
     private EventListDayFragment mEventListDayFragment;
     private EventListWeekFragment mEventListWeekFragment;
 
@@ -20,16 +21,17 @@ public class FragmentAdapter extends FragmentPagerAdapter {
             "Wochenansicht"
     };
 
-    public FragmentAdapter(FragmentManager fm) {
+    public FragmentAdapter(FragmentManager fm, boolean hideWeekend) {
         super(fm);
+        this.hideWeekend = hideWeekend;
     }
 
     public EventListDayFragment getEventListDayFragment() {
-        return mEventListDayFragment;
+        return (EventListDayFragment) getItem(0);
     }
 
     public EventListWeekFragment getEventListWeekFragment() {
-        return mEventListWeekFragment;
+        return (EventListWeekFragment) getItem(1);
     }
 
     @Override
@@ -43,6 +45,10 @@ public class FragmentAdapter extends FragmentPagerAdapter {
         } else {
             if(mEventListWeekFragment == null) {
                 mEventListWeekFragment = new EventListWeekFragment();
+
+                if(hideWeekend) {
+                    mEventListWeekFragment.hideWeekend();
+                }
             }
 
             return mEventListWeekFragment;

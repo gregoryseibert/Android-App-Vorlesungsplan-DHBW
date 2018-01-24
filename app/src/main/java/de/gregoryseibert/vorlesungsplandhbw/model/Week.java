@@ -10,13 +10,15 @@ import java.util.List;
 public class Week {
     private List<Day> days;
     private SimpleDate firstDate;
+    private int numberOfDays;
 
     public Week(SimpleDate firstDate) {
         this.days = new ArrayList<>();
         this.firstDate = new SimpleDate(firstDate);
+        this.numberOfDays = 6;
 
         SimpleDate date = new SimpleDate(firstDate);
-        for(int i = 0; i < 6; i++) {
+        for(int i = 0; i < numberOfDays; i++) {
             days.add(new Day(date.getFormatDateShort()));
             date.addDays(1);
         }
@@ -24,7 +26,7 @@ public class Week {
 
     public void insertEvent(Event event) {
         int index = event.getStartDate().getDayOfWeek();
-        if(index < 6) {
+        if(index >= 0 && index < numberOfDays) {
             days.get(index).addEvent(event);
         }
     }
@@ -36,7 +38,7 @@ public class Week {
     }
 
     public List<Event> getEventsOfDay(int day) {
-        if(day >= 0 && day < 6) {
+        if(day >= 0 && day < numberOfDays) {
             return days.get(day).getEvents();
         }
 
