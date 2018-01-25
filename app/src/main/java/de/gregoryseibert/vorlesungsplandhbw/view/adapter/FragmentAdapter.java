@@ -4,8 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListDayFragment;
-import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListWeekFragment;
+import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventDayFragment;
+import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventWeekFragment;
 
 /**
  * Created by Gregory Seibert on 17.01.2018.
@@ -13,8 +13,8 @@ import de.gregoryseibert.vorlesungsplandhbw.view.fragment.EventListWeekFragment;
 
 public class FragmentAdapter extends FragmentPagerAdapter {
     private boolean hideWeekend;
-    private EventListDayFragment mEventListDayFragment;
-    private EventListWeekFragment mEventListWeekFragment;
+    private EventDayFragment mEventDayFragment;
+    private EventWeekFragment mEventWeekFragment;
 
     private final String tabTitles[] = new String[] {
             "Tagesansicht",
@@ -26,32 +26,32 @@ public class FragmentAdapter extends FragmentPagerAdapter {
         this.hideWeekend = hideWeekend;
     }
 
-    public EventListDayFragment getEventListDayFragment() {
-        return (EventListDayFragment) getItem(0);
+    public EventDayFragment getEventListDayFragment() {
+        return (EventDayFragment) getItem(0);
     }
 
-    public EventListWeekFragment getEventListWeekFragment() {
-        return (EventListWeekFragment) getItem(1);
+    public EventWeekFragment getEventListWeekFragment() {
+        return (EventWeekFragment) getItem(1);
     }
 
     @Override
     public Fragment getItem(int position) {
         if(position == 0) {
-            if(mEventListDayFragment == null) {
-                mEventListDayFragment = new EventListDayFragment();
+            if(mEventDayFragment == null) {
+                mEventDayFragment = new EventDayFragment();
             }
 
-            return mEventListDayFragment;
+            return mEventDayFragment;
         } else {
-            if(mEventListWeekFragment == null) {
-                mEventListWeekFragment = new EventListWeekFragment();
+            if(mEventWeekFragment == null) {
+                mEventWeekFragment = new EventWeekFragment();
 
                 if(hideWeekend) {
-                    mEventListWeekFragment.hideWeekend();
+                    mEventWeekFragment.hideWeekend();
                 }
             }
 
-            return mEventListWeekFragment;
+            return mEventWeekFragment;
         }
     }
 

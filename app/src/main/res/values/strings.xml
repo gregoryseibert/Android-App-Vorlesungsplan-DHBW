@@ -22,7 +22,7 @@
     <string name="title_refresh">Alterung der bereits geladenen Vorlesungen</string>
 
     <string name="key_hideweekend">hideweekend</string>
-    <string name="title_hideweekend">Samstage ausblenden</string>
+    <string name="title_hideweekend">Samstage in der Wochenansicht ausblenden</string>
 
     <string-array name="refresh_options">
         <item>Eine Stunde</item>

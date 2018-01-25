@@ -186,6 +186,8 @@ public class MainActivity extends AppCompatActivity {
         if(!date.equals(this.date)) {
             this.date = date;
 
+            fragmentPagerAdapter.getEventListDayFragment().setLoading();
+
             eventViewModel.init(url, date);
         }
     }

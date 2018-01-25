@@ -3,14 +3,13 @@ package de.gregoryseibert.vorlesungsplandhbw.model;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
-import android.support.annotation.NonNull;
 
 /**
  * Created by Gregory Seibert on 11.01.2018.
  */
 
 @Entity
-public class Event implements Comparable<Event> {
+public class Event {
     @ColumnInfo(name = "loadedat")
     public SimpleDate loadedAt;
     @PrimaryKey
@@ -45,17 +44,6 @@ public class Event implements Comparable<Event> {
     @Override
     public String toString() {
         return type.toString() + " '" + title + "': " + startDate.getFormatTime() + " - " + endDate.getFormatTime() + ", " + startDate.getFormatDate();
-    }
-
-    @Override
-    public int compareTo(@NonNull Event event) {
-        SimpleDate date = event.startDate;
-
-        if(this.startDate != null && date != null) {
-            return startDate.getMillis() < date.getMillis() ? -1 : (startDate.getMillis() > date.getMillis()) ? 1 : 0;
-        }
-
-        return 0;
     }
 
     @Override

@@ -30,14 +30,14 @@ import de.gregoryseibert.vorlesungsplandhbw.view.util.Animator;
  * Created by Gregory Seibert on 16.01.2018.
  */
 
-public class EventListWeekFragment extends Fragment {
+public class EventWeekFragment extends Fragment {
     private ArrayList<View> itemWeeks;
 
     private ArrayList<EventWeekAdapter> eventWeekAdapters;
 
     private int numberOfDays;
 
-    public EventListWeekFragment() {
+    public EventWeekFragment() {
         numberOfDays = 6;
     }
 

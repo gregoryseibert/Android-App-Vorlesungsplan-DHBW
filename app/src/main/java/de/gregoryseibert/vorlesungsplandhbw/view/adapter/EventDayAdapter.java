@@ -26,8 +26,6 @@ public class EventDayAdapter extends RecyclerView.Adapter<EventDayAdapter.EventV
     }
 
     public void addEvents(List<Event> newEventList) {
-        removeAllEvents();
-
         if(newEventList != null && newEventList.size() > 0) {
             eventList.addAll(newEventList);
         } else {

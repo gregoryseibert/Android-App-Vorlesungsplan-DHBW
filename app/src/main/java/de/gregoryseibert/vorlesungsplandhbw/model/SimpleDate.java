@@ -1,6 +1,5 @@
 package de.gregoryseibert.vorlesungsplandhbw.model;
 
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -9,7 +8,7 @@ import java.util.Locale;
  * Created by Gregory Seibert on 10.01.2018.
  */
 
-public class SimpleDate implements Serializable {
+public class SimpleDate {
     private Calendar c;
     private static SimpleDateFormat sdfDateTime, sdfDate, sdfDateShort, sdfTime;
 
@@ -42,14 +41,6 @@ public class SimpleDate implements Serializable {
         sdfDate = new SimpleDateFormat("EEEE, dd.MM.yyyy", Locale.GERMAN);
         sdfDateShort = new SimpleDateFormat("EEEE", Locale.GERMAN);
         sdfTime = new SimpleDateFormat("HH:mm", Locale.GERMAN);
-    }
-
-    public boolean isSameDay(SimpleDate date) {
-        return this.getFormatDate().equals(date.getFormatDate());
-    }
-
-    public boolean isSameWeek(SimpleDate date) {
-        return this.getYear() == date.getYear() && this.getWeek() == date.getWeek();
     }
 
     public SimpleDate getFirstDayOfWeek() {
