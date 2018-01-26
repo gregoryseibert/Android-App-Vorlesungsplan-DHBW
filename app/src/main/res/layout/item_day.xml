@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorCardBackground"
     android:orientation="horizontal">
 
     <TextView
@@ -13,7 +12,6 @@
         android:layout_margin="@dimen/item_offset"
         android:padding="@dimen/item_offset"
         android:text="09:00 - 11:30"
-        android:textColor="@color/colorAccentText"
         android:textStyle="bold" />
 
     <RelativeLayout
@@ -26,7 +24,7 @@
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
-            android:background="@color/colorDividerNormal" />
+            android:background="#FFFFFF" />
 
         <ImageView
             android:id="@+id/timelineCircle"
@@ -47,11 +45,8 @@
             android:id="@+id/titleText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
             android:padding="@dimen/item_offset"
             android:text="Mathematik"
-            android:textColor="@color/colorAccentText"
             android:textStyle="bold" />
 
         <TextView
@@ -60,8 +55,6 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/item_offset"
             android:text="RB4444"
-            android:textColor="@color/colorCardText"
             android:textStyle="bold" />
-
     </LinearLayout>
 </LinearLayout>

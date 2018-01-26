@@ -66,11 +66,11 @@ public class EventWeekAdapter extends RecyclerView.Adapter<EventWeekAdapter.Even
             eventViewHolder.timeText.setText(event.startDate.getFormatTime() + " - " + event.endDate.getFormatTime());
 
             if(event.type == Event.EventType.EXAM) {
-                eventViewHolder.divider.setBackgroundColor(context.getResources().getColor(R.color.colorDividerExam));
+//                eventViewHolder.divider.setBackgroundColor(context.getResources().getColor(R.color.colorDividerExam));
             }
         } else {
             eventViewHolder.timeText.setText("");
-            eventViewHolder.divider.setBackgroundColor(context.getResources().getColor(R.color.colorDividerFree));
+//            eventViewHolder.divider.setBackgroundColor(context.getResources().getColor(R.color.colorDividerFree));
         }
     }
 
