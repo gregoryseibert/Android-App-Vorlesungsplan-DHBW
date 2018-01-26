@@ -44,13 +44,10 @@ public class EventRepository {
         SimpleDate rangeStart = date.getFirstDayOfWeek();
         SimpleDate rangeEnd = date.getLastDayOfWeek();
         rangeEnd.getCalendar().add(Calendar.HOUR_OF_DAY, 23);
-
-        Timber.i("start: %s", rangeStart.getFormatDateTime());
-        Timber.i("end: %s", rangeEnd.getFormatDateTime());
-
         List<Event> events = EVENTDAO.getAllByRange(rangeStart.getMillis(), rangeEnd.getMillis());
 
         if(hasToRefresh(events)) {
+            events.clear();
             events = refreshEvents(url, rangeStart);
         }
 

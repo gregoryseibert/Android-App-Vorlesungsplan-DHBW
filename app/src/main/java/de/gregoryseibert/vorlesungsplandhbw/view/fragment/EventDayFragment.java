@@ -16,6 +16,7 @@ import java.util.List;
 import de.gregoryseibert.vorlesungsplandhbw.R;
 import de.gregoryseibert.vorlesungsplandhbw.model.Event;
 import de.gregoryseibert.vorlesungsplandhbw.view.adapter.EventDayAdapter;
+import timber.log.Timber;
 
 /**
  * Created by Gregory Seibert on 11.01.2018.
@@ -36,8 +37,6 @@ public class EventDayFragment extends Fragment {
     }
 
     public void setLoading() {
-        eventDayAdapter.removeAllEvents();
-
         if(progressBar != null) {
             progressBar.setVisibility(View.VISIBLE);
         }

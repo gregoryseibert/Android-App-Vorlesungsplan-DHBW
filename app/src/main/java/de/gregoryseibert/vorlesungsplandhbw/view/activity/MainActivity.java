@@ -35,6 +35,7 @@ import de.gregoryseibert.vorlesungsplandhbw.viewmodel.EventViewModel;
 import devs.mulham.horizontalcalendar.HorizontalCalendar;
 import devs.mulham.horizontalcalendar.HorizontalCalendarView;
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
+import timber.log.Timber;
 
 /**
  * Created by Gregory Seibert on 09.01.2018.
@@ -110,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
     private void setupSharedPreferencesListener() {
         settingsListener = (SharedPreferences sharedPreferences, String key) -> {
             url = sharedPreferences.getString(getString(R.string.key_dhbwurl), "");
-            setupViewModel();
+            eventViewModel.init(url, date);
         };
 
         sharedPreferences.registerOnSharedPreferenceChangeListener(settingsListener);

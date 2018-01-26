@@ -13,6 +13,7 @@ import java.util.List;
 import de.gregoryseibert.vorlesungsplandhbw.R;
 import de.gregoryseibert.vorlesungsplandhbw.model.Event;
 import de.gregoryseibert.vorlesungsplandhbw.model.Event.EventType;
+import timber.log.Timber;
 
 /**
  * Created by Gregory Seibert on 09.01.2018.
@@ -26,17 +27,13 @@ public class EventDayAdapter extends RecyclerView.Adapter<EventDayAdapter.EventV
     }
 
     public void addEvents(List<Event> newEventList) {
+        eventList.clear();
+
         if(newEventList != null && newEventList.size() > 0) {
             eventList.addAll(newEventList);
         } else {
             eventList.add(new Event("Es wurden keine Vorlesungen gefunden.", EventType.EMPTY));
         }
-
-        notifyDataSetChanged();
-    }
-
-    public void removeAllEvents() {
-        eventList.clear();
 
         notifyDataSetChanged();
     }
