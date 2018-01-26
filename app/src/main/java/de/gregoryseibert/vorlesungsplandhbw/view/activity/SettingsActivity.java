@@ -1,6 +1,7 @@
 package de.gregoryseibert.vorlesungsplandhbw.view.activity;
 
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -81,6 +82,11 @@ public class SettingsActivity extends AppCompatSettingsActivity {
         @Override
         public boolean onPreferenceChange(Preference preference, Object newValue) {
             String stringValue = newValue.toString();
+
+            if(preference instanceof ListPreference) {
+                stringValue = ((ListPreference) preference).getEntry().toString();
+            }
+
             preference.setSummary(stringValue);
 
             return true;
@@ -95,6 +101,7 @@ public class SettingsActivity extends AppCompatSettingsActivity {
             addPreferencesFromResource(R.xml.pref_main);
 
             bindPreferenceSummaryToValue(findPreference(getString(R.string.key_dhbwurl)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.key_refresh)));
         }
     }
 }

@@ -8,12 +8,15 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.RelativeLayout;
+
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.Calendar;
 
@@ -65,7 +68,12 @@ public class MainActivity extends AppCompatActivity {
 
         date = new SimpleDate();
 
-        setupSharedPreferences();
+        url = sharedPreferences.getString(getString(R.string.key_dhbwurl), "");
+        if(url.length() == 0 || !Validator.validateURL(url)) {
+            showUrlDialog();
+        }
+
+        setupSharedPreferencesListener();
 
         setupViewPager();
 
@@ -84,11 +92,25 @@ public class MainActivity extends AppCompatActivity {
         return serviceComponent;
     }
 
-    private void setupSharedPreferences() {
+    private void showUrlDialog() {
+        new MaterialDialog.Builder(this)
+                .title(R.string.title_dhbwurl)
+                .content(R.string.popup_message_dhbwurl)
+                .inputType(InputType.TYPE_TEXT_VARIATION_URI)
+                .input(getString(R.string.popup_hint_dhbwurl), "",(MaterialDialog dialog, CharSequence input) -> {
+                    url = input.toString();
+                    if(url.length() > 0 || Validator.validateURL(url)) {
+                        sharedPreferences.edit().putString(getString(R.string.key_dhbwurl), url).apply();
+                    }
+                })
+                .cancelable(false)
+                .show();
+    }
+
+    private void setupSharedPreferencesListener() {
         settingsListener = (SharedPreferences sharedPreferences, String key) -> {
-            if(key.equals(getString(R.string.key_dhbwurl))) {
-                setupViewModel();
-            }
+            url = sharedPreferences.getString(getString(R.string.key_dhbwurl), "");
+            setupViewModel();
         };
 
         sharedPreferences.registerOnSharedPreferenceChangeListener(settingsListener);
@@ -144,8 +166,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setupViewModel() {
-        url = sharedPreferences.getString(getString(R.string.key_dhbwurl), "");
-
         if(url.length() > 0) {
             if(Validator.validateURL(url)) {
                 eventViewModel.init(url, date);
@@ -159,8 +179,6 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Toaster.toast(this, "Die in den Einstellungen gespeicherte URL deines Vorlesungsplans ist fehlerhaft.", true);
             }
-        } else {
-            Toaster.toast(this, "Die URL deines Vorlesungsplans muss in den Einstellungen dieser App gespeichert werden.", true);
         }
     }
 
@@ -188,7 +206,9 @@ public class MainActivity extends AppCompatActivity {
 
             fragmentPagerAdapter.getEventListDayFragment().setLoading();
 
-            eventViewModel.init(url, date);
+            if(url.length() > 0 && Validator.validateURL(url)) {
+                eventViewModel.init(url, date);
+            }
         }
     }
 

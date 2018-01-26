@@ -18,16 +18,20 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/key_datepickertop"
-            android:title="@string/title_datepickertop" />
+            android:title="@string/title_datepickertop"
+            android:summaryOff="@string/summary_datepickertop_off"
+            android:summaryOn="@string/summary_datepickertop_on"/>
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/key_weeklyexpanded"
-            android:title="@string/title_weeklyexpanded" />
+            android:title="@string/title_weeklyexpanded"
+            android:summaryOff="@string/summary_weeklyexpanded_off"
+            android:summaryOn="@string/summary_weeklyexpanded_on"/>
         <SwitchPreference
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:defaultValue="true"
             android:key="@string/key_hideweekend"
-            android:title="@string/title_hideweekend" />
+            android:title="@string/title_hideweekend"
+            android:summaryOff="@string/summary_hideweekend_off"
+            android:summaryOn="@string/summary_hideweekend_on"/>
     </PreferenceCategory>
 </PreferenceScreen>

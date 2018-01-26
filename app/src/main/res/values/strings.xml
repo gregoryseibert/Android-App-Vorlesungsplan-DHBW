@@ -8,21 +8,28 @@
     <string name="category_design">Aussehen</string>
 
     <string name="key_dhbwurl">dhbwurl</string>
-    <string name="title_dhbwurl">DHBW URL</string>
-    <string name="summary_dhbwurl">Füge hier die URL des DHBW Vorlesungsplans ein</string>
-
-    <string name="key_weeklyexpanded">weeklyexpanded</string>
-    <string name="title_weeklyexpanded">Standardmäßig ausgeklappte Wochenansicht</string>
+    <string name="title_dhbwurl">Vorlesungsplan URL</string>
+    <string name="summary_dhbwurl">Füge hier die URL deines Vorlesungsplans ein</string>
+    <string name="popup_message_dhbwurl">Füge hier die URL deines Vorlesungsplans ein.\nDiese Webseiten-Adresse hast du von deinem Sekretariat erhalten.\n\nBeispiel:\n"https://rapla.dhbw-stuttgart.de/rapla?key=xxxxxxxxxxxxxxxxx"</string>
+    <string name="popup_hint_dhbwurl"></string>
 
     <string name="key_datepickertop">datepickertop</string>
-    <string name="title_datepickertop">Datumsauswahl oben</string>
-    <string name="title_datepickertop_off">Datumsauswahl unten</string>
+    <string name="title_datepickertop">Datumsauswahl</string>
+    <string name="summary_datepickertop_on">Oben anzeigen</string>
+    <string name="summary_datepickertop_off">Unten anzeigen</string>
 
-    <string name="key_refresh">refresh</string>
-    <string name="title_refresh">Alterung der bereits geladenen Vorlesungen</string>
+    <string name="key_weeklyexpanded">weeklyexpanded</string>
+    <string name="title_weeklyexpanded">Einzelne Tage in der Wochenansicht</string>
+    <string name="summary_weeklyexpanded_on">Standardmäßig ausgeklappt</string>
+    <string name="summary_weeklyexpanded_off">Standardmäßig eingeklappt</string>
 
     <string name="key_hideweekend">hideweekend</string>
-    <string name="title_hideweekend">Samstage in der Wochenansicht ausblenden</string>
+    <string name="title_hideweekend">Samstage in der Wochenansicht</string>
+    <string name="summary_hideweekend_on">Ausblenden</string>
+    <string name="summary_hideweekend_off">Einblenden</string>
+
+    <string name="key_refresh">refresh</string>
+    <string name="title_refresh">Maximales Alter der bereits geladenen Vorlesungen</string>
 
     <string-array name="refresh_options">
         <item>Eine Stunde</item>
