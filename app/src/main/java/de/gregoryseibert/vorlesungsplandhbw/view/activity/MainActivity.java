@@ -238,9 +238,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_settings:
                 intent = new Intent(this, SettingsActivity.class);
                 break;
-            //case R.id.action_about:
-            //    intent = new Intent(this, AboutActivity.class);
-            //    break;
+            case R.id.action_about:
+                intent = new Intent(this, AboutActivity.class);
+                break;
             default:
                 break;
         }

@@ -51,16 +51,7 @@ tools:context="de.gregoryseibert.vorlesungsplandhbw.view.activity.AboutActivity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/item_offset"
-                android:text="Entwickler: Gregory Seibert"
-                android:textAlignment="center"
-                android:textColor="@color/colorAccent"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/item_offset"
-                android:text="Diese App wurde nicht für die Öffentlichkeit programmiert."
+                android:text="Wenn du etwas länger auf die Datumsauswahl drückst, öffnet sich eine erweiterte Auswahl für's Datum."
                 android:textAlignment="center"
                 android:textColor="@color/colorAccent"
                 android:textStyle="bold" />
