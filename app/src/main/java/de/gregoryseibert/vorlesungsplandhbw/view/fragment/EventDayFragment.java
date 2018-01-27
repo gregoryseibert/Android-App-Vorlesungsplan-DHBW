@@ -55,7 +55,7 @@ public class EventDayFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_event_day, container, false);
+        View view = inflater.inflate(R.layout.event_day_list, container, false);
 
         eventDayAdapter = new EventDayAdapter();
 

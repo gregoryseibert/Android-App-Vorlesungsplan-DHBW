@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -52,7 +51,7 @@ public class EventWeekAdapter extends RecyclerView.Adapter<EventWeekAdapter.Even
 
     @Override
     public EventViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_day, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_week_day, viewGroup, false);
 
         return new EventViewHolder(view);
     }
@@ -61,22 +60,17 @@ public class EventWeekAdapter extends RecyclerView.Adapter<EventWeekAdapter.Even
     public void onBindViewHolder(EventViewHolder eventViewHolder, int i) {
         Event event = eventList.get(i);
 
-        eventViewHolder.titleText.setText(event.title);
+        eventViewHolder.titleText.setText(event.getTitle());
 
         if(event.type != Event.EventType.EMPTY) {
-            eventViewHolder.timeTextStart.setVisibility(View.VISIBLE);
-            eventViewHolder.timeTextEnd.setVisibility(View.VISIBLE);
-            eventViewHolder.roomText.setVisibility(View.VISIBLE);
-            //eventViewHolder.dividerLayout.setVisibility(View.VISIBLE);
+            eventViewHolder.timeText.setText(event.startDate.getFormatTime() + " - " + event.endDate.getFormatTime());
 
-            eventViewHolder.timeTextStart.setText(String.format("%s", event.startDate.getFormatTime()));
-            eventViewHolder.timeTextEnd.setText(String.format("%s", event.endDate.getFormatTime()));
-            eventViewHolder.roomText.setText(event.room);
+            if(event.type == Event.EventType.EXAM) {
+//                eventViewHolder.divider.setBackgroundColor(context.getResources().getColor(R.color.colorDividerExam));
+            }
         } else {
-            eventViewHolder.timeTextStart.setVisibility(View.GONE);
-            eventViewHolder.timeTextEnd.setVisibility(View.GONE);
-            eventViewHolder.roomText.setVisibility(View.GONE);
-            //eventViewHolder.dividerLayout.setVisibility(View.GONE);
+            eventViewHolder.timeText.setText("");
+//            eventViewHolder.divider.setBackgroundColor(context.getResources().getColor(R.color.colorDividerFree));
         }
     }
 
@@ -86,17 +80,15 @@ public class EventWeekAdapter extends RecyclerView.Adapter<EventWeekAdapter.Even
     }
 
     class EventViewHolder extends RecyclerView.ViewHolder {
+        TextView timeText;
         TextView titleText;
-        TextView timeTextStart, timeTextEnd;
-        TextView roomText;
+        View divider;
 
         EventViewHolder(View itemView) {
             super(itemView);
-
+            timeText = itemView.findViewById(R.id.timeText);
             titleText = itemView.findViewById(R.id.titleText);
-            timeTextStart = itemView.findViewById(R.id.timeTextStart);
-            timeTextEnd = itemView.findViewById(R.id.timeTextEnd);
-            roomText = itemView.findViewById(R.id.roomText);
+            divider = itemView.findViewById(R.id.divider);
         }
     }
 }

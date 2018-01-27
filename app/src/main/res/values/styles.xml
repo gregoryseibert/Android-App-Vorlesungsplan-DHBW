@@ -6,7 +6,6 @@
 
         <item name="android:textColorPrimary">@color/colorTextPrimary</item>
         <item name="android:textColor">@color/colorTextSecondary</item>
-
         <item name="android:datePickerDialogTheme">@style/MyDatePickerDialogTheme</item>
     </style>
 
