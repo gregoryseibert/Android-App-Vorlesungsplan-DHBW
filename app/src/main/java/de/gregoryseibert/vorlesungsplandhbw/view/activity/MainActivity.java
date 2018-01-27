@@ -12,8 +12,10 @@ import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -51,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
 
+    private ProgressBar progressBar;
+
     private SimpleDate date;
     private String url;
 
@@ -66,6 +70,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         date = new SimpleDate(14, 10, 2017, 0, 0);
+
+        progressBar = findViewById(R.id.progressBar);
+
+        setLoading();
 
         setupViewPager();
 
@@ -87,6 +95,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return serviceComponent;
+    }
+
+    public void setLoading() {
+        if(progressBar != null) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void stopLoading() {
+        if(progressBar != null) {
+            progressBar.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void showUrlDialog() {
@@ -163,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
                     if(week != null) {
                         fragmentPagerAdapter.getEventListDayFragment().setEvents(week.getEventsOfDay(date.getDayOfWeek()));
                         fragmentPagerAdapter.getEventListWeekFragment().setEvents(week);
+                        stopLoading();
                     }
                 });
             } else {
@@ -193,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
         if(!date.equals(this.date)) {
             this.date = date;
 
-            fragmentPagerAdapter.getEventListDayFragment().setLoading();
+            setLoading();
 
             if(url.length() > 0 && Validator.validateURL(url)) {
                 eventViewModel.init(url, date);

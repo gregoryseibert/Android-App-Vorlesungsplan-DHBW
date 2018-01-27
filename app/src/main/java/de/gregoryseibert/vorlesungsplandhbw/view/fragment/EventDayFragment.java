@@ -24,7 +24,6 @@ import timber.log.Timber;
 
 public class EventDayFragment extends Fragment {
     private EventDayAdapter eventDayAdapter;
-    private ProgressBar progressBar;
 
     public EventDayFragment() {
 
@@ -32,20 +31,6 @@ public class EventDayFragment extends Fragment {
 
     public void setEvents(List<Event> events) {
         eventDayAdapter.addEvents(events);
-
-        stopLoading();
-    }
-
-    public void setLoading() {
-        if(progressBar != null) {
-            progressBar.setVisibility(View.VISIBLE);
-        }
-    }
-
-    public void stopLoading() {
-        if(progressBar != null) {
-            progressBar.setVisibility(View.INVISIBLE);
-        }
     }
 
     @Override
@@ -61,10 +46,7 @@ public class EventDayFragment extends Fragment {
 
         RecyclerView rv = view.findViewById(R.id.recyclerView);
         rv.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        //rv.addItemDecoration(new ItemOffsetDecoration(getContext(), R.dimen.item_offset, false));
         rv.setAdapter(eventDayAdapter);
-
-        progressBar = view.findViewById(R.id.progressBar);
 
         return view;
     }
