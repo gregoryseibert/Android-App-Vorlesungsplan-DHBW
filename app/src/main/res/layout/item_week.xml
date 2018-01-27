@@ -1,25 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/week_container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <RelativeLayout
         android:id="@+id/week_container_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/item_offset">
+        android:padding="@dimen/item_offset"
+        android:paddingEnd="@dimen/fab_margin"
+        android:paddingStart="@dimen/fab_margin">
 
         <TextView
             android:id="@+id/dayText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:paddingBottom="@dimen/item_offset"
-            android:paddingEnd="@dimen/item_offset"
-            android:paddingTop="@dimen/item_offset"
             android:text="Montag"
             android:textStyle="bold" />
 
@@ -30,9 +27,11 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="99dp"
             android:background="@drawable/circle"
+            android:backgroundTint="@color/colorTextSecondary"
             android:gravity="center"
             android:text="99"
             android:textAlignment="center"
+            android:textColor="@color/colorTextPrimary"
             android:textStyle="bold" />
 
         <ToggleButton
@@ -42,11 +41,11 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:background="@drawable/toggle_selector"
+            android:backgroundTint="@color/colorTextSecondary"
             android:checked="false"
             android:text=""
             android:textOff=""
             android:textOn="" />
-
     </RelativeLayout>
 
     <FrameLayout
@@ -60,7 +59,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/item_offset"
-            app:reverseLayout="false">
-        </android.support.v7.widget.RecyclerView>
+            app:reverseLayout="false"></android.support.v7.widget.RecyclerView>
+
     </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="false"
+        android:layout_below="@id/week_container_bottom"
+        android:background="@color/cardview_shadow_start_color" />
 </RelativeLayout>

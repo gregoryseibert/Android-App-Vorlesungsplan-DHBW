@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:tabIndicatorColor="@color/colorAccent"/>
+            app:tabTextColor="@color/colorTextPrimary" />
 
         <devs.mulham.horizontalcalendar.HorizontalCalendarView
             android:id="@+id/calendarView"
