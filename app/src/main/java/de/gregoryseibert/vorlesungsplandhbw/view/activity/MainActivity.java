@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        date = new SimpleDate(14, 10, 2017, 0, 0);
+        date = new SimpleDate();
 
         progressBar = findViewById(R.id.progressBar);
 
