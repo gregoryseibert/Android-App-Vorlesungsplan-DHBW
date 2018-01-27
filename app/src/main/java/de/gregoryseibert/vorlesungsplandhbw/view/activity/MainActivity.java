@@ -31,13 +31,12 @@ import de.gregoryseibert.vorlesungsplandhbw.dependencyinjection.service.ServiceM
 import de.gregoryseibert.vorlesungsplandhbw.model.SimpleDate;
 import de.gregoryseibert.vorlesungsplandhbw.view.adapter.FragmentAdapter;
 import de.gregoryseibert.vorlesungsplandhbw.view.util.Toaster;
-import de.gregoryseibert.vorlesungsplandhbw.view.util.Validator;
+import de.gregoryseibert.vorlesungsplandhbw.view.util.UrlUtil;
 import de.gregoryseibert.vorlesungsplandhbw.view.util.ZoomOutAndSlideTransformer;
 import de.gregoryseibert.vorlesungsplandhbw.viewmodel.EventViewModel;
 import devs.mulham.horizontalcalendar.HorizontalCalendar;
 import devs.mulham.horizontalcalendar.HorizontalCalendarView;
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
-import timber.log.Timber;
 
 /**
  * Created by Gregory Seibert on 09.01.2018.
@@ -82,9 +81,10 @@ public class MainActivity extends AppCompatActivity {
         setupDatePickerLayout();
 
         url = sharedPreferences.getString(getString(R.string.key_dhbwurl), "");
-        if(url.length() == 0 || !Validator.validateURL(url)) {
+        if(url.length() == 0 || !UrlUtil.validate(url)) {
             showUrlDialog();
         } else {
+            url = UrlUtil.sanitize(url);
             setupViewModel();
         }
     }
@@ -115,8 +115,8 @@ public class MainActivity extends AppCompatActivity {
                 .content(R.string.popup_message_dhbwurl)
                 .inputType(InputType.TYPE_TEXT_VARIATION_URI)
                 .input(getString(R.string.popup_hint_dhbwurl), "",(MaterialDialog dialog, CharSequence input) -> {
-                    url = input.toString();
-                    if(url.length() > 0 || Validator.validateURL(url)) {
+                    url = UrlUtil.sanitize(input.toString());
+                    if(url.length() > 0 || UrlUtil.validate(url)) {
                         sharedPreferences.edit().putString(getString(R.string.key_dhbwurl), url).apply();
                     }
                     setupViewModel();
@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void setupViewModel() {
         if(url.length() > 0) {
-            if(Validator.validateURL(url)) {
+            if(UrlUtil.validate(url)) {
                 eventViewModel.init(url, date);
 
                 eventViewModel.getEvents().observe(this, week -> {
@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
 
             setLoading();
 
-            if(url.length() > 0 && Validator.validateURL(url)) {
+            if(url.length() > 0 && UrlUtil.validate(url)) {
                 eventViewModel.init(url, date);
             }
         }
@@ -238,9 +238,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_settings:
                 intent = new Intent(this, SettingsActivity.class);
                 break;
-            case R.id.action_about:
-                intent = new Intent(this, AboutActivity.class);
-                break;
+            //case R.id.action_about:
+            //    intent = new Intent(this, AboutActivity.class);
+            //    break;
             default:
                 break;
         }
