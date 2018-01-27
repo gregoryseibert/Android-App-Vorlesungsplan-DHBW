@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/week_container"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/colorCardBackground">
 
     <RelativeLayout
         android:id="@+id/week_container_top"
@@ -21,6 +22,7 @@
             android:paddingEnd="@dimen/item_offset"
             android:paddingTop="@dimen/item_offset"
             android:text="Montag"
+            android:textColor="@color/colorCardText"
             android:textStyle="bold" />
 
         <TextView
@@ -33,6 +35,7 @@
             android:gravity="center"
             android:text="99"
             android:textAlignment="center"
+            android:textColor="@color/colorCardBackground"
             android:textStyle="bold" />
 
         <ToggleButton
@@ -53,14 +56,15 @@
         android:id="@+id/week_container_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/week_container_top">
+        android:layout_below="@+id/week_container_top"
+        android:background="@color/colorCardBackgroundIndent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/item_offset"
-            app:reverseLayout="false">
-        </android.support.v7.widget.RecyclerView>
+            app:reverseLayout="false"></android.support.v7.widget.RecyclerView>
     </FrameLayout>
+
 </RelativeLayout>
