@@ -47,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
     @Inject SharedPreferences sharedPreferences;
     @Inject EventViewModel eventViewModel;
 
-    private SharedPreferences.OnSharedPreferenceChangeListener settingsListener;
-
     private FragmentAdapter fragmentPagerAdapter;
 
     private ViewPager viewPager;
@@ -67,22 +65,20 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        date = new SimpleDate();
-
-        url = sharedPreferences.getString(getString(R.string.key_dhbwurl), "");
-        if(url.length() == 0 || !Validator.validateURL(url)) {
-            showUrlDialog();
-        }
-
-        setupSharedPreferencesListener();
+        date = new SimpleDate(14, 10, 2017, 0, 0);
 
         setupViewPager();
 
         setupDatePicker();
 
-        setupViewModel();
-
         setupDatePickerLayout();
+
+        url = sharedPreferences.getString(getString(R.string.key_dhbwurl), "");
+        if(url.length() == 0 || !Validator.validateURL(url)) {
+            showUrlDialog();
+        } else {
+            setupViewModel();
+        }
     }
 
     public ServiceComponent getServiceComponent() {
@@ -103,18 +99,10 @@ public class MainActivity extends AppCompatActivity {
                     if(url.length() > 0 || Validator.validateURL(url)) {
                         sharedPreferences.edit().putString(getString(R.string.key_dhbwurl), url).apply();
                     }
+                    setupViewModel();
                 })
                 .cancelable(false)
                 .show();
-    }
-
-    private void setupSharedPreferencesListener() {
-        settingsListener = (SharedPreferences sharedPreferences, String key) -> {
-            url = sharedPreferences.getString(getString(R.string.key_dhbwurl), "");
-            eventViewModel.init(url, date);
-        };
-
-        sharedPreferences.registerOnSharedPreferenceChangeListener(settingsListener);
     }
 
     private void setupViewPager() {

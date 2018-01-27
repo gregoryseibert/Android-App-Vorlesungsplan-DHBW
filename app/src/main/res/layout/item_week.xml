@@ -4,13 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/week_container"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/colorCardBackground">
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:id="@+id/week_container_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/itemWeekTopBackground"
         android:padding="@dimen/item_offset">
 
         <TextView
@@ -22,7 +22,7 @@
             android:paddingEnd="@dimen/item_offset"
             android:paddingTop="@dimen/item_offset"
             android:text="Montag"
-            android:textColor="@color/colorCardText"
+            android:textColor="@color/itemWeekTopText"
             android:textStyle="bold" />
 
         <TextView
@@ -32,10 +32,11 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="99dp"
             android:background="@drawable/circle"
+            android:backgroundTint="@color/itemWeekTopText"
             android:gravity="center"
             android:text="99"
             android:textAlignment="center"
-            android:textColor="@color/colorCardBackground"
+            android:textColor="@color/itemWeekTopBackground"
             android:textStyle="bold" />
 
         <ToggleButton
@@ -45,6 +46,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:background="@drawable/toggle_selector"
+            android:backgroundTint="@color/itemWeekTopText"
             android:checked="false"
             android:text=""
             android:textOff=""
@@ -56,15 +58,14 @@
         android:id="@+id/week_container_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/week_container_top"
-        android:background="@color/colorCardBackgroundIndent">
+        android:layout_below="@+id/week_container_top">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/item_offset"
-            app:reverseLayout="false"></android.support.v7.widget.RecyclerView>
+            app:reverseLayout="false"/>
     </FrameLayout>
 
 </RelativeLayout>
