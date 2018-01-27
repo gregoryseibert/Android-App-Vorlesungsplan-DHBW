@@ -81,7 +81,7 @@ public class EventWeekFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.event_week_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_event_week, container, false);
 
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getContext());
         boolean maximizedWeekly = settings.getBoolean(getString(R.string.key_weeklyexpanded), true);

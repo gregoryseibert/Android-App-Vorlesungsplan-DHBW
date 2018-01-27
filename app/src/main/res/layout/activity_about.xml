@@ -14,15 +14,7 @@ tools:context="de.gregoryseibert.vorlesungsplandhbw.view.activity.AboutActivity"
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            android:elevation="4dp"
-            android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:layout_scrollFlags="scroll|enterAlways"/>
+        <include layout="@layout/toolbar"/>
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v7.widget.CardView
@@ -34,7 +26,6 @@ tools:context="de.gregoryseibert.vorlesungsplandhbw.view.activity.AboutActivity"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:clickable="false"
-        app:cardBackgroundColor="@color/colorCardBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,7 +53,7 @@ tools:context="de.gregoryseibert.vorlesungsplandhbw.view.activity.AboutActivity"
                 android:padding="@dimen/item_offset"
                 android:text="Entwickler: Gregory Seibert"
                 android:textAlignment="center"
-                android:textColor="@color/colorCardText"
+                android:textColor="@color/colorAccent"
                 android:textStyle="bold" />
 
             <TextView
@@ -71,7 +62,7 @@ tools:context="de.gregoryseibert.vorlesungsplandhbw.view.activity.AboutActivity"
                 android:padding="@dimen/item_offset"
                 android:text="Diese App wurde nicht für die Öffentlichkeit programmiert."
                 android:textAlignment="center"
-                android:textColor="@color/colorCardText"
+                android:textColor="@color/colorAccent"
                 android:textStyle="bold" />
         </LinearLayout>
     </android.support.v7.widget.CardView>

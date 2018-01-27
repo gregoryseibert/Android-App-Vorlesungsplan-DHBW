@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3e3e3e</color>
-    <color name="colorPrimaryDark">#242424</color>
-    <color name="colorAccent">#9e9e9e</color>
+    <color name="colorPrimary">@color/material_grey800</color>
+    <color name="colorPrimaryDark">@color/material_grey900</color>
+    <color name="colorAccent">@color/material_blue300</color>
 
-    <color name="colorPrimaryText">#FFFFFF</color>
-    <color name="colorAccentText">#FFFFFF</color>
+    <color name="colorTextPrimary">#333333</color>
+    <color name="colorTextSecondary">#333333</color>
+    <color name="colorTextAppBar">#FFFFFF</color>
 
-    <color name="colorBackground">#00306e</color>
+    <color name="itemWeekTopBackground">@color/colorAccent</color>
+    <color name="itemWeekTopText">#FFFFFF</color>
 
-    <color name="colorCardBackground">#004299</color>
-    <color name="colorCardBackgroundIndent">@color/colorBackground</color>
-    <color name="colorCardText">@color/colorPrimaryText</color>
-
-    <color name="colorDividerNormal">@color/colorAccent</color>
-    <color name="colorDividerExam">@color/colorAccent</color>
-    <color name="colorDividerFree">@color/colorAccent</color>
-
-    <color name="colorTimelineCircle">@color/colorDividerNormal</color>
+    <color name="colorDivider">@color/colorAccent</color>
 </resources>

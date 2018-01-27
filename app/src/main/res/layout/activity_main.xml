@@ -12,27 +12,17 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="@color/colorPrimary">
+        android:layout_alignParentTop="true">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:elevation="4dp"
-            android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:titleTextColor="@color/colorPrimaryText" />
+        <include layout="@layout/toolbar"/>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:tabIndicatorColor="@color/colorAccent"
-            app:tabSelectedTextColor="@color/colorPrimaryText"
-            app:tabTextColor="@color/colorPrimaryText"/>
+            app:tabTextColor="@color/colorTextAppBar"
+            app:tabSelectedTextColor="@color/colorTextAppBar"
+            app:layout_scrollFlags="scroll|enterAlways"/>
 
         <devs.mulham.horizontalcalendar.HorizontalCalendarView
             android:id="@+id/calendarView"
@@ -40,9 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tabLayout"
             android:layout_marginTop="@dimen/item_offset"
-            android:background="@color/colorPrimary"
             app:selectorColor="@color/colorAccent"
-            app:textColorSelected="@color/colorPrimaryText" />
+            app:textColorSelected="@color/colorTextAppBar" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -51,8 +40,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_below="@+id/appbar"
-        android:background="@color/colorPrimaryDark">
-
+        android:layout_below="@+id/appbar">
     </android.support.v4.view.ViewPager>
 </RelativeLayout>

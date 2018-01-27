@@ -4,8 +4,8 @@
     <string name="title_activity_about">Informationen</string>
 
     <!-- Strings related to Settings -->
-    <string name="category_general">Allgemein</string>
-    <string name="category_design">Aussehen</string>
+    <string name="category_general">Allgemein (Neustart der App bei einer Änderung notwendig)</string>
+    <string name="category_design">Aussehen (Neustart der App bei einer Änderung notwendig)</string>
 
     <string name="key_dhbwurl">dhbwurl</string>
     <string name="title_dhbwurl">Vorlesungsplan URL</string>
